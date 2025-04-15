@@ -1,0 +1,2 @@
+# scrooge
+Personal finance app
