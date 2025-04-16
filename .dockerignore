@@ -1,5 +1,17 @@
 # See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
 
+# Ignore files created inside a Docker container.
+.cache/
+.config/
+.local/
+.npm/
+
+# Ignore history files.
+.bash_history
+.irb_history
+.psql_history
+.rdbg_history
+
 # Ignore git directory.
 /.git/
 /.gitignore
@@ -45,4 +57,5 @@
 
 # Ignore Docker-related files
 /.dockerignore
+/docker-compose.yml
 /Dockerfile*

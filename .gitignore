@@ -4,6 +4,18 @@
 # belong in git's global ignore instead:
 # `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`
 
+# Ignore files created inside a Docker container.
+.cache/
+.config/
+.local/
+.npm/
+
+# Ignore history files.
+.bash_history
+.irb_history
+.psql_history
+.rdbg_history
+
 # Ignore bundler config.
 /.bundle
 
@@ -38,3 +50,6 @@
 !/app/assets/builds/.keep
 
 /node_modules
+
+# Ignore development files.
+/.devcontainer
