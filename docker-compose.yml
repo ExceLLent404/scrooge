@@ -1,0 +1,27 @@
+services:
+  web:
+    build:
+      context: .
+      target: development
+    environment:
+      DB_USER: scrooge
+      DB_PASS: 123456
+      DB_HOST: postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/scrooge
+      - bundle:/usr/local/bundle
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:16.1-alpine3.19
+    environment:
+      POSTGRES_USER: scrooge
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  bundle:

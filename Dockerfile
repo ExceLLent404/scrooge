@@ -1,11 +1,55 @@
 # syntax = docker/dockerfile:1
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t my-app .
-# docker run -d -p 80:80 -p 443:443 --name my-app -e RAILS_MASTER_KEY=<value from config/master.key> my-app
-
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.5
+
+FROM ruby:$RUBY_VERSION-slim-bullseye AS development
+
+RUN groupadd --gid 1001 scrooge && \
+    useradd --uid 1000 --gid 1001 --home-dir /scrooge --shell /bin/bash scrooge && \
+    mkdir /scrooge && chown scrooge:scrooge /scrooge && \
+    apt-get update -qq && \
+    apt-get install -y --no-install-recommends sudo && \
+    echo "%scrooge ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG NODE_MAJOR=18
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends curl gnupg && \
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+        gpg --dearmor -o /usr/share/keyrings/postgresql-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgresql-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" > \
+        /etc/apt/sources.list.d/postgresql.list && \
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
+        gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" > \
+        /etc/apt/sources.list.d/nodesource.list && \
+    apt-get purge -y --auto-remove gnupg && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG NODE_VERSION=18.20.4
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+        git \
+        make gcc libjemalloc2 \
+        libpq-dev postgresql-client-16 \
+        nodejs=$NODE_VERSION-1nodesource1 && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG YARN_VERSION=1.22.22
+RUN npm install -g yarn@$YARN_VERSION
+
+WORKDIR /scrooge
+
+USER scrooge
+
+EXPOSE 3000
+
+CMD ["bash"]
+
+
+
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
