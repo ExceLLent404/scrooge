@@ -17,6 +17,7 @@ gem "stimulus-rails", "~> 1.0"
 group :development do
   gem "web-console", "~> 4.0"
 
+  gem "erb_lint", "~> 0.9.0", require: false
   gem "rubocop", "~> 1.0", require: false
   gem "rubocop-performance", "~> 1.0", require: false
   gem "rubocop-rails", "~> 2.0", require: false

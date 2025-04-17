@@ -21,6 +21,21 @@ jobs:
       - name: Run RuboCop
         run: bin/rubocop -f github -f progress
 
+  lint_erb:
+    name: Lint ERB files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Run erb_lint
+        run: bundle exec erb_lint --lint-all
+
   analyze_security:
     name: Analyze security vulnerabilities
     runs-on: ubuntu-latest
