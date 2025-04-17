@@ -17,6 +17,8 @@ gem "stimulus-rails", "~> 1.0"
 group :development do
   gem "web-console", "~> 4.0"
 
+  gem "letter_opener_web", "~> 3.0"
+
   gem "erb_lint", "~> 0.9.0", require: false
   gem "rails_best_practices", "~> 1.0", require: false
   gem "reek", "~> 6.0", require: false
@@ -27,7 +29,16 @@ group :development do
   gem "standard", "~> 1.0", require: false
   gem "standard-rails", "~> 1.0", require: false
 
+  gem "ruby-lsp-rails", "~> 0.4.0"
+
+  gem "database_consistency", "~> 2.0", require: false
+
   gem "brakeman", "~> 7.0", require: false
+  gem "bundler-audit", "~> 0.9.0", require: false
+
+  gem "bundle_update_interactive", "~> 0.11.0", require: false
+
+  gem "yard", "~> 0.9.0", require: false
 end
 
 group :development, :test do
