@@ -1,6 +1,9 @@
 ---
 glob: "**/*.{html,text,turbo_stream,js}{+*,}.erb"
 
+exclude:
+  - "**/vendor/**/*"
+
 EnableDefaultLinters: true
 
 linters:
