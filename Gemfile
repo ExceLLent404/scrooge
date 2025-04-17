@@ -33,6 +33,8 @@ group :development do
 
   gem "brakeman", "~> 7.0", require: false
   gem "bundler-audit", "~> 0.9.0", require: false
+
+  gem "bundle_update_interactive", "~> 0.11.0", require: false
 end
 
 group :development, :test do
