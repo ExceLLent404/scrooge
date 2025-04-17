@@ -17,6 +17,8 @@ gem "stimulus-rails", "~> 1.0"
 group :development do
   gem "web-console", "~> 4.0"
 
+  gem "letter_opener_web", "~> 3.0"
+
   gem "erb_lint", "~> 0.9.0", require: false
   gem "rails_best_practices", "~> 1.0", require: false
   gem "reek", "~> 6.0", require: false
