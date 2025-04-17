@@ -27,6 +27,8 @@ group :development do
   gem "standard", "~> 1.0", require: false
   gem "standard-rails", "~> 1.0", require: false
 
+  gem "ruby-lsp-rails", "~> 0.4.0"
+
   gem "brakeman", "~> 7.0", require: false
 end
 
