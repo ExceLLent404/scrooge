@@ -35,6 +35,8 @@ group :development do
   gem "bundler-audit", "~> 0.9.0", require: false
 
   gem "bundle_update_interactive", "~> 0.11.0", require: false
+
+  gem "yard", "~> 0.9.0", require: false
 end
 
 group :development, :test do
