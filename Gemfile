@@ -17,11 +17,16 @@ gem "stimulus-rails", "~> 1.0"
 group :development do
   gem "web-console", "~> 4.0"
 
-  gem "rubocop-rails-omakase", "~> 1.0", require: false
+  gem "erb_lint", "~> 0.9.0", require: false
+  gem "rubocop", "~> 1.0", require: false
+  gem "rubocop-performance", "~> 1.0", require: false
+  gem "rubocop-rails", "~> 2.0", require: false
+  gem "standard", "~> 1.0", require: false
+  gem "standard-rails", "~> 1.0", require: false
 
   gem "brakeman", "~> 7.0", require: false
 end
 
 group :development, :test do
-  gem "debug", "~> 1.0", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", "~> 1.0", platforms: %i[mri windows], require: "debug/prelude"
 end

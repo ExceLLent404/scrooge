@@ -1,0 +1,30 @@
+---
+glob: "**/*.{html,text,turbo_stream,js}{+*,}.erb"
+
+exclude:
+  - "**/vendor/**/*"
+
+EnableDefaultLinters: true
+
+linters:
+  ErbSafety:
+    enabled: true
+  NoUnusedDisable:
+    enabled: true
+  PartialInstanceVariable:
+    enabled: true
+  Rubocop:
+    enabled: true
+    rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+      Layout/ArgumentAlignment:
+        EnforcedStyle: with_first_argument
+      Layout/InitialIndentation:
+        Enabled: false
+      Layout/TrailingEmptyLines:
+        Enabled: false
+      Layout/TrailingWhitespace:
+        Enabled: false
+      Lint/UselessAssignment:
+        Enabled: false
