@@ -21,6 +21,21 @@ jobs:
       - name: Run RuboCop
         run: bin/rubocop -f github -f progress
 
+  lint_rails:
+    name: Check the quality of Rails code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Run rails_best_practices
+        run: bundle exec rails_best_practices .
+
   lint_erb:
     name: Lint ERB files
     runs-on: ubuntu-latest
