@@ -29,6 +29,8 @@ group :development do
 
   gem "ruby-lsp-rails", "~> 0.4.0"
 
+  gem "database_consistency", "~> 2.0", require: false
+
   gem "brakeman", "~> 7.0", require: false
 end
 
