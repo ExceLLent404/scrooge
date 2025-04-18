@@ -92,4 +92,7 @@ RSpec.configure do |config|
   config.define_derived_metadata do |meta|
     meta[:aggregate_failures] = true unless meta.key?(:aggregate_failures)
   end
+
+  # Run system specs only if they are specified explicitly or on CI
+  config.exclude_pattern = "spec/system/*_spec.rb" unless ARGV.any?(/spec\/system/) || ENV["CI"]
 end

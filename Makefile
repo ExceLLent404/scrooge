@@ -7,6 +7,7 @@ review:
 
 test:
 	bundle exec rspec --fail-fast=5
+	bundle exec rspec spec/system --fail-fast=5
 
 chrome:
 	LANGUAGE=en_US.UTF-8 chromedriver \
