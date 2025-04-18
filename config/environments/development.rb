@@ -3,6 +3,13 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.bullet_logger = true
+    Bullet.rails_logger  = true
+    Bullet.add_footer    = true
+  end
+
   config.web_console.permissions = "172.0.0.0/8"
 
   # In the development environment your application's code is reloaded any time
