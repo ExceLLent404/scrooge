@@ -38,7 +38,7 @@ group :development do
   gem "database_consistency", "~> 2.0", require: false
 
   gem "brakeman", "~> 7.0", require: false
-  gem "bundler-audit", "~> 0.9.0", require: false
+  gem "bundler-audit", "~> 0.9.2", require: false
 
   gem "bundle_update_interactive", "~> 0.11.0", require: false
 
