@@ -7,8 +7,11 @@ services:
       DB_USER: scrooge
       DB_PASS: 123456
       DB_HOST: postgres
+      CHROME_HOST: 172.17.0.1
+      CHROME_PORT: 9515
     ports:
       - "3000:3000"
+      - "3030:3030"
     volumes:
       - .:/scrooge
       - bundle:/usr/local/bundle

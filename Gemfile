@@ -28,6 +28,7 @@ group :development do
   gem "rubocop-rails", "~> 2.0", require: false
   gem "rubocop-rspec", "~> 3.0", require: false
   gem "rubocop-rspec_rails", "~> 2.0", require: false
+  gem "rubocop-capybara", "~> 2.0", require: false
   gem "standard", "~> 1.0", require: false
   gem "standard-rails", "~> 1.0", require: false
 
@@ -47,4 +48,9 @@ group :development, :test do
   gem "debug", "~> 1.0", platforms: %i[mri windows], require: "debug/prelude"
 
   gem "rspec-rails", "~> 7.0"
+end
+
+group :test do
+  gem "capybara", "~> 3.0", require: false
+  gem "selenium-webdriver", "~> 4.0", require: false
 end
