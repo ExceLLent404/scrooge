@@ -8,6 +8,8 @@ require:
 plugins:
   - rubocop-performance
   - rubocop-rails
+  - rubocop-rspec
+  - rubocop-rspec_rails
   - standard-custom
   - standard-performance
   - standard-rails
@@ -45,3 +47,26 @@ Performance/TimesMap:
 
 Performance/Sum:
   Enabled: true
+
+
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ContextWording:
+  AllowedPatterns:
+    - ^by default$
+  Prefixes:
+    - "on"
+    - when
+    - with
+    - without
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false

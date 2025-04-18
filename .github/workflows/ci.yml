@@ -65,3 +65,49 @@ jobs:
 
       - name: Run Brakeman
         run: bin/brakeman --run-all-checks --no-pager
+
+  test:
+    name: Test code
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://scrooge:123456@localhost:5432/scrooge_test
+    services:
+      postgres:
+        image: postgres:16.1-alpine3.19
+        env:
+          POSTGRES_USER: scrooge
+          POSTGRES_PASSWORD: 123456
+        ports:
+          - 5432:5432
+        options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libjemalloc2
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Set up test database
+        run: bin/rails db:setup
+
+      - name: Run tests
+        run: bin/rails spec
+
+      - name: Upload logs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logs
+          path: log/test.log

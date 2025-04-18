@@ -26,6 +26,8 @@ group :development do
   gem "rubocop", "~> 1.0", require: false
   gem "rubocop-performance", "~> 1.0", require: false
   gem "rubocop-rails", "~> 2.0", require: false
+  gem "rubocop-rspec", "~> 3.0", require: false
+  gem "rubocop-rspec_rails", "~> 2.0", require: false
   gem "standard", "~> 1.0", require: false
   gem "standard-rails", "~> 1.0", require: false
 
@@ -43,4 +45,6 @@ end
 
 group :development, :test do
   gem "debug", "~> 1.0", platforms: %i[mri windows], require: "debug/prelude"
+
+  gem "rspec-rails", "~> 7.0"
 end
