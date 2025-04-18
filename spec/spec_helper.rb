@@ -1,3 +1,5 @@
+require "test-prof" if ENV["TEST_PROF"]
+
 if ENV["COVERAGE"] || ENV["CI"]
   require "simplecov"
   require "simplecov-cobertura" if ENV["CI"]

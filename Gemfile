@@ -60,4 +60,7 @@ group :test do
 
   gem "simplecov", "~> 0.22.0", require: false
   gem "simplecov-cobertura", "~> 2.0", require: false
+
+  gem "stackprof", "~> 0.2.0", require: false
+  gem "test-prof", "~> 1.0", require: false
 end
