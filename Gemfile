@@ -28,6 +28,7 @@ group :development do
   gem "rubocop-rails", "~> 2.0", require: false
   gem "rubocop-rspec", "~> 3.0", require: false
   gem "rubocop-rspec_rails", "~> 2.0", require: false
+  gem "rubocop-factory_bot", "~> 2.0", require: false
   gem "rubocop-capybara", "~> 2.0", require: false
   gem "standard", "~> 1.0", require: false
   gem "standard-rails", "~> 1.0", require: false
@@ -47,6 +48,8 @@ end
 group :development, :test do
   gem "debug", "~> 1.0", platforms: %i[mri windows], require: "debug/prelude"
 
+  gem "factory_bot_rails", "~> 6.0"
+  gem "faker", "~> 3.0"
   gem "rspec-rails", "~> 7.0"
 end
 
