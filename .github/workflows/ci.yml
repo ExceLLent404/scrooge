@@ -99,6 +99,9 @@ jobs:
           node-version-file: .node-version
           cache: yarn
 
+      - name: Create test database
+        run: bin/rails db:create
+
       - name: Run tests
         run: bin/rails spec
 
