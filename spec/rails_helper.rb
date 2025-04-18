@@ -63,4 +63,10 @@ RSpec.configure do |config|
 
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.before do |example|
+    Rails.logger.debug { "-" * 50 }
+    Rails.logger.debug { example.full_description }
+    Rails.logger.debug { example.location }
+  end
 end
