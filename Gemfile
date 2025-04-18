@@ -55,4 +55,5 @@ group :test do
   gem "selenium-webdriver", "~> 4.0", require: false
 
   gem "simplecov", "~> 0.22.0", require: false
+  gem "simplecov-cobertura", "~> 2.0", require: false
 end

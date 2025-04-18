@@ -1,5 +1,6 @@
-if ENV["COVERAGE"]
+if ENV["COVERAGE"] || ENV["CI"]
   require "simplecov"
+  require "simplecov-cobertura" if ENV["CI"]
 
   SimpleCov.start "rails" do
     enable_coverage :branch
@@ -7,6 +8,8 @@ if ENV["COVERAGE"]
     enable_coverage_for_eval
 
     add_group "Views", "app/views"
+
+    formatter SimpleCov::Formatter::CoberturaFormatter if ENV["CI"]
   end
 end
 

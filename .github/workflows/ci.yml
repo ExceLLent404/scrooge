@@ -119,3 +119,8 @@ jobs:
           name: screenshots
           path: tmp/capybara
           if-no-files-found: ignore
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
