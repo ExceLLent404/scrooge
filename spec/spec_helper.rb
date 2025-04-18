@@ -1,3 +1,15 @@
+if ENV["COVERAGE"]
+  require "simplecov"
+
+  SimpleCov.start "rails" do
+    enable_coverage :branch
+    primary_coverage :branch
+    enable_coverage_for_eval
+
+    add_group "Views", "app/views"
+  end
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

@@ -507,6 +507,7 @@ DEPENDENCIES
   ruby-lsp-rails (~> 0.4.0)
   rubycritic (~> 4.0)
   selenium-webdriver (~> 4.0)
+  simplecov (~> 0.22.0)
   sprockets-rails (~> 3.0)
   standard (~> 1.0)
   standard-rails (~> 1.0)
