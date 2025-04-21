@@ -1,1 +1,16 @@
 @use "bulma/sass";
+
+.flash {
+  position: fixed;
+  z-index: 31; // calc(var(--bulma-navbar-z) + 1);
+  width: fit-content;
+  margin: auto;
+
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

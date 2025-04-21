@@ -1,5 +1,9 @@
-<div class="block">
-  <% flash.each do |_type, message| %>
-    <%= message %>
+<div class="flash">
+  <% colors = {"notice" => "success", "alert" => "danger"} %>
+  <% flash.each do |type, message| %>
+    <% color = colors[type] %>
+    <div class="notification <%= "is-#{color}" %> is-light p-4">
+      <%= message %>
+    </div>
   <% end %>
 </div>
