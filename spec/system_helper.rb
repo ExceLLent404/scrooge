@@ -21,6 +21,13 @@ Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, **browser_location, options:)
 end
 
+# Helpers for finding elements on the page based on Bulma classes
+module BulmaHelpers
+  def navbar
+    find(".navbar")
+  end
+end
+
 RSpec.configure do |config|
   config.before(:each, type: :system) { driven_by :chrome }
 
@@ -31,4 +38,6 @@ RSpec.configure do |config|
     example.run
     ActionMailer::Base.default_url_options = default_options
   end
+
+  config.include BulmaHelpers, type: :system
 end

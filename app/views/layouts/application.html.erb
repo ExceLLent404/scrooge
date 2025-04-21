@@ -18,6 +18,14 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= render "navbar" %>
+
+    <section class="section">
+      <div class="container">
+        <%= render "flash" %>
+
+        <%= yield %>
+      </div>
+    </section>
   </body>
 </html>
