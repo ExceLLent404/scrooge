@@ -1,14 +1,46 @@
 <nav class="navbar has-shadow">
-  <div class="container is-block">
-    <div class="navbar-brand is-flex is-justify-content-space-between">
-      <%= render "app_logo" %>
+  <% if Rails.configuration.x.user_signed_in %>
+    <div class="container">
+      <div class="navbar-brand">
+        <%= render "app_logo" %>
 
-      <div class="navbar-item">
-        <div class="buttons">
-          <%= link_to "Sign up", "#", class: "button is-link" %>
-          <%= link_to "Sign in", "#", class: "button is-link is-outlined" %>
+        <a class="navbar-burger">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu pl-3">
+        <div class="navbar-start">
+          <%= link_to "Capital", "#", class: "navbar-item is-tab" %>
+          <%= link_to "Accounts", "#", class: "navbar-item is-tab" %>
+          <%= link_to "Transactions", "#", class: "navbar-item is-tab" %>
+          <%= link_to "Categories", "#", class: "navbar-item is-tab" %>
+        </div>
+
+        <div class="navbar-end is-flex is-justify-content-space-between">
+          <%= link_to "User", "#", class: "navbar-item" %>
+
+          <div class="navbar-item">
+            <%= link_to "Sign out", "#", class: "button is-dark is-outlined" %>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <% else %>
+    <div class="container is-block">
+      <div class="navbar-brand is-flex is-justify-content-space-between">
+        <%= render "app_logo" %>
+
+        <div class="navbar-item">
+          <div class="buttons">
+            <%= link_to "Sign up", "#", class: "button is-link" %>
+            <%= link_to "Sign in", "#", class: "button is-link is-outlined" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </nav>
