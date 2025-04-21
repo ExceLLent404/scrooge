@@ -2,8 +2,10 @@
   <% colors = {"notice" => "success", "alert" => "danger"} %>
   <% flash.each do |type, message| %>
     <% color = colors[type] %>
-    <div class="notification <%= "is-#{color}" %> is-light p-4">
-      <%= message %>
+    <div class="notification <%= "is-#{color}" %> is-light p-4" data-controller="flash">
+      <button class="delete" data-action="flash#remove"></button>
+
+      <%= tag.span message, class: "mr-5" %>
     </div>
   <% end %>
 </div>
