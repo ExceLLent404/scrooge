@@ -1,6 +1,7 @@
 // Path to Bulma's sass folder
 @use "bulma/sass" with (
   // Update Bulma's global variables
+  $family-primary: '"Nunito", sans-serif',
   $black: #020617,
   $black-bis: #0f172a,
   $black-ter: #1e293b,
@@ -15,6 +16,8 @@
   $primary: #ffcc33,
   $link: #016c5f
 );
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 label {
   abbr {
