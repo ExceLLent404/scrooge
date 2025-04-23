@@ -14,10 +14,22 @@
   $white-ter: #f1f5f9,
   $white-bis: #f8fafc,
   $primary: #ffcc33,
-  $link: #016c5f
+  $link: #016c5f,
+  $radius-small: 0.375rem,
+  $radius: 0.5rem,
+  $radius-medium: 0.75rem,
+  $radius-large: 0.825rem,
+
+  // Update some of Bulma's component variables
+  $card-radius: 1.5rem
 );
 
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+.input,
+.button {
+  @extend .is-rounded;
+}
 
 label {
   abbr {
@@ -36,6 +48,10 @@ label {
   .field.is-danger & {
     @extend .is-danger;
   }
+}
+
+.column {
+  border-radius: calc(var(--bulma-radius) + var(--bulma-column-gap));
 }
 
 .flash {

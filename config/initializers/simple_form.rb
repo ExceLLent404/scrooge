@@ -131,7 +131,7 @@ SimpleForm.setup do |config|
 
     b.use :label, class: "label"
     b.wrapper :control, tag: "div", class: "control" do |control|
-      control.wrapper :select, tag: "div", class: "select" do |select|
+      control.wrapper :select, tag: "div", class: "select is-rounded" do |select|
         select.use :input
       end
     end
@@ -141,7 +141,7 @@ SimpleForm.setup do |config|
 
   config.wrappers :select_control, tag: "div", class: "control", error_class: "is-danger" do |b|
     b.use :html5
-    b.wrapper :select, tag: "div", class: "select" do |select|
+    b.wrapper :select, tag: "div", class: "select is-rounded" do |select|
       select.use :input
     end
   end
@@ -155,7 +155,7 @@ SimpleForm.setup do |config|
     b.wrapper :field_body, tag: "div", class: "field-body" do |field_body|
       field_body.wrapper :field, tag: "div", class: "field" do |field|
         field.wrapper :control, tag: "div", class: "control" do |control|
-          control.wrapper :select, tag: "div", class: "select" do |select|
+          control.wrapper :select, tag: "div", class: "select is-rounded" do |select|
             select.use :input
           end
         end
