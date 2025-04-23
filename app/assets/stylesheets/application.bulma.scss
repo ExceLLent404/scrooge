@@ -1,5 +1,24 @@
 @use "bulma/sass";
 
+label {
+  abbr {
+    text-decoration: none;
+  }
+}
+
+// Hack for simple_form wrapper:
+// when `input` contains errors, the .control or .field div has error_class "is-danger",
+// but "is-danger" should be in the .select div
+.select {
+  .control.is-danger & {
+    @extend .is-danger;
+  }
+
+  .field.is-danger & {
+    @extend .is-danger;
+  }
+}
+
 .flash {
   position: fixed;
   z-index: 31; // calc(var(--bulma-navbar-z) + 1);

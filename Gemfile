@@ -14,6 +14,8 @@ gem "sprockets-rails", "~> 3.0"
 gem "turbo-rails", "~> 2.0"
 gem "stimulus-rails", "~> 1.0"
 
+gem "simple_form", "~> 5.0"
+
 group :development do
   gem "web-console", "~> 4.0"
 

@@ -1,2 +1,34 @@
 <h1>Test#index</h1>
 <p>Find me in app/views/test/index.html.erb</p>
+
+<div class="box">
+  <%= simple_form_for(@form, url: "#", method: :get) do |f| %>
+    <%= f.input :error_field, as: :hidden, error: false %>
+    <%= f.full_error :error_field %>
+
+    <%= f.input :field, as: :password, required: true, label: "Password", hint: "Hint" %>
+
+    <div class="field has-addons">
+      <%= f.input :field, wrapper: :control, placeholder: "placeholder" %>
+      <%= f.input :error_field, as: :date, wrapper: :control, html5: true, input_html: {max: Date.current} %>
+      <%= f.input :field, wrapper: :select_control, collection: %w[abc ijk xyz] %>
+    </div>
+
+    <%= f.input :error_field, wrapper: :select, collection: %w[abc ijk xyz], label: "Select" %>
+
+    <%= f.input :field, as: :text, label: "Text" %>
+
+    <%= f.input :field, wrapper: :horizontal, label: "Horizontal field", input_html: {class: "is-fullwidth"} %>
+    <%= f.input :field, wrapper: :select_horizontal, collection: %w[abc ijk xyz], label: "Horizontal select" %>
+
+    <%= f.input :field, as: :check_boxes, collection: %w[abc ijk xyz], label: "Checkboxes" %>
+
+    <%= f.input :field, as: :boolean, inline_label: true, label: "Boolean" %>
+
+    <%= f.input :field, as: :file %>
+
+    <div class="field pt-4">
+      <%= f.button :submit, "Button", name: nil, class: "is-primary is-fullwidth" %>
+    </div>
+  <% end %>
+</div>
