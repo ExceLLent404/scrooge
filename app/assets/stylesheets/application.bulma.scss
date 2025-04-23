@@ -1,4 +1,20 @@
-@use "bulma/sass";
+// Path to Bulma's sass folder
+@use "bulma/sass" with (
+  // Update Bulma's global variables
+  $black: #020617,
+  $black-bis: #0f172a,
+  $black-ter: #1e293b,
+  $grey-darker: #334155,
+  $grey-dark: #475569,
+  $grey: #64748b,
+  $grey-light: #94a3b8,
+  $grey-lighter: #cbd5e1,
+  $grey-lightest: #e2e8f0,
+  $white-ter: #f1f5f9,
+  $white-bis: #f8fafc,
+  $primary: #ffcc33,
+  $link: #016c5f
+);
 
 label {
   abbr {
