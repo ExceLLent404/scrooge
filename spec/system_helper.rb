@@ -21,6 +21,30 @@ Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, **browser_location, options:)
 end
 
+# Helpers for finding elements on the page based on Bulma classes
+module BulmaHelpers
+  def navbar
+    find(".navbar")
+  end
+end
+
+# Helpers for interacting with the browser
+module BrowserHelpers
+  def resize_window_to_mobile
+    resize_window_to(480, 960)
+  end
+
+  def resize_window_to_default
+    resize_window_to(1400, 1000)
+  end
+
+  private
+
+  def resize_window_to(width, height)
+    Capybara.current_session.current_window.resize_to(width, height)
+  end
+end
+
 RSpec.configure do |config|
   config.before(:each, type: :system) { driven_by :chrome }
 
@@ -31,4 +55,7 @@ RSpec.configure do |config|
     example.run
     ActionMailer::Base.default_url_options = default_options
   end
+
+  config.include BulmaHelpers, type: :system
+  config.include BrowserHelpers, type: :system
 end

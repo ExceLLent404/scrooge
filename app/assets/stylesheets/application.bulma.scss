@@ -1,39 +1,70 @@
-// @charset "utf-8";
+// Path to Bulma's sass folder
+@use "bulma/sass" with (
+  // Update Bulma's global variables
+  $family-primary: '"Nunito", sans-serif',
+  $black: #020617,
+  $black-bis: #0f172a,
+  $black-ter: #1e293b,
+  $grey-darker: #334155,
+  $grey-dark: #475569,
+  $grey: #64748b,
+  $grey-light: #94a3b8,
+  $grey-lighter: #cbd5e1,
+  $grey-lightest: #e2e8f0,
+  $white-ter: #f1f5f9,
+  $white-bis: #f8fafc,
+  $primary: #ffcc33,
+  $link: #016c5f,
+  $radius-small: 0.375rem,
+  $radius: 0.5rem,
+  $radius-medium: 0.75rem,
+  $radius-large: 0.825rem,
 
-// Import a Google Font
-// @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+  // Update some of Bulma's component variables
+  $card-radius: 1.5rem
+);
 
-// Set your brand colors
-// $purple: #8A4D76;
-// $pink: #FA7C91;
-// $brown: #757763;
-// $beige-light: #D0D1CD;
-// $beige-lighter: #EFF0EB;
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
-// Update Bulma's global variables
-// $family-sans-serif: "Nunito", sans-serif;
-// $grey-dark: $brown;
-// $grey-light: $beige-light;
-// $primary: $purple;
-// $link: $pink;
-// $widescreen-enabled: false;
-// $fullhd-enabled: false;
+.input,
+.button {
+  @extend .is-rounded;
+}
 
-// Update some of Bulma's component variables
-// $body-background-color: $beige-lighter;
-// $control-border-width: 2px;
-// $input-border-color: transparent;
-// $input-shadow: none;
+label {
+  abbr {
+    text-decoration: none;
+  }
+}
 
-// Import only what you need from Bulma
-// @import "bulma/sass/utilities/_all.sass";
-// @import "bulma/sass/base/_all.sass";
-// @import "bulma/sass/elements/button.sass";
-// @import "bulma/sass/elements/container.sass";
-// @import "bulma/sass/elements/title.sass";
-// @import "bulma/sass/form/_all.sass";
-// @import "bulma/sass/components/navbar.sass";
-// @import "bulma/sass/layout/hero.sass";
-// @import "bulma/sass/layout/section.sass";
+// Hack for simple_form wrapper:
+// when `input` contains errors, the .control or .field div has error_class "is-danger",
+// but "is-danger" should be in the .select div
+.select {
+  .control.is-danger & {
+    @extend .is-danger;
+  }
 
-@import 'bulma/bulma';
+  .field.is-danger & {
+    @extend .is-danger;
+  }
+}
+
+.column {
+  border-radius: calc(var(--bulma-radius) + var(--bulma-column-gap));
+}
+
+.flash {
+  position: fixed;
+  z-index: 31; // calc(var(--bulma-navbar-z) + 1);
+  width: fit-content;
+  margin: auto;
+
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
