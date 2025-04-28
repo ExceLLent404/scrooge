@@ -9,6 +9,7 @@ if ENV["COVERAGE"] || ENV["CI"]
     primary_coverage :branch
     enable_coverage_for_eval
 
+    add_group "Inputs", "app/inputs"
     add_group "Views", "app/views"
 
     formatter SimpleCov::Formatter::CoberturaFormatter if ENV["CI"]
