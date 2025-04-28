@@ -23,8 +23,20 @@ end
 
 # Helpers for finding elements on the page based on Bulma classes
 module BulmaHelpers
+  def form
+    find("form")
+  end
+
   def navbar
     find(".navbar")
+  end
+
+  def success_notification
+    find(".notification.is-success")
+  end
+
+  def error_notification
+    find(".notification.is-danger")
   end
 end
 

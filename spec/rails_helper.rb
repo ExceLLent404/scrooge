@@ -27,6 +27,8 @@ require "rspec/rails"
 #
 Rails.root.glob("spec/support/**/*.rb").each { |f| require f }
 
+Rails.root.glob("spec/shared/**/*.rb").each { |f| require f }
+
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
 begin
