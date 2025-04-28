@@ -23,6 +23,10 @@ end
 
 # Helpers for finding elements on the page based on Bulma classes
 module BulmaHelpers
+  def field_error(field)
+    find_field(field).ancestor(".field", match: :first).find(".help.is-danger")
+  end
+
   def form
     find("form")
   end

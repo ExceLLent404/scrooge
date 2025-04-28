@@ -1,0 +1,18 @@
+<div class="columns is-mobile is-centered">
+  <div class="column" style="max-width: 500px">
+    <h2 class="title has-text-centered">Resend confirmation instructions</h2>
+
+    <div class="box">
+      <%= simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: {method: :post}) do |f| %>
+        <%= f.error_notification %>
+        <%= f.full_error :confirmation_token %>
+
+        <%= f.input :email, autofocus: true %>
+
+        <div class="field pt-4">
+          <%= f.button :submit, "Resend confirmation instructions", class: "is-primary is-fullwidth" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

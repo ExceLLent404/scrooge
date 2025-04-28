@@ -1,0 +1,26 @@
+<div class="columns is-mobile is-centered">
+  <div class="column" style="max-width: 500px">
+    <h2 class="title has-text-centered">Change your password</h2>
+
+    <div class="box">
+      <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: {method: :put}) do |f| %>
+        <%= f.error_notification %>
+
+        <%= f.input :reset_password_token, as: :hidden, error: false %>
+        <%= f.full_error :reset_password_token %>
+
+        <%= f.input :password,
+                    label: "New password",
+                    autofocus: true,
+                    input_html: {autocomplete: "new-password"} %>
+        <%= f.input :password_confirmation,
+                    label: "Confirm new password",
+                    input_html: {autocomplete: "new-password"} %>
+
+        <div class="field pt-4">
+          <%= f.button :submit, "Change my password", class: "is-primary is-fullwidth" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

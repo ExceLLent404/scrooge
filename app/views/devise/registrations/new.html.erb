@@ -1,0 +1,27 @@
+<div class="columns is-mobile is-centered">
+  <div class="column" style="max-width: 500px">
+    <h2 class="title has-text-centered">Sign up</h2>
+
+    <div class="box">
+      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= f.error_notification %>
+
+        <%= f.input :email, autofocus: true %>
+        <%= f.input :password, input_html: {autocomplete: "new-password"} %>
+        <%= f.input :password_confirmation, input_html: {autocomplete: "new-password"} %>
+
+        <div class="field pt-4">
+          <%= f.button :submit, "Sign up", class: "is-primary is-fullwidth" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="box has-text-centered">
+      Already have an account? <%= link_to "Sign in", new_session_path(resource) %>
+    </div>
+
+    <div class="box has-text-centered">
+      <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource) %>
+    </div>
+  </div>
+</div>
