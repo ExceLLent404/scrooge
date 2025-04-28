@@ -10,3 +10,14 @@ ActiveStorage::Blob:
   enabled: false
 ActiveStorage::VariantRecord:
   enabled: false
+
+User:
+  email:
+    ColumnPresenceChecker:
+      enabled: false
+  index_users_on_confirmation_token:
+    UniqueIndexChecker:
+      enabled: false
+  index_users_on_reset_password_token:
+    UniqueIndexChecker:
+      enabled: false

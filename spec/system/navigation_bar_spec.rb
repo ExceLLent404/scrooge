@@ -8,8 +8,8 @@ RSpec.shared_examples "for navigation bar" do |location|
     expect(navbar).to have_link("Categories")
   end
 
-  it "contains user name #{location}" do
-    expect(navbar).to have_content("User")
+  it "contains part of user email before the `@` sign #{location}" do
+    expect(navbar).to have_content(user.email.split("@").first)
   end
 
   it "contains `Sign out` button #{location}" do
@@ -19,8 +19,6 @@ end
 
 RSpec.describe "Navigation bar" do
   context "when user is not signed in" do
-    before { Rails.configuration.x.user_signed_in = false }
-
     it "contains `Sign up` and `Sign in` buttons" do
       visit root_path
 
@@ -30,10 +28,9 @@ RSpec.describe "Navigation bar" do
   end
 
   context "when user is signed in" do
-    before do
-      Rails.configuration.x.user_signed_in = true
-      visit root_path
-    end
+    include_context "with authenticated user"
+
+    before { visit root_path }
 
     context "on desktop" do
       include_examples "for navigation bar", "on itself"
