@@ -25,6 +25,16 @@ RSpec.describe "Users" do
       expect(error_notification).to have_content("You need to sign in or sign up before continuing.")
       expect(open_email(email)).to have_content("Confirm my account")
     end
+
+    it_behaves_like "validation of email presence"
+    it_behaves_like "validation of email format validity", "Sign up"
+    it_behaves_like "validation of email uniqueness"
+    it_behaves_like "validation of password presence" do
+      let(:password_confirmation) { user.password }
+    end
+    it_behaves_like "validation of minimum password length"
+    it_behaves_like "validation of password confirmation presence"
+    it_behaves_like "validation of matching password with its confirmation"
   end
 
   describe "Resending confirmation instructions" do
@@ -48,6 +58,10 @@ RSpec.describe "Users" do
       expect(emails_sent_to(email).count).to be(2)
       expect(emails_sent_to(email)).to all(have_content("Confirm my account"))
     end
+
+    it_behaves_like "validation of email presence"
+    it_behaves_like "validation of email format validity", "Resend confirmation instructions"
+    it_behaves_like "validation of email existence"
 
     context "when email has already been confirmed" do
       let(:email) { create(:user).email }
@@ -94,6 +108,9 @@ RSpec.describe "Users" do
       expect(navbar).to have_link("Sign out")
     end
 
+    it_behaves_like "validation of email presence"
+    it_behaves_like "validation of email format validity", "Sign in"
+
     context "with unregistered email" do
       let(:email) { "scrooge@example.com" }
 
@@ -112,6 +129,13 @@ RSpec.describe "Users" do
 
         expect(error_notification).to have_content("You have to confirm your email address before continuing.")
       end
+    end
+
+    it_behaves_like "validation of password presence" do
+      let(:email) { "email-that-does-not-trigger-user-creation@example.com" }
+    end
+    it_behaves_like "validation of minimum password length" do
+      let(:email) { "email-that-does-not-trigger-user-creation@example.com" }
     end
 
     context "with invalid password" do
@@ -145,6 +169,10 @@ RSpec.describe "Users" do
       expect(success_notification).to have_content("You will receive an email with instructions on how to reset your password in a few minutes.")
       expect(open_email(email)).to have_content("Change my password")
     end
+
+    it_behaves_like "validation of email presence"
+    it_behaves_like "validation of email format validity", "Receive instructions"
+    it_behaves_like "validation of email existence"
   end
 
   describe "Password reset" do
@@ -183,6 +211,13 @@ RSpec.describe "Users" do
           .to have_content("Reset password token has expired, please request a new one")
       end
     end
+
+    it_behaves_like "validation of password presence", "New password" do
+      let(:password_confirmation) { "p@ssw0rd" }
+    end
+    it_behaves_like "validation of minimum password length", "New password"
+    it_behaves_like "validation of password confirmation presence", "Confirm new password"
+    it_behaves_like "validation of matching password with its confirmation", "Confirm new password"
   end
 
   describe "Viewing profile" do
@@ -224,6 +259,12 @@ RSpec.describe "Users" do
         .to have_content("You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address.")
       expect(open_email(email)).to have_content("Confirm my account")
     end
+
+    it_behaves_like "validation of email presence"
+    it_behaves_like "validation of email format validity", "Update"
+    it_behaves_like "validation of email uniqueness"
+    it_behaves_like "validation of current password presence"
+    it_behaves_like "validation of current password validity"
   end
 
   describe "Changing password" do
@@ -251,6 +292,35 @@ RSpec.describe "Users" do
 
       expect(success_notification).to have_content("Your account has been updated successfully.")
     end
+
+    context "with empty password" do
+      let(:password) { nil }
+      let(:password_confirmation) { "p@ssw0rd" }
+
+      it "shows an error message" do
+        act
+
+        expect(error_notification).to have_content("Please review the problems below:")
+        expect(field_error("New password")).to have_content("can't be blank")
+      end
+    end
+
+    it_behaves_like "validation of minimum password length", "New password"
+
+    context "with empty password confirmation" do
+      let(:password_confirmation) { nil }
+
+      it "shows an error message" do
+        act
+
+        expect(error_notification).to have_content("Please review the problems below:")
+        expect(field_error("Confirm new password")).to have_content("doesn't match Password")
+      end
+    end
+
+    it_behaves_like "validation of matching password with its confirmation", "Confirm new password"
+    it_behaves_like "validation of current password presence"
+    it_behaves_like "validation of current password validity"
   end
 
   describe "Signing out" do

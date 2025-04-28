@@ -5,6 +5,8 @@ require "capybara/rspec"
 require "capybara/email/rspec"
 require "selenium-webdriver"
 
+Rails.root.glob("spec/system/shared/**/*.rb").each { |f| require f }
+
 Capybara.server_host = Socket.ip_address_list.find(&:ipv4_private?).ip_address
 Capybara.server_port = 3030
 
@@ -46,6 +48,10 @@ end
 
 # Helpers for interacting with the browser
 module BrowserHelpers
+  def field_validation_message(locator)
+    find_field(locator, match: :first).native.attribute("validationMessage")
+  end
+
   def resize_window_to_mobile
     resize_window_to(480, 960)
   end
