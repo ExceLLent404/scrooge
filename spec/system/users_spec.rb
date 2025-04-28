@@ -55,7 +55,8 @@ RSpec.describe "Users" do
       it "shows an error message" do
         act
 
-        expect(page).to have_content("Email was already confirmed, please try signing in")
+        expect(error_notification).to have_content("Please review the problems below:")
+        expect(field_error("Email")).to have_content("was already confirmed, please try signing in")
       end
     end
   end
@@ -79,7 +80,7 @@ RSpec.describe "Users" do
       fill_in "Email", with: email
       fill_in "Password", with: password
 
-      form.click_on "Log in"
+      form.click_on "Sign in"
     end
 
     let(:user) { create(:user) }
@@ -133,7 +134,7 @@ RSpec.describe "Users" do
 
       fill_in "Email", with: email
 
-      click_on "Send me reset password instructions"
+      click_on "Receive instructions"
     end
 
     let(:email) { create(:user).email }
@@ -172,11 +173,14 @@ RSpec.describe "Users" do
       before { user.update!(reset_password_sent_at: Time.current - available_time) }
 
       let(:available_time) { Rails.configuration.devise.reset_password_within }
+      let(:reset_password_token_error) { form.find(".help.is-danger") }
 
       it "shows an error message" do
         act
 
-        expect(page).to have_content("Reset password token has expired, please request a new one")
+        expect(error_notification).to have_content("Please review the problems below:")
+        expect(reset_password_token_error)
+          .to have_content("Reset password token has expired, please request a new one")
       end
     end
   end
@@ -230,8 +234,8 @@ RSpec.describe "Users" do
 
       click_on user.email.split("@").first
 
-      fill_in "Password", with: password, match: :first
-      fill_in "Password confirmation", with: password_confirmation
+      fill_in "New password", with: password
+      fill_in "Confirm new password", with: password_confirmation
       fill_in "Current password", with: current_password
 
       click_on "Update"
