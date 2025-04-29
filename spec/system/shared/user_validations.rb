@@ -5,7 +5,7 @@ RSpec.shared_examples "validation of email presence" do
     it "pops up an error message" do
       act
 
-      expect(field_validation_message("Email")).to eql("Please fill out this field.")
+      expect(field_validation_message("Email")).to eql(t("chrome.validations.required"))
     end
   end
 end
@@ -17,13 +17,13 @@ RSpec.shared_examples "validation of email format validity" do |button|
     it "pops up an error message" do
       act
 
-      expect(field_validation_message("Email")).to eql("Please include an '@' in the email address. '#{email}' is missing an '@'.")
+      expect(field_validation_message("Email")).to eql(t("chrome.validations.email.invalid", email:))
 
       fill_in "Email", with: "#{email}@"
 
       form.click_on button
 
-      expect(field_validation_message("Email")).to eql("Please enter a part following '@'. '#{email}@' is incomplete.")
+      expect(field_validation_message("Email")).to eql(t("chrome.validations.email.incomplete", email: "#{email}@"))
     end
   end
 end
@@ -35,8 +35,8 @@ RSpec.shared_examples "validation of email existence" do
     it "shows an error message" do
       act
 
-      expect(error_notification).to have_content("Please review the problems below:")
-      expect(field_error("Email")).to have_content("not found")
+      expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
+      expect(field_error("Email")).to have_content(t("errors.messages.not_found"))
     end
   end
 end
@@ -48,8 +48,8 @@ RSpec.shared_examples "validation of email uniqueness" do
     it "shows an error message" do
       act
 
-      expect(error_notification).to have_content("Please review the problems below:")
-      expect(field_error("Email")).to have_content("has already been taken")
+      expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
+      expect(field_error("Email")).to have_content(t("errors.messages.taken"))
     end
   end
 end
@@ -61,7 +61,7 @@ RSpec.shared_examples "validation of password presence" do |field_name|
     it "pops up an error message" do
       act
 
-      expect(field_validation_message(field_name || "Password")).to eql("Please fill out this field.")
+      expect(field_validation_message(field_name || "Password")).to eql(t("chrome.validations.required"))
     end
   end
 end
@@ -75,7 +75,7 @@ RSpec.shared_examples "validation of minimum password length" do |field_name|
       act
 
       expect(field_validation_message(field_name || "Password"))
-        .to eql("Please lengthen this text to #{min_length} characters or more (you are currently using #{min_length - 1} characters).")
+        .to eql(t("chrome.validations.too_short", min_length:, current_length: min_length - 1))
     end
   end
 end
@@ -87,7 +87,7 @@ RSpec.shared_examples "validation of password confirmation presence" do |field_n
     it "pops up an error message" do
       act
 
-      expect(field_validation_message(field_name || "Password confirmation")).to eql("Please fill out this field.")
+      expect(field_validation_message(field_name || "Password confirmation")).to eql(t("chrome.validations.required"))
     end
   end
 end
@@ -99,9 +99,9 @@ RSpec.shared_examples "validation of matching password with its confirmation" do
     it "shows an error message" do
       act
 
-      expect(error_notification).to have_content("Please review the problems below:")
+      expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
       expect(field_error(field_name || "Password confirmation"))
-        .to have_content("doesn't match Password")
+        .to have_content(t("errors.messages.confirmation", attribute: "Password"))
     end
   end
 end
@@ -113,7 +113,7 @@ RSpec.shared_examples "validation of current password presence" do
     it "pops up an error message" do
       act
 
-      expect(field_validation_message("Current password")).to eql("Please fill out this field.")
+      expect(field_validation_message("Current password")).to eql(t("chrome.validations.required"))
     end
   end
 end
@@ -125,8 +125,8 @@ RSpec.shared_examples "validation of current password validity" do
     it "shows an error message" do
       act
 
-      expect(error_notification).to have_content("Please review the problems below:")
-      expect(field_error("Current password")).to have_content("is invalid")
+      expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
+      expect(field_error("Current password")).to have_content(t("errors.messages.invalid"))
     end
   end
 end

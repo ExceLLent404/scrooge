@@ -1,0 +1,20 @@
+---
+en:
+  devise:
+    passwords:
+      new:
+        instruction: Enter your email below to receive reset password instructions
+        receive_instructions: Receive instructions
+    registrations:
+      edit:
+        my_profile: My profile
+      new:
+        already_have_an_account: Already have an account?
+    sessions:
+      new:
+        dont_have_an_account: Don't have an account?
+        sign_in: Sign in
+    shared:
+      links:
+        sign_in: Sign in
+        sign_out: Sign out

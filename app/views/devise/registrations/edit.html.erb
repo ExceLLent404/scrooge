@@ -1,6 +1,6 @@
 <div class="columns is-mobile is-centered">
   <div class="column" style="max-width: 500px">
-    <h2 class="title has-text-centered">My profile</h2>
+    <h2 class="title has-text-centered"><%= t(".my_profile") %></h2>
 
     <div class="box">
       <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
@@ -25,7 +25,7 @@
         <%= f.input :current_password, hint: "Enter current password to confirm changes" %>
 
         <div class="field pt-4">
-          <%= f.button :submit, "Update", class: "is-primary is-fullwidth" %>
+          <%= f.button :submit, t(".update"), class: "is-primary is-fullwidth" %>
         </div>
       <% end %>
     </div>
