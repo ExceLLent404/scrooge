@@ -258,10 +258,13 @@ RSpec.describe "Users" do
     let(:email) { attributes_for(:user)[:email] }
     let(:current_password) { user.password }
 
-    it "requires confirmation of the user's new email via a link in the sent email to the new email" do
+    it "sends a notification email to the former user email " \
+       "and requires confirmation of the user's new email via a link in the sent email to the new email" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.update_needs_confirmation"))
+      expect(open_email(user.email))
+        .to have_content(t("devise.mailer.email_changed.message_unconfirmed", email:))
       expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
