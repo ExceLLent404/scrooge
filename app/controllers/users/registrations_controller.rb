@@ -57,4 +57,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     new_session_path(resource)
   end
+
+  # The default url to be used after updating a resource.
+  def after_update_path_for(resource)
+    sign_in_after_change_password? ? edit_registration_path(resource) : new_session_path(resource_name)
+  end
 end
