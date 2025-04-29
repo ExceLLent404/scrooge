@@ -14,10 +14,10 @@
 
       <div class="navbar-menu pl-3" data-navbar-target="menu">
         <div class="navbar-start">
-          <%= link_to "Capital", "#", class: "navbar-item is-tab" %>
-          <%= link_to "Accounts", "#", class: "navbar-item is-tab" %>
-          <%= link_to "Transactions", "#", class: "navbar-item is-tab" %>
-          <%= link_to "Categories", "#", class: "navbar-item is-tab" %>
+          <%= link_to t("menu.capital"), "#", class: "navbar-item is-tab" %>
+          <%= link_to t("menu.accounts"), "#", class: "navbar-item is-tab" %>
+          <%= link_to t("menu.transactions"), "#", class: "navbar-item is-tab" %>
+          <%= link_to t("menu.categories"), "#", class: "navbar-item is-tab" %>
         </div>
 
         <div class="navbar-end is-flex is-justify-content-space-between">
@@ -26,7 +26,7 @@
                       class: "navbar-item" %>
 
           <div class="navbar-item">
-            <%= link_to "Sign out",
+            <%= link_to t("devise.shared.links.sign_out"),
                         destroy_user_session_path,
                         class: "button is-dark is-outlined",
                         data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
@@ -41,8 +41,8 @@
 
         <div class="navbar-item">
           <div class="buttons">
-            <%= link_to "Sign up", new_user_registration_path, class: "button is-link" %>
-            <%= link_to "Sign in", new_user_session_path, class: "button is-link is-outlined" %>
+            <%= link_to t("devise.shared.links.sign_up"), new_user_registration_path, class: "button is-link" %>
+            <%= link_to t("devise.shared.links.sign_in"), new_user_session_path, class: "button is-link is-outlined" %>
           </div>
         </div>
       </div>

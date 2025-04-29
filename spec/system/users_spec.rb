@@ -5,13 +5,13 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      navbar.click_on "Sign up"
+      navbar.click_on t("devise.shared.links.sign_up")
 
       fill_in "Email", with: email
       fill_in "Password", with: password, match: :first
       fill_in "Password confirmation", with: password_confirmation
 
-      form.click_on "Sign up"
+      form.click_on t("devise.registrations.new.sign_up")
     end
 
     let(:user) { build(:user) }
@@ -22,12 +22,12 @@ RSpec.describe "Users" do
     it "requires confirmation of the registered user's email via a link in the sent email" do
       act
 
-      expect(error_notification).to have_content("You need to sign in or sign up before continuing.")
-      expect(open_email(email)).to have_content("Confirm my account")
+      expect(error_notification).to have_content(t("devise.failure.unauthenticated"))
+      expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
     it_behaves_like "validation of email presence"
-    it_behaves_like "validation of email format validity", "Sign up"
+    it_behaves_like "validation of email format validity", I18n.t("devise.registrations.new.sign_up")
     it_behaves_like "validation of email uniqueness"
     it_behaves_like "validation of password presence" do
       let(:password_confirmation) { user.password }
@@ -41,12 +41,12 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      navbar.click_on "Sign in"
-      click_on "Didn't receive confirmation instructions?"
+      navbar.click_on t("devise.shared.links.sign_in")
+      click_on t("devise.shared.links.didn_t_receive_confirmation_instructions")
 
       fill_in "Email", with: email
 
-      click_on "Resend confirmation instructions"
+      click_on t("devise.confirmations.new.resend_confirmation_instructions")
     end
 
     let(:email) { create(:user, :unconfirmed).email }
@@ -54,13 +54,13 @@ RSpec.describe "Users" do
     it "sends an email with confirmation instructions" do
       act
 
-      expect(success_notification).to have_content("You will receive an email with instructions for how to confirm your email address in a few minutes.")
+      expect(success_notification).to have_content(t("devise.confirmations.send_instructions"))
       expect(emails_sent_to(email).count).to be(2)
-      expect(emails_sent_to(email)).to all(have_content("Confirm my account"))
+      expect(emails_sent_to(email)).to all(have_content(t("devise.mailer.confirmation_instructions.action")))
     end
 
     it_behaves_like "validation of email presence"
-    it_behaves_like "validation of email format validity", "Resend confirmation instructions"
+    it_behaves_like "validation of email format validity", I18n.t("devise.confirmations.new.resend_confirmation_instructions")
     it_behaves_like "validation of email existence"
 
     context "when email has already been confirmed" do
@@ -69,8 +69,8 @@ RSpec.describe "Users" do
       it "shows an error message" do
         act
 
-        expect(error_notification).to have_content("Please review the problems below:")
-        expect(field_error("Email")).to have_content("was already confirmed, please try signing in")
+        expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
+        expect(field_error("Email")).to have_content(t("errors.messages.already_confirmed"))
       end
     end
   end
@@ -79,9 +79,9 @@ RSpec.describe "Users" do
     it "activates user profile" do
       user = create(:user, :unconfirmed)
 
-      open_email(user.email).click_on "Confirm my account"
+      open_email(user.email).click_on t("devise.mailer.confirmation_instructions.action")
 
-      expect(success_notification).to have_content("Your email address has been successfully confirmed.")
+      expect(success_notification).to have_content(t("devise.confirmations.confirmed"))
     end
   end
 
@@ -89,27 +89,32 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      navbar.click_on "Sign in"
+      navbar.click_on t("devise.shared.links.sign_in")
 
       fill_in "Email", with: email
       fill_in "Password", with: password
 
-      form.click_on "Sign in"
+      form.click_on t("devise.sessions.new.sign_in")
     end
 
     let(:user) { create(:user) }
     let(:email) { user.email }
     let(:password) { user.password }
+    let(:authentication_keys) do
+      # from Devise::FailureApp#i18n_message
+      # https://github.com/heartcombo/devise/blob/a259ff3c28912a27329727f4a3c2623d3f5cb6f2/lib/devise/failure_app.rb#L105
+      User.authentication_keys.map { |key| User.human_attribute_name(key) }.join(t("support.array.words_connector"))
+    end
 
     it "allows user to sign in" do
       act
 
-      expect(success_notification).to have_content("Signed in successfully.")
-      expect(navbar).to have_link("Sign out")
+      expect(success_notification).to have_content(t("devise.sessions.signed_in"))
+      expect(navbar).to have_link(t("devise.shared.links.sign_out"))
     end
 
     it_behaves_like "validation of email presence"
-    it_behaves_like "validation of email format validity", "Sign in"
+    it_behaves_like "validation of email format validity", I18n.t("devise.sessions.new.sign_in")
 
     context "with unregistered email" do
       let(:email) { "scrooge@example.com" }
@@ -117,7 +122,7 @@ RSpec.describe "Users" do
       it "shows an error notification" do
         act
 
-        expect(error_notification).to have_content("Invalid Email or password.")
+        expect(error_notification).to have_content(t("devise.failure.invalid", authentication_keys:))
       end
     end
 
@@ -127,7 +132,7 @@ RSpec.describe "Users" do
       it "shows an error notification" do
         act
 
-        expect(error_notification).to have_content("You have to confirm your email address before continuing.")
+        expect(error_notification).to have_content(t("devise.failure.unconfirmed"))
       end
     end
 
@@ -144,7 +149,7 @@ RSpec.describe "Users" do
       it "shows an error notification" do
         act
 
-        expect(error_notification).to have_content("Invalid Email or password.")
+        expect(error_notification).to have_content(t("devise.failure.invalid", authentication_keys:))
       end
     end
   end
@@ -153,12 +158,12 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      navbar.click_on "Sign in"
-      click_on "Forgot your password?"
+      navbar.click_on t("devise.shared.links.sign_in")
+      click_on t("devise.shared.links.forgot_your_password")
 
       fill_in "Email", with: email
 
-      click_on "Receive instructions"
+      click_on t("devise.passwords.new.receive_instructions")
     end
 
     let(:email) { create(:user).email }
@@ -166,12 +171,12 @@ RSpec.describe "Users" do
     it "sends an email with reset password instructions" do
       act
 
-      expect(success_notification).to have_content("You will receive an email with instructions on how to reset your password in a few minutes.")
-      expect(open_email(email)).to have_content("Change my password")
+      expect(success_notification).to have_content(t("devise.passwords.send_instructions"))
+      expect(open_email(email)).to have_content(t("devise.mailer.reset_password_instructions.action"))
     end
 
     it_behaves_like "validation of email presence"
-    it_behaves_like "validation of email format validity", "Receive instructions"
+    it_behaves_like "validation of email format validity", I18n.t("devise.passwords.new.receive_instructions")
     it_behaves_like "validation of email existence"
   end
 
@@ -179,12 +184,12 @@ RSpec.describe "Users" do
     before { user.send_reset_password_instructions }
 
     def act
-      open_email(user.email).click_on "Change my password"
+      open_email(user.email).click_on t("devise.mailer.reset_password_instructions.action")
 
       fill_in "New password", with: password
       fill_in "Confirm new password", with: password_confirmation
 
-      click_on "Change my password"
+      click_on t("devise.passwords.edit.change_my_password")
     end
 
     let(:user) { create(:user) }
@@ -194,7 +199,7 @@ RSpec.describe "Users" do
     it "updates user password" do
       act
 
-      expect(success_notification).to have_content("Your password has been changed successfully.")
+      expect(success_notification).to have_content(t("devise.passwords.updated_not_active"))
     end
 
     context "when the available time to change the password has expired" do
@@ -206,9 +211,9 @@ RSpec.describe "Users" do
       it "shows an error message" do
         act
 
-        expect(error_notification).to have_content("Please review the problems below:")
+        expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
         expect(reset_password_token_error)
-          .to have_content("Reset password token has expired, please request a new one")
+          .to have_content("Reset password token #{t("errors.messages.expired")}")
       end
     end
 
@@ -245,7 +250,7 @@ RSpec.describe "Users" do
       fill_in "Email", with: email
       fill_in "Current password", with: current_password
 
-      click_on "Update"
+      click_on t("devise.registrations.edit.update")
     end
 
     let(:user) { create(:user) }
@@ -255,13 +260,12 @@ RSpec.describe "Users" do
     it "requires confirmation of the user's new email via a link in the sent email to the new email" do
       act
 
-      expect(success_notification)
-        .to have_content("You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address.")
-      expect(open_email(email)).to have_content("Confirm my account")
+      expect(success_notification).to have_content(t("devise.registrations.update_needs_confirmation"))
+      expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
     it_behaves_like "validation of email presence"
-    it_behaves_like "validation of email format validity", "Update"
+    it_behaves_like "validation of email format validity", I18n.t("devise.registrations.edit.update")
     it_behaves_like "validation of email uniqueness"
     it_behaves_like "validation of current password presence"
     it_behaves_like "validation of current password validity"
@@ -279,7 +283,7 @@ RSpec.describe "Users" do
       fill_in "Confirm new password", with: password_confirmation
       fill_in "Current password", with: current_password
 
-      click_on "Update"
+      click_on t("devise.registrations.edit.update")
     end
 
     let(:user) { create(:user) }
@@ -290,7 +294,7 @@ RSpec.describe "Users" do
     it "updates user password" do
       act
 
-      expect(success_notification).to have_content("Your account has been updated successfully.")
+      expect(success_notification).to have_content(t("devise.registrations.updated"))
     end
 
     context "with empty password" do
@@ -300,8 +304,8 @@ RSpec.describe "Users" do
       it "shows an error message" do
         act
 
-        expect(error_notification).to have_content("Please review the problems below:")
-        expect(field_error("New password")).to have_content("can't be blank")
+        expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
+        expect(field_error("New password")).to have_content(t("errors.messages.blank"))
       end
     end
 
@@ -313,8 +317,9 @@ RSpec.describe "Users" do
       it "shows an error message" do
         act
 
-        expect(error_notification).to have_content("Please review the problems below:")
-        expect(field_error("Confirm new password")).to have_content("doesn't match Password")
+        expect(error_notification).to have_content(t("simple_form.error_notification.default_message"))
+        expect(field_error("Confirm new password"))
+          .to have_content(t("errors.messages.confirmation", attribute: "Password"))
       end
     end
 
@@ -329,9 +334,9 @@ RSpec.describe "Users" do
 
       visit root_path
 
-      accept_confirm { click_on "Sign out" }
+      accept_confirm { click_on t("devise.shared.links.sign_out") }
 
-      expect(error_notification).to have_content("You need to sign in or sign up before continuing.")
+      expect(error_notification).to have_content(t("devise.failure.unauthenticated"))
       expect(page).to have_field("Email").and have_field("Password")
     end
   end

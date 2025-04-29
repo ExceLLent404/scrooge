@@ -2,10 +2,10 @@ require "system_helper"
 
 RSpec.shared_examples "for navigation bar" do |location|
   it "contains a menu of application sections #{location}" do
-    expect(navbar).to have_link("Capital")
-    expect(navbar).to have_link("Accounts")
-    expect(navbar).to have_link("Transactions")
-    expect(navbar).to have_link("Categories")
+    expect(navbar).to have_link(t("menu.capital"))
+    expect(navbar).to have_link(t("menu.accounts"))
+    expect(navbar).to have_link(t("menu.transactions"))
+    expect(navbar).to have_link(t("menu.categories"))
   end
 
   it "contains part of user email before the `@` sign #{location}" do
@@ -13,7 +13,7 @@ RSpec.shared_examples "for navigation bar" do |location|
   end
 
   it "contains `Sign out` button #{location}" do
-    expect(navbar).to have_link("Sign out")
+    expect(navbar).to have_link(t("devise.shared.links.sign_out"))
   end
 end
 
@@ -22,8 +22,8 @@ RSpec.describe "Navigation bar" do
     it "contains `Sign up` and `Sign in` buttons" do
       visit root_path
 
-      expect(navbar).to have_link("Sign up")
-      expect(navbar).to have_link("Sign in")
+      expect(navbar).to have_link(t("devise.shared.links.sign_up"))
+      expect(navbar).to have_link(t("devise.shared.links.sign_in"))
     end
   end
 

@@ -1,8 +1,8 @@
 <div class="columns is-mobile is-centered">
   <div class="column" style="max-width: 500px">
     <div class="box">
-      <h2 class="subtitle">Forgot your password?</h2>
-      <p class="mb-4">Enter your email below to receive reset password instructions</p>
+      <h2 class="subtitle"><%= t(".forgot_your_password") %></h2>
+      <p class="mb-4"><%= t(".instruction") %></p>
 
       <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name)) do |f| %>
         <%= f.error_notification %>
@@ -10,7 +10,7 @@
         <%= f.input :email, autofocus: true %>
 
         <div class="field pt-4">
-          <%= f.button :submit, "Receive instructions", class: "is-primary is-fullwidth" %>
+          <%= f.button :submit, t(".receive_instructions"), class: "is-primary is-fullwidth" %>
         </div>
       <% end %>
     </div>
