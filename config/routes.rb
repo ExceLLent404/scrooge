@@ -14,5 +14,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "test#index"
 
-  devise_for :users
+  devise_for :users, controllers: {registrations: "users/registrations"}
 end

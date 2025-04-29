@@ -30,7 +30,9 @@ RemoveEmptyHelpersCheck: {}
 # RemoveTabCheck: {}
 RemoveTrailingWhitespaceCheck: {}
 RemoveUnusedMethodsInControllersCheck:
-  except_methods: []
+  except_methods:
+    - ApplicationController#after_sign_out_path_for
+    - Users::RegistrationsController#after_inactive_sign_up_path_for
 RemoveUnusedMethodsInHelpersCheck:
   except_methods: []
 RemoveUnusedMethodsInModelsCheck:

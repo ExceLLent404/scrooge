@@ -22,7 +22,7 @@ RSpec.describe "Users" do
     it "requires confirmation of the registered user's email via a link in the sent email" do
       act
 
-      expect(error_notification).to have_content(t("devise.failure.unauthenticated"))
+      expect(success_notification).to have_content(t("devise.registrations.signed_up_but_unconfirmed"))
       expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
@@ -336,7 +336,7 @@ RSpec.describe "Users" do
 
       accept_confirm { click_on t("devise.shared.links.sign_out") }
 
-      expect(error_notification).to have_content(t("devise.failure.unauthenticated"))
+      expect(success_notification).to have_content(t("devise.sessions.signed_out"))
       expect(page).to have_field("Email").and have_field("Password")
     end
   end
