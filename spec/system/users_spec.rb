@@ -196,10 +196,11 @@ RSpec.describe "Users" do
     let(:password) { "p@ssw0rd" }
     let(:password_confirmation) { password }
 
-    it "updates user password" do
+    it "updates user password and sends a notification email" do
       act
 
       expect(success_notification).to have_content(t("devise.passwords.updated_not_active"))
+      expect(open_email(user.email)).to have_content(t("devise.mailer.password_change.message"))
     end
 
     context "when the available time to change the password has expired" do
@@ -291,10 +292,11 @@ RSpec.describe "Users" do
     let(:password_confirmation) { password }
     let(:current_password) { user.password }
 
-    it "updates user password" do
+    it "updates user password and sends a notification email" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.updated"))
+      expect(open_email(user.email)).to have_content(t("devise.mailer.password_change.message"))
     end
 
     context "with empty password" do
