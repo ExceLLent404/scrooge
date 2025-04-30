@@ -7,6 +7,7 @@ RSpec.describe "Users" do
 
       navbar.click_on t("devise.shared.links.sign_up")
 
+      fill_in "Name", with: user.name
       fill_in "Email", with: email
       fill_in "Password", with: password, match: :first
       fill_in "Password confirmation", with: password_confirmation
@@ -227,7 +228,7 @@ RSpec.describe "Users" do
   end
 
   describe "Viewing profile" do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_name) }
 
     it "displays user data" do
       sign_in(user)
@@ -236,8 +237,39 @@ RSpec.describe "Users" do
 
       click_on user.email.split("@").first
 
-      expect(page).to have_field("Email", with: user.email)
+      expect(page)
+        .to have_field("Name", with: user.name)
+        .and have_field("Email", with: user.email)
     end
+  end
+
+  describe "Changing user data" do
+    before { sign_in(user) }
+
+    def act
+      visit root_path
+
+      click_on user.email.split("@").first
+
+      fill_in "Name", with: name
+      fill_in "Current password", with: current_password
+
+      click_on t("devise.registrations.edit.update")
+    end
+
+    let(:user) { create(:user, :with_name) }
+    let(:name) { "Updated #{user.name}" }
+    let(:current_password) { user.password }
+
+    it "updates user data" do
+      act
+
+      expect(success_notification).to have_content(t("devise.registrations.updated"))
+      expect(page).to have_field("Name", with: name)
+    end
+
+    it_behaves_like "validation of current password presence"
+    it_behaves_like "validation of current password validity"
   end
 
   describe "Changing email" do
