@@ -4,11 +4,12 @@
 
     <div class="box">
       <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-        <%= f.input :email, autofocus: true %>
+        <%= f.input :email, autofocus: true, input_html: {value: ENV["DEMO_USER_EMAIL"]} %>
 
         <%= f.input :password,
                     hint: link_to(t("devise.shared.links.forgot_your_password"), new_password_path(resource)),
-                    hint_html: {class: "has-text-right"} %>
+                    hint_html: {class: "has-text-right"},
+                    input_html: {value: ENV["DEMO_USER_PASS"]} %>
 
         <%= f.input :remember_me, as: :boolean, inline_label: true %>
 
