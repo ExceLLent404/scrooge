@@ -14,10 +14,10 @@
 
       <div class="navbar-menu pl-3" data-navbar-target="menu">
         <div class="navbar-start">
-          <%= link_to t("menu.capital"), "#", class: "navbar-item is-tab" %>
-          <%= link_to t("menu.accounts"), "#", class: "navbar-item is-tab" %>
-          <%= link_to t("menu.transactions"), "#", class: "navbar-item is-tab" %>
-          <%= link_to t("menu.categories"), "#", class: "navbar-item is-tab" %>
+          <%= menu_item(:capital) %>
+          <%= menu_item(:accounts) %>
+          <%= menu_item(:transactions) %>
+          <%= menu_item(:categories) %>
         </div>
 
         <div class="navbar-end is-flex is-justify-content-space-between">

@@ -52,6 +52,7 @@ SimpleForm.setup do |config|
     b.use :label, class: "label"
     b.wrapper :control, tag: "div", class: "control" do |control|
       control.use :input, class: "input", error_class: "is-danger"
+      control.use :icon
     end
     b.use :error, wrap_with: {tag: "span", class: "help is-danger ml-1"}
     b.use :hint, wrap_with: {tag: "span", class: "help ml-1"}
@@ -73,6 +74,7 @@ SimpleForm.setup do |config|
     b.optional :readonly
 
     b.use :input, class: "input", error_class: "is-danger"
+    b.use :icon
   end
 
   config.wrappers :horizontal, tag: "div", class: "field is-horizontal" do |b|
@@ -91,6 +93,7 @@ SimpleForm.setup do |config|
       field_body.wrapper :field, tag: "div", class: "field" do |field|
         field.wrapper :control, tag: "div", class: "control" do |control|
           control.use :input, class: "input", error_class: "is-danger"
+          control.use :icon
         end
         field.use :error, wrap_with: {tag: "span", class: "help is-danger ml-1"}
         field.use :hint, wrap_with: {tag: "span", class: "help ml-1"}
@@ -134,6 +137,7 @@ SimpleForm.setup do |config|
       control.wrapper :select, tag: "div", class: "select is-rounded" do |select|
         select.use :input
       end
+      control.use :icon
     end
     b.use :error, wrap_with: {tag: "span", class: "help is-danger ml-1"}
     b.use :hint, wrap_with: {tag: "span", class: "help ml-1"}
@@ -158,6 +162,7 @@ SimpleForm.setup do |config|
           control.wrapper :select, tag: "div", class: "select is-rounded" do |select|
             select.use :input
           end
+          control.use :icon
         end
         field.use :error, wrap_with: {tag: "span", class: "help is-danger ml-1"}
         field.use :hint, wrap_with: {tag: "span", class: "help ml-1"}
