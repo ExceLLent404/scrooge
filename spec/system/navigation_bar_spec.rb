@@ -8,8 +8,20 @@ RSpec.shared_examples "for navigation bar" do |location|
     expect(navbar).to have_link(t("menu.categories"))
   end
 
-  it "contains part of user email before the `@` sign #{location}" do
-    expect(navbar).to have_content(user.email.split("@").first)
+  context "when user has not set his name" do
+    let(:user) { create(:user, :without_name, email: "user-email@email.com") }
+
+    it "contains part of user email before the `@` sign #{location}" do
+      expect(navbar).to have_content("user-email")
+    end
+  end
+
+  context "when user has set his name" do
+    let(:user) { create(:user, :with_name) }
+
+    it "contains the user name #{location}" do
+      expect(navbar).to have_content(user.name)
+    end
   end
 
   it "contains `Sign out` button #{location}" do

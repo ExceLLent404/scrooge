@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  normalizes :name, with: ->(name) { name.present? ? name.squish : nil }
   normalizes :email, with: ->(email) { email.strip.downcase }
 
   # Include default devise modules. Others available are:
