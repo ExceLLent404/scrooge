@@ -22,6 +22,16 @@ RSpec.describe User do
       expect(build(:user, email: "@incorrect-email")).not_to be_valid
     end
 
+    it "does not contain whitespace on the left and right" do
+      user.email = "\t\n\v\f\r email@example.com \t\n\v\f\r"
+      expect(email).to eql("email@example.com")
+    end
+
+    it "consists of downcase characters" do
+      user.email = "EMAIL@Example.Com"
+      expect(email).to eql("email@example.com")
+    end
+
     it "is unique" do
       create(:user, email:)
 

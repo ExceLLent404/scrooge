@@ -22,7 +22,7 @@ RSpec.describe "Users" do
     it "requires confirmation of the registered user's email via a link in the sent email" do
       act
 
-      expect(error_notification).to have_content(t("devise.failure.unauthenticated"))
+      expect(success_notification).to have_content(t("devise.registrations.signed_up_but_unconfirmed"))
       expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
@@ -196,10 +196,11 @@ RSpec.describe "Users" do
     let(:password) { "p@ssw0rd" }
     let(:password_confirmation) { password }
 
-    it "updates user password" do
+    it "updates user password and sends a notification email" do
       act
 
       expect(success_notification).to have_content(t("devise.passwords.updated_not_active"))
+      expect(open_email(user.email)).to have_content(t("devise.mailer.password_change.message"))
     end
 
     context "when the available time to change the password has expired" do
@@ -257,10 +258,13 @@ RSpec.describe "Users" do
     let(:email) { attributes_for(:user)[:email] }
     let(:current_password) { user.password }
 
-    it "requires confirmation of the user's new email via a link in the sent email to the new email" do
+    it "sends a notification email to the former user email " \
+       "and requires confirmation of the user's new email via a link in the sent email to the new email" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.update_needs_confirmation"))
+      expect(open_email(user.email))
+        .to have_content(t("devise.mailer.email_changed.message_unconfirmed", email:))
       expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
@@ -291,10 +295,11 @@ RSpec.describe "Users" do
     let(:password_confirmation) { password }
     let(:current_password) { user.password }
 
-    it "updates user password" do
+    it "updates user password and sends a notification email" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.updated"))
+      expect(open_email(user.email)).to have_content(t("devise.mailer.password_change.message"))
     end
 
     context "with empty password" do
@@ -336,7 +341,7 @@ RSpec.describe "Users" do
 
       accept_confirm { click_on t("devise.shared.links.sign_out") }
 
-      expect(error_notification).to have_content(t("devise.failure.unauthenticated"))
+      expect(success_notification).to have_content(t("devise.sessions.signed_out"))
       expect(page).to have_field("Email").and have_field("Password")
     end
   end
