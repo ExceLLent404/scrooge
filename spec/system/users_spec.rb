@@ -98,7 +98,7 @@ RSpec.describe "Users" do
       form.click_on t("devise.sessions.new.sign_in")
     end
 
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_name) }
     let(:email) { user.email }
     let(:password) { user.password }
     let(:authentication_keys) do
@@ -111,7 +111,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.sessions.signed_in"))
-      expect(navbar).to have_link(t("devise.shared.links.sign_out"))
+      expect(navbar).to have_content(user.name).and have_link(t("devise.shared.links.sign_out"))
     end
 
     it_behaves_like "validation of email presence"
@@ -235,7 +235,7 @@ RSpec.describe "Users" do
 
       visit root_path
 
-      click_on user.email.split("@").first
+      click_on user.name
 
       expect(page)
         .to have_field("Name", with: user.name)
@@ -249,7 +249,7 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      click_on user.email.split("@").first
+      click_on user.name
 
       fill_in "Name", with: name
       fill_in "Current password", with: current_password
@@ -265,6 +265,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.updated"))
+      expect(navbar).to have_content(name)
       expect(page).to have_field("Name", with: name)
     end
 
@@ -278,7 +279,7 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      click_on user.email.split("@").first
+      click_on user.name
 
       fill_in "Email", with: email
       fill_in "Current password", with: current_password
@@ -286,7 +287,7 @@ RSpec.describe "Users" do
       click_on t("devise.registrations.edit.update")
     end
 
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_name) }
     let(:email) { attributes_for(:user)[:email] }
     let(:current_password) { user.password }
 
@@ -313,7 +314,7 @@ RSpec.describe "Users" do
     def act
       visit root_path
 
-      click_on user.email.split("@").first
+      click_on user.name
 
       fill_in "New password", with: password
       fill_in "Confirm new password", with: password_confirmation
@@ -322,7 +323,7 @@ RSpec.describe "Users" do
       click_on t("devise.registrations.edit.update")
     end
 
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_name) }
     let(:password) { "p@ssw0rd" }
     let(:password_confirmation) { password }
     let(:current_password) { user.password }

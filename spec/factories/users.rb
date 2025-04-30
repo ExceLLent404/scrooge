@@ -10,6 +10,10 @@ FactoryBot.define do
       name { Faker::Name.first_name }
     end
 
+    trait :without_name do
+      name { nil }
+    end
+
     trait :confirmed do
       confirmed_at { Time.current }
     end
