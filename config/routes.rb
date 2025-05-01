@@ -15,4 +15,9 @@ Rails.application.routes.draw do
   root "test#index"
 
   devise_for :users, controllers: {registrations: "users/registrations"}
+
+  get "capital", to: "capital#show"
+  get "accounts", to: "accounts#index"
+  get "categories", to: "categories#index"
+  get "transactions", to: "transactions#index"
 end

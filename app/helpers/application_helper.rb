@@ -10,7 +10,7 @@ module ApplicationHelper
   # @return [String] HTML code of the link to application section
   # @example
   #   menu_item(:transactions) #=>
-  #     <a class="navbar-item is-tab" href="#">
+  #     <a class="navbar-item is-tab" href="/transactions">
   #       <span class="icon-text">
   #         <span class="icon">
   #           <i class="fas fa-receipt"></i>
@@ -19,9 +19,10 @@ module ApplicationHelper
   #       </span>
   #     </a>
   def menu_item(section)
+    path = send(:"#{section}_path")
     text = t(:"menu.#{section}")
 
-    link_to "#", class: "navbar-item is-tab" do
+    link_to path, class: "navbar-item is-tab" do
       tag.span(class: "icon-text") do
         icon(SECTION_ICON[section]) + tag.span(text)
       end
