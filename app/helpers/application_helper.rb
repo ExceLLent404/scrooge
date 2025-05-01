@@ -10,7 +10,7 @@ module ApplicationHelper
   # @return [String] HTML code of the link to application section
   # @example
   #   menu_item(:transactions) #=>
-  #     <a class="navbar-item is-tab" href="#">
+  #     <a class="navbar-item is-tab is-active" href="/transactions">
   #       <span class="icon-text">
   #         <span class="icon">
   #           <i class="fas fa-receipt"></i>
@@ -19,9 +19,12 @@ module ApplicationHelper
   #       </span>
   #     </a>
   def menu_item(section)
+    is_active_class = controller_name.eql?(section.to_s) ? "is-active" : nil
+    css_class = ["navbar-item is-tab", is_active_class].compact.join(" ")
+    path = send(:"#{section}_path")
     text = t(:"menu.#{section}")
 
-    link_to "#", class: "navbar-item is-tab" do
+    link_to path, class: css_class do
       tag.span(class: "icon-text") do
         icon(SECTION_ICON[section]) + tag.span(text)
       end
