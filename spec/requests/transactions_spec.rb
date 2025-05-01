@@ -7,5 +7,6 @@ RSpec.describe "Transactions requests" do
     let(:request) { get transactions_url }
 
     include_examples "of response status", :ok
+    include_examples "of user authentication"
   end
 end

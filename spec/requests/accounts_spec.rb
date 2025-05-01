@@ -7,5 +7,6 @@ RSpec.describe "Accounts requests" do
     let(:request) { get accounts_url }
 
     include_examples "of response status", :ok
+    include_examples "of user authentication"
   end
 end

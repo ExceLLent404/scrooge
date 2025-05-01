@@ -7,5 +7,6 @@ RSpec.describe "Categories requests" do
     let(:request) { get categories_url }
 
     include_examples "of response status", :ok
+    include_examples "of user authentication"
   end
 end

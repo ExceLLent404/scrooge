@@ -7,5 +7,6 @@ RSpec.describe "Capital requests" do
     let(:request) { get capital_url }
 
     include_examples "of response status", :ok
+    include_examples "of user authentication"
   end
 end
