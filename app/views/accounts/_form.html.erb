@@ -1,0 +1,12 @@
+<div class="card" style="width: 250px">
+  <div class="card-content p-3">
+    <%= simple_form_for(account) do |f| %>
+      <%= f.input :name, label_html: {class: "is-sr-only"}, placeholder: "Account name", autofocus: true %>
+      <%= f.input :balance_cents, required: true, min_max: true %>
+
+      <div class="field">
+        <%= f.button :submit, class: "is-primary is-fullwidth" %>
+      </div>
+    <% end %>
+  </div>
+</div>

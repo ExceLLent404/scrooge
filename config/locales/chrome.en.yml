@@ -5,5 +5,6 @@ en:
       email:
         incomplete: Please enter a part following '@'. '%{email}' is incomplete.
         invalid: Please include an '@' in the email address. '%{email}' is missing an '@'.
+      greater_than_or_equal_to: Value must be greater than or equal to %{count}.
       required: Please fill out this field.
       too_short: Please lengthen this text to %{min_length} characters or more (you are currently using %{current_length} characters).

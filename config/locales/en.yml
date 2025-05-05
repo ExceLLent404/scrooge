@@ -1,5 +1,20 @@
 ---
 en:
+  accounts:
+    actions_menu:
+      delete: Delete
+      edit: Edit
+    create:
+      success: Account added
+    destroy:
+      success: Account deleted
+    offer_new_account:
+      text: Add account
+    update:
+      success: Account updated
+  errors:
+    messages:
+      not_less_than: cannot be less than %{count}
   menu:
     accounts: Accounts
     capital: Capital
