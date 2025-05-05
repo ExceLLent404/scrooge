@@ -1,0 +1,25 @@
+<div class="is-overlay is-flex is-justify-content-flex-end mt-3 mr-4" style="max-height: fit-content">
+  <div class="dropdown is-hoverable">
+    <div class="dropdown-trigger">
+      <%= icon "fas fa-ellipsis", class: "is-clickable" %>
+    </div>
+
+    <div class="dropdown-menu">
+      <div class="dropdown-content">
+        <%= link_to edit_account_path(account), class: "dropdown-item" do %>
+          <span class="icon-text">
+            <%= icon "fas fa-pencil" %>
+            <span><%= t(".edit") %></span>
+          </span>
+        <% end %>
+
+        <%= link_to account_path(account), class: "dropdown-item", data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} do %>
+          <span class="icon-text has-text-danger">
+            <%= icon "far fa-trash-can" %>
+            <span><%= t(".delete") %></span>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

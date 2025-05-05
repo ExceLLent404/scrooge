@@ -1,0 +1,9 @@
+class Account < ApplicationRecord
+  normalizes :name, with: ->(name) { name.squish }
+
+  belongs_to :user
+
+  validates :name, presence: true
+  validates :balance_cents,
+    numericality: {greater_than_or_equal_to: 0, message: I18n.t("errors.messages.not_less_than", count: 0)}
+end

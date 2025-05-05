@@ -23,10 +23,25 @@ Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, **browser_location, options:)
 end
 
+# Helpers for finding objects on the page
+module ObjectHelpers
+  include ActionView::RecordIdentifier
+
+  def find_object(object)
+    find_by_id(dom_id(object))
+  end
+end
+
 # Helpers for finding elements on the page based on Bulma classes
 module BulmaHelpers
+  include ObjectHelpers
+
   def field_error(field)
     find_field(field).ancestor(".field", match: :first).find(".help.is-danger")
+  end
+
+  def find_menu(object)
+    find_object(object).find(".fa-ellipsis")
   end
 
   def form
