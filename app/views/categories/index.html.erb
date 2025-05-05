@@ -1,2 +1,11 @@
-<h1>Categories#index</h1>
-<p>Find me in app/views/categories/index.html.erb</p>
+<% [[@income_categories, "IncomeCategory"], [@expense_categories, "ExpenseCategory"]].each do |categories, type| %>
+  <div class="block pb-5">
+    <h1 class="title is-4 has-text-centered"><%= type.underscore.pluralize.capitalize.sub("_", " ") %></h1>
+
+    <%= tag.div class: "grid is-col-min-9", style: "justify-items: center" do %>
+      <%= render partial: "category", collection: categories %>
+
+      <%= render "offer_new_category", type: %>
+    <% end %>
+  </div>
+<% end %>

@@ -11,6 +11,10 @@ ActiveStorage::Blob:
 ActiveStorage::VariantRecord:
   enabled: false
 
+Category:
+  type:
+    NullConstraintChecker:
+      enabled: false
 User:
   email:
     ColumnPresenceChecker:

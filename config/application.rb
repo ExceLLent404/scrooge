@@ -28,6 +28,10 @@ module Scrooge
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets components tasks templates])
 
+    Rails.autoloaders.each do |autoloader|
+      autoloader.inflector.inflect("faithful_sti" => "FaithfulSTI")
+    end
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
