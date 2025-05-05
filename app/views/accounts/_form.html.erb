@@ -2,7 +2,21 @@
   <div class="card-content p-3">
     <%= simple_form_for(account) do |f| %>
       <%= f.input :name, label_html: {class: "is-sr-only"}, placeholder: "Account name", autofocus: true %>
-      <%= f.input :balance_cents, required: true, min_max: true %>
+
+      <div class="field">
+        <%= f.label :balance, class: "is-sr-only", required: true %>
+        <div class="field has-addons mb-0">
+          <div class="control">
+            <%= f.button :button, Money.default_currency.symbol, class: "is-static has-text-dark" %>
+          </div>
+
+          <%= f.input :balance,
+                      as: :money,
+                      wrapper: :control,
+                      wrapper_html: {class: "is-expanded"} %>
+        </div>
+        <%= f.error :balance %>
+      </div>
 
       <div class="field">
         <%= f.button :submit, class: "is-primary is-fullwidth" %>

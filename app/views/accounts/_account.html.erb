@@ -2,7 +2,7 @@
   <div class="card has-background-primary-light" style="width: 200px; min-width: 200px">
     <div class="card-content">
       <p class="title is-5"><%= account.name %></p>
-      <p><%= account.balance_cents %></p>
+      <p><%= account.balance.format %></p>
     </div>
 
     <%= render "actions_menu", account: account %>

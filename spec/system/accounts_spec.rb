@@ -5,15 +5,15 @@ RSpec.describe "Accounts" do
 
   describe "Viewing a list of accounts" do
     it "shows a list of accounts owned by user" do
-      user_accounts = [create(:account, user:, balance_cents: 200), create(:account, user:, balance_cents: 404)]
-      another_accounts = Array.new(2) { |n| create(:account, name: "Account #{n}", balance_cents: n + 100) }
+      user_accounts = [create(:account, user:, balance: 200), create(:account, user:, balance: 404)]
+      another_accounts = Array.new(2) { |n| create(:account, name: "Account #{n}", balance: n + 1) }
 
       visit accounts_path
 
       user_accounts.each do |account|
-        expect(page).to have_content(account.name).and have_content(account.balance_cents)
+        expect(page).to have_content(account.name).and have_content(account.balance)
       end
-      another_accounts.each { |account| expect(page).to have_no_content(account.name).and have_no_content(account.balance_cents) }
+      another_accounts.each { |account| expect(page).to have_no_content(account.name).and have_no_content(account.balance) }
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe "Accounts" do
       click_on t("accounts.offer_new_account.text")
 
       fill_in "Name", with: name
-      fill_in "Balance cents", with: balance unless default_balance
+      fill_in "Balance", with: balance unless default_balance
 
       click_on t("helpers.submit.create", model: Account)
     end
@@ -64,14 +64,14 @@ RSpec.describe "Accounts" do
       click_on t("accounts.actions_menu.edit")
 
       fill_in "Name", with: name
-      fill_in "Balance cents", with: balance
+      fill_in "Balance", with: balance
 
       click_on t("helpers.submit.update", model: Account)
     end
 
     let!(:account) { create(:account, user:) }
     let(:name) { "Updated #{account.name}" }
-    let(:balance) { account.balance_cents + 1 }
+    let(:balance) { account.balance + Money.from_amount(1) }
 
     it "updates the account" do
       act
@@ -95,7 +95,7 @@ RSpec.describe "Accounts" do
       accept_confirm { click_on t("accounts.actions_menu.delete") }
 
       expect(success_notification).to have_content(t("accounts.destroy.success"))
-      expect(page).to have_no_content(account.name).and have_no_content(account.balance_cents)
+      expect(page).to have_no_content(account.name).and have_no_content(account.balance)
     end
   end
 
@@ -108,7 +108,7 @@ RSpec.describe "Accounts" do
       find_menu(account).hover
       dismiss_confirm { click_on t("accounts.actions_menu.delete") }
 
-      expect(page).to have_content(account.name).and have_content(account.balance_cents)
+      expect(page).to have_content(account.name).and have_content(account.balance)
     end
   end
 end

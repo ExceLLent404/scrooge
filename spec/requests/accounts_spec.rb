@@ -30,12 +30,14 @@ RSpec.describe "Accounts requests" do
   describe "POST /accounts" do
     let(:request) { post accounts_url, params: }
     let(:params) { {account: attributes_for(:account)} }
+    let(:search_params) { params[:account].dup.tap { |hash| hash[:balance_cents] = balance_cents }.tap { |hash| hash.delete(:balance) } }
+    let(:balance_cents) { Money.from_amount(params[:account][:balance]).cents }
 
     include_examples "of redirection to list of", :accounts
     include_examples "of user authentication"
 
     it "creates a new Account with the specified data" do
-      expect { request }.to change { Account.find_by(params[:account]) }.from(nil).to(Account)
+      expect { request }.to change { Account.find_by(search_params) }.from(nil).to(Account)
     end
 
     context "with invalid parameters" do

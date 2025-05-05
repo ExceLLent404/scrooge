@@ -16,6 +16,7 @@ gem "stimulus-rails", "~> 1.0"
 
 gem "devise", "~> 4.0"
 gem "devise-i18n", "~> 1.0"
+gem "money-rails", "~> 1.0"
 gem "simple_form", "~> 5.0"
 
 group :development do
