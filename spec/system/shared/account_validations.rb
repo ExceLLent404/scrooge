@@ -17,7 +17,7 @@ RSpec.shared_examples "validation of account balance presence" do
     it "pops up an error message" do
       act
 
-      expect(field_validation_message("Balance cents")).to eql(t("chrome.validations.required"))
+      expect(field_validation_message("Balance")).to eql(t("chrome.validations.required"))
     end
   end
 end
@@ -29,7 +29,7 @@ RSpec.shared_examples "validation of account balance non-negativity" do
     it "pops up an error message" do
       act
 
-      expect(field_validation_message("Balance cents")).to eql(t("chrome.validations.greater_than_or_equal_to", count: 0))
+      expect(field_validation_message("Balance")).to eql(t("chrome.validations.greater_than_or_equal_to", count: 0))
     end
   end
 end
