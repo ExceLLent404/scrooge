@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get "capital", to: "capital#show"
 
   resources :accounts, except: :show
+  resources :categories, except: :show
 
-  get "categories", to: "categories#index"
   get "transactions", to: "transactions#index"
 end

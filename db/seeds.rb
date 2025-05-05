@@ -6,4 +6,7 @@ unless Rails.env.test? || User.exists?(email: ENV.fetch("DEMO_USER_EMAIL"))
   create(:account, user:, name: "Primary", balance: 100_000)
   create(:account, user:, name: "Wallet", balance: 1234)
   create(:account, user:, name: "Savings", balance: 1_000_000)
+
+  %w[Salary Interest Gifts].each { |name| create(:income_category, user:, name:) }
+  %w[Food Home Health Clothes Entertainment].each { |name| create(:expense_category, user:, name:) }
 end

@@ -12,6 +12,18 @@ en:
       text: Add account
     update:
       success: Account updated
+  categories:
+    actions_menu:
+      delete: Delete
+      edit: Edit
+    create:
+      success: Category added
+    destroy:
+      success: Category deleted
+    offer_new_category:
+      text: Add %{type}
+    update:
+      success: Category updated
   errors:
     messages:
       not_less_than: cannot be less than %{count}

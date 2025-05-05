@@ -1,0 +1,13 @@
+<div class="card has-background-<%= category.is_a?(IncomeCategory) ? "success" : "danger" %>-light" style="width: 240px">
+  <div class="card-content p-3">
+    <% url = category.new_record? ? categories_path : category_path(category) %>
+    <%= simple_form_for(category, as: :category, url:) do |f| %>
+      <%= f.input :type, as: :hidden if category.new_record? %>
+      <%= f.input :name, label_html: {class: "is-sr-only"}, placeholder: "Category name", autofocus: true %>
+
+      <div class="field">
+        <%= f.button :submit, class: "is-primary is-fullwidth" %>
+      </div>
+    <% end %>
+  </div>
+</div>
