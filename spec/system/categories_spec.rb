@@ -32,7 +32,7 @@ RSpec.describe "Categories" do
 
       fill_in "Name", with: name
 
-      click_on t("helpers.submit.create", model: "#{type.capitalize} category")
+      click_on t("helpers.submit.create")
     end
 
     let(:type) { %i[income expense].sample }
@@ -57,7 +57,7 @@ RSpec.describe "Categories" do
 
       fill_in "Name", with: name
 
-      click_on t("helpers.submit.update", model: "#{type.capitalize} category")
+      click_on t("helpers.submit.update")
     end
 
     let(:type) { %i[income expense].sample }

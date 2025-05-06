@@ -26,7 +26,7 @@ RSpec.describe "Accounts" do
       fill_in "Name", with: name
       fill_in "Balance", with: balance unless default_balance
 
-      click_on t("helpers.submit.create", model: Account)
+      click_on t("helpers.submit.create")
     end
 
     let(:name) { attributes_for(:account)[:name] }
@@ -66,7 +66,7 @@ RSpec.describe "Accounts" do
       fill_in "Name", with: name
       fill_in "Balance", with: balance
 
-      click_on t("helpers.submit.update", model: Account)
+      click_on t("helpers.submit.update")
     end
 
     let!(:account) { create(:account, user:) }
