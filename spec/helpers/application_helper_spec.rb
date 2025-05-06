@@ -19,4 +19,40 @@ RSpec.describe ApplicationHelper do
       end
     end
   end
+
+  describe "#edit_object_path" do
+    context "when object is a Category of any type" do
+      it "returns `/categories/:id/edit` path" do
+        %i[income_category expense_category].each do |category|
+          object = build_stubbed(category)
+          expect(helper.edit_object_path(object)).to eql("/categories/#{object.id}/edit")
+        end
+      end
+    end
+
+    context "when object is another model" do
+      it "returns `/<model pluralized name>/:id/edit` path" do
+        object = build_stubbed(:account)
+        expect(helper.edit_object_path(object)).to eql("/accounts/#{object.id}/edit")
+      end
+    end
+  end
+
+  describe "#object_path" do
+    context "when object is a Category of any type" do
+      it "returns `/categories/:id` path" do
+        %i[income_category expense_category].each do |category|
+          object = build_stubbed(category)
+          expect(helper.object_path(object)).to eql("/categories/#{object.id}")
+        end
+      end
+    end
+
+    context "when object is another model" do
+      it "returns `/<model pluralized name>/:id` path" do
+        object = build_stubbed(:account)
+        expect(helper.object_path(object)).to eql("/accounts/#{object.id}")
+      end
+    end
+  end
 end
