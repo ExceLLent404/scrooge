@@ -1,9 +1,9 @@
 <div class="columns is-mobile is-centered">
   <div class="column" style="max-width: 500px">
-    <h1 class="title has-text-centered">Add <%= @category.model_name.human.downcase %></h1>
+    <h1 class="title has-text-centered">Add <%= category.human_type %></h1>
 
     <div class="is-flex is-justify-content-center">
-      <%= render "form", category: @category %>
+      <%= render "form", category: %>
     </div>
   </div>
 </div>
