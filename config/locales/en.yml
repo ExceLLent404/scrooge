@@ -27,6 +27,10 @@ en:
   errors:
     messages:
       not_less_than: cannot be less than %{count}
+  helpers:
+    submit:
+      create: Add
+      update: Save
   menu:
     accounts: Accounts
     capital: Capital
