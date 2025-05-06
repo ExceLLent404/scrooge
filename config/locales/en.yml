@@ -1,9 +1,6 @@
 ---
 en:
   accounts:
-    actions_menu:
-      delete: Delete
-      edit: Edit
     create:
       success: Account added
     destroy:
@@ -13,9 +10,6 @@ en:
     update:
       success: Account updated
   categories:
-    actions_menu:
-      delete: Delete
-      edit: Edit
     create:
       success: Category added
     destroy:
@@ -36,3 +30,7 @@ en:
     capital: Capital
     categories: Categories
     transactions: Transactions
+  shared:
+    links:
+      delete: Delete
+      edit: Edit

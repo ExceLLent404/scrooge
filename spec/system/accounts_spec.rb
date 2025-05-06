@@ -61,7 +61,7 @@ RSpec.describe "Accounts" do
       visit accounts_path
 
       find_menu(account).hover
-      click_on t("accounts.actions_menu.edit")
+      click_on t("shared.links.edit")
 
       fill_in "Name", with: name
       fill_in "Balance", with: balance
@@ -92,7 +92,7 @@ RSpec.describe "Accounts" do
       visit accounts_path
 
       find_menu(account).hover
-      accept_confirm { click_on t("accounts.actions_menu.delete") }
+      accept_confirm { click_on t("shared.links.delete") }
 
       expect(success_notification).to have_content(t("accounts.destroy.success"))
       expect(page).to have_no_content(account.name).and have_no_content(account.balance)
@@ -106,7 +106,7 @@ RSpec.describe "Accounts" do
       visit accounts_path
 
       find_menu(account).hover
-      dismiss_confirm { click_on t("accounts.actions_menu.delete") }
+      dismiss_confirm { click_on t("shared.links.delete") }
 
       expect(page).to have_content(account.name).and have_content(account.balance)
     end

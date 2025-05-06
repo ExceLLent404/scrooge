@@ -53,7 +53,7 @@ RSpec.describe "Categories" do
       visit categories_path
 
       find_menu(category).hover
-      click_on t("categories.actions_menu.edit")
+      click_on t("shared.links.edit")
 
       fill_in "Name", with: name
 
@@ -81,7 +81,7 @@ RSpec.describe "Categories" do
       visit categories_path
 
       find_menu(category).hover
-      accept_confirm { click_on t("categories.actions_menu.delete") }
+      accept_confirm { click_on t("shared.links.delete") }
 
       expect(success_notification).to have_content(t("categories.destroy.success"))
       expect(page).to have_no_content(category.name)
@@ -95,7 +95,7 @@ RSpec.describe "Categories" do
       visit categories_path
 
       find_menu(category).hover
-      dismiss_confirm { click_on t("categories.actions_menu.delete") }
+      dismiss_confirm { click_on t("shared.links.delete") }
 
       expect(page).to have_content(category.name)
     end

@@ -6,17 +6,17 @@
 
     <div class="dropdown-menu">
       <div class="dropdown-content">
-        <%= link_to edit_account_path(account), class: "dropdown-item" do %>
+        <%= link_to edit_object_path(object), class: "dropdown-item" do %>
           <span class="icon-text">
             <%= icon "fas fa-pencil" %>
-            <span><%= t(".edit") %></span>
+            <span><%= t("shared.links.edit") %></span>
           </span>
         <% end %>
 
-        <%= link_to account_path(account), class: "dropdown-item", data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} do %>
+        <%= link_to object_path(object), class: "dropdown-item", data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} do %>
           <span class="icon-text has-text-danger">
             <%= icon "far fa-trash-can" %>
-            <span><%= t(".delete") %></span>
+            <span><%= t("shared.links.delete") %></span>
           </span>
         <% end %>
       </div>

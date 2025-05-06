@@ -46,4 +46,24 @@ module ApplicationHelper
       tag.i(class: i_class)
     end
   end
+
+  # @param object [ApplicationRecord] model instance
+  # @return [String] relative path for the edit page of the object
+  def edit_object_path(object)
+    send(:"edit_#{resource_name(object)}_path", object)
+  end
+
+  # @param object [ApplicationRecord] model instance
+  # @return [String] relative path for the object
+  def object_path(object)
+    send(:"#{resource_name(object)}_path", object)
+  end
+
+  private
+
+  # @param object [ApplicationRecord] model instance
+  # @return [String] object resource name
+  def resource_name(object)
+    object.class.base_class.name.downcase
+  end
 end
