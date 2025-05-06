@@ -1,5 +1,5 @@
 <%= tag.div id: dom_id(category) do %>
-  <div class="card has-background-<%= category.is_a?(IncomeCategory) ? "success" : "danger" %>-light" style="width: 240px">
+  <div class="card has-background-<%= category.color %>-light" style="width: 240px">
     <div class="card-content">
       <span class="subtitle"><%= category.name %></span>
     </div>

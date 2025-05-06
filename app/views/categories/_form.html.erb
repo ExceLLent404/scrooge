@@ -1,4 +1,4 @@
-<div class="card has-background-<%= category.is_a?(IncomeCategory) ? "success" : "danger" %>-light" style="width: 240px">
+<div class="card has-background-<%= category.color %>-light" style="width: 240px">
   <div class="card-content p-3">
     <% url = category.new_record? ? categories_path : category_path(category) %>
     <%= simple_form_for(category, as: :category, url:) do |f| %>

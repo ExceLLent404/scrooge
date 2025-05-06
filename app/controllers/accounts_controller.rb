@@ -1,6 +1,8 @@
 class AccountsController < ApplicationController
   before_action :set_account, only: %i[edit update destroy]
 
+  decorates_assigned :account, :accounts
+
   def index
     @accounts = current_user.accounts.order(created_at: :asc)
   end

@@ -4,6 +4,10 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
+  def current_user
+    @decorated_user ||= super.decorate if super
+  end
+
   private
 
   # Method used by sessions controller to sign out a user.

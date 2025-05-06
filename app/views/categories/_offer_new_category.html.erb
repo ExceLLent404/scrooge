@@ -1,10 +1,10 @@
-<% new_category = Category.new(type:) %>
+<% new_category = Category.new(type:).decorate %>
 
 <%= link_to new_category_path(type:) do %>
   <div class="card has-background-light" style="width: 240px">
     <div class="card-content has-text-centered p-3">
-      <p class="is-size-5 mb-2"><%= t(".text", type: new_category.model_name.human.downcase) %></p>
-      <%= icon "fas fa-square-plus fa-2xl", class: "has-text-#{new_category.is_a?(IncomeCategory) ? "success" : "danger"}" %>
+      <p class="is-size-5 mb-2"><%= t(".text", type: new_category.human_type) %></p>
+      <%= icon "fas fa-square-plus fa-2xl", class: "has-text-#{new_category.color}" %>
     </div>
   </div>
 <% end %>

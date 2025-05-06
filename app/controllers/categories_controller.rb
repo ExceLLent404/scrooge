@@ -1,6 +1,8 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: %i[edit update destroy]
 
+  decorates_assigned :category, :income_categories, :expense_categories
+
   def index
     @income_categories = current_user.income_categories.order(created_at: :asc)
     @expense_categories = current_user.expense_categories.order(created_at: :asc)

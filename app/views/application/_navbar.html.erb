@@ -21,9 +21,7 @@
         </div>
 
         <div class="navbar-end is-flex is-justify-content-space-between">
-          <%= link_to current_user.name || current_user.email.split("@").first,
-                      edit_user_registration_path,
-                      class: "navbar-item" %>
+          <%= link_to current_user.name, edit_user_registration_path, class: "navbar-item" %>
 
           <div class="navbar-item">
             <%= link_to t("devise.shared.links.sign_out"),

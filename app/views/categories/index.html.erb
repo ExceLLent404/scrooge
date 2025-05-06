@@ -1,6 +1,6 @@
-<% [[@income_categories, "IncomeCategory"], [@expense_categories, "ExpenseCategory"]].each do |categories, type| %>
+  <% [[income_categories, "IncomeCategory"], [expense_categories, "ExpenseCategory"]].each do |categories, type| %>
   <div class="block pb-5">
-    <h1 class="title is-4 has-text-centered"><%= type.underscore.pluralize.capitalize.sub("_", " ") %></h1>
+    <h1 class="title is-4 has-text-centered"><%= categories.human_type %></h1>
 
     <%= tag.div class: "grid is-col-min-9", style: "justify-items: center" do %>
       <%= render partial: "category", collection: categories %>
