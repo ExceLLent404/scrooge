@@ -5,6 +5,8 @@ RSpec.describe User do
 
   it { is_expected.to be_an(ApplicationRecord) }
 
+  it_behaves_like "it has timestamps"
+
   describe "#name" do
     subject(:name) { user.name }
 
@@ -15,14 +17,8 @@ RSpec.describe User do
       expect(name).to be_nil
     end
 
-    it "does not contain whitespace on the left and right" do
-      user.name = "\t\n\v\f\r name \t\n\v\f\r"
-      expect(name).to eql("name")
-    end
-
-    it "can contain only one space character between non whitespace characters" do
-      user.name = "na \t \n \v \f \r me"
-      expect(name).to eql("na me")
+    include_examples "of squished name" do
+      let(:object) { user }
     end
   end
 
@@ -58,17 +54,5 @@ RSpec.describe User do
 
       expect(user).not_to be_valid
     end
-  end
-
-  describe "#created_at" do
-    subject { build_stubbed(:user).created_at }
-
-    it { is_expected.to be_an_instance_of(ActiveSupport::TimeWithZone) }
-  end
-
-  describe "#updated_at" do
-    subject { build_stubbed(:user).updated_at }
-
-    it { is_expected.to be_an_instance_of(ActiveSupport::TimeWithZone) }
   end
 end

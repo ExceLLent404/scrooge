@@ -14,6 +14,9 @@ RSpec.describe Category do
     expect(described_class.new(type: "ExpenseCategory")).to be_an_instance_of(ExpenseCategory)
   end
 
+  it_behaves_like "it has name"
+  it_behaves_like "it has timestamps"
+
   describe "#type" do
     subject { category.type }
 
@@ -39,41 +42,5 @@ RSpec.describe Category do
       expect { category.type = "NewType" }.to raise_error(ActiveRecord::ReadonlyAttributeError)
       expect { category.attributes = {type: "NewType"} }.to raise_error(ActiveRecord::ReadonlyAttributeError)
     end
-  end
-
-  describe "#name" do
-    subject(:name) { category.name }
-
-    it { is_expected.to be_an_instance_of(String) }
-
-    it "cannot be absent" do
-      expect(build(:category, name: nil)).not_to be_valid
-    end
-
-    it "cannot be empty" do
-      expect(build(:category, name: "")).not_to be_valid
-    end
-
-    it "does not contain whitespace on the left and right" do
-      category.name = "\t\n\v\f\r name \t\n\v\f\r"
-      expect(name).to eql("name")
-    end
-
-    it "can contain only one space character between non whitespace characters" do
-      category.name = "na \t \n \v \f \r me"
-      expect(name).to eql("na me")
-    end
-  end
-
-  describe "#created_at" do
-    subject { build_stubbed(:user).created_at }
-
-    it { is_expected.to be_an_instance_of(ActiveSupport::TimeWithZone) }
-  end
-
-  describe "#updated_at" do
-    subject { build_stubbed(:user).updated_at }
-
-    it { is_expected.to be_an_instance_of(ActiveSupport::TimeWithZone) }
   end
 end

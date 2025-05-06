@@ -7,29 +7,8 @@ RSpec.describe Account do
 
   it { is_expected.to monetize(:balance) }
 
-  describe "#name" do
-    subject(:name) { account.name }
-
-    it { is_expected.to be_an_instance_of(String) }
-
-    it "cannot be absent" do
-      expect(build(:account, name: nil)).not_to be_valid
-    end
-
-    it "cannot be empty" do
-      expect(build(:account, name: "")).not_to be_valid
-    end
-
-    it "does not contain whitespace on the left and right" do
-      account.name = "\t\n\v\f\r name \t\n\v\f\r"
-      expect(name).to eql("name")
-    end
-
-    it "can contain only one space character between non whitespace characters" do
-      account.name = "na \t \n \v \f \r me"
-      expect(name).to eql("na me")
-    end
-  end
+  it_behaves_like "it has name"
+  it_behaves_like "it has timestamps"
 
   describe "#balance_cents" do
     subject(:balance_cents) { account.balance_cents }
@@ -55,17 +34,5 @@ RSpec.describe Account do
       expect(balance).to be >= 0
       expect(build(:account, balance: -1)).not_to be_valid
     end
-  end
-
-  describe "#created_at" do
-    subject { build_stubbed(:user).created_at }
-
-    it { is_expected.to be_an_instance_of(ActiveSupport::TimeWithZone) }
-  end
-
-  describe "#updated_at" do
-    subject { build_stubbed(:user).updated_at }
-
-    it { is_expected.to be_an_instance_of(ActiveSupport::TimeWithZone) }
   end
 end
