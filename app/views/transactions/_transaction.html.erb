@@ -1,0 +1,19 @@
+<%= tag.div id: dom_id(transaction) do %>
+  <div class="is-relative p-4">
+    <div class="mr-4">
+      <div class="is-flex is-justify-content-space-between">
+        <span class="icon-text is-align-items-center">
+          <%= tag.span transaction.source.name %>
+          <%= icon "fas fa-arrow-right-long fa-xs", class: "is-small" %>
+          <%= tag.span transaction.destination.name %>
+        </span>
+
+        <%= tag.span transaction.amount.format, class: "has-text-#{transaction.color}" %>
+      </div>
+
+      <%= tag.p transaction.comment, class: "has-text-grey-light" if transaction.comment? %>
+    </div>
+
+    <%= render "shared/actions_menu", object: transaction, margin: "mr-1" %>
+  </div>
+<% end %>

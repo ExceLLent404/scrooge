@@ -30,6 +30,15 @@ RSpec.describe ApplicationHelper do
       end
     end
 
+    context "when object is a Transaction of any type" do
+      it "returns `/transactions/:id/edit` path" do
+        %i[income expense].each do |transaction|
+          object = build_stubbed(transaction)
+          expect(helper.edit_object_path(object)).to eql("/transactions/#{object.id}/edit")
+        end
+      end
+    end
+
     context "when object is another model" do
       it "returns `/<model pluralized name>/:id/edit` path" do
         object = build_stubbed(:account)
@@ -44,6 +53,15 @@ RSpec.describe ApplicationHelper do
         %i[income_category expense_category].each do |category|
           object = build_stubbed(category)
           expect(helper.object_path(object)).to eql("/categories/#{object.id}")
+        end
+      end
+    end
+
+    context "when object is a Transaction of any type" do
+      it "returns `/transactions/:id` path" do
+        %i[income expense].each do |transaction|
+          object = build_stubbed(transaction)
+          expect(helper.object_path(object)).to eql("/transactions/#{object.id}")
         end
       end
     end

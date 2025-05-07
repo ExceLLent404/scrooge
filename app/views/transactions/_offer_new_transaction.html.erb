@@ -1,0 +1,8 @@
+<% new_transaction = Transaction.new(type:).decorate %>
+
+<%= link_to new_transaction_path(type:), class: "button" do %>
+  <span class="icon-text">
+    <%= icon "fas fa-lg fa-circle-plus", class: "has-text-#{new_transaction.color}" %>
+    <span><%= t(".text", type: new_transaction.human_type) %></span>
+  </span>
+<% end %>
