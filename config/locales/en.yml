@@ -34,3 +34,12 @@ en:
     links:
       delete: Delete
       edit: Edit
+  transactions:
+    create:
+      success: Transaction added
+    destroy:
+      success: Transaction deleted
+    offer_new_transaction:
+      text: Add %{type}
+    update:
+      success: Transaction updated

@@ -15,6 +15,10 @@ Category:
   type:
     NullConstraintChecker:
       enabled: false
+Transaction:
+  type:
+    NullConstraintChecker:
+      enabled: false
 User:
   email:
     ColumnPresenceChecker:

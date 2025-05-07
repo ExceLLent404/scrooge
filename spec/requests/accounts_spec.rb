@@ -86,5 +86,15 @@ RSpec.describe "Accounts requests" do
     it "deletes the requested Account" do
       expect { request }.to change { Account.find_by(id: account.id) }.from(account).to(nil)
     end
+
+    it "deletes all related Transactions" do
+      income = create(:income, user:, destination: account)
+      expense = create(:expense, user:, source: account)
+
+      expect { request }
+        .to change { [Income.find_by(id: income.id), Expense.find_by(id: expense.id)] }
+        .from([income, expense])
+        .to([nil, nil])
+    end
   end
 end

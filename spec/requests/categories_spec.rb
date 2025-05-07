@@ -88,5 +88,11 @@ RSpec.describe "Categories requests" do
     it "deletes the requested Category" do
       expect { request }.to change { Category.find_by(id: category.id) }.from(category).to(nil)
     end
+
+    it "deletes all related Transactions" do
+      transaction = category.is_a?(IncomeCategory) ? create(:income, user:, source: category) : create(:expense, user:, destination: category)
+
+      expect { request }.to change { Transaction.find_by(id: transaction.id) }.from(transaction).to(nil)
+    end
   end
 end

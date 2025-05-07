@@ -20,6 +20,5 @@ Rails.application.routes.draw do
 
   resources :accounts, except: :show
   resources :categories, except: :show
-
-  get "transactions", to: "transactions#index"
+  resources :transactions, except: :show
 end

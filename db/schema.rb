@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_05_094516) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_06_092832) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,6 +30,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_05_094516) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_categories_on_user_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.string "type", null: false
+    t.integer "amount_cents", null: false
+    t.text "comment"
+    t.date "committed_date", null: false
+    t.string "source_type", null: false
+    t.bigint "source_id", null: false
+    t.string "destination_type", null: false
+    t.bigint "destination_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destination_type", "destination_id"], name: "index_transactions_on_destination"
+    t.index ["source_type", "source_id"], name: "index_transactions_on_source"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -52,4 +69,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_05_094516) do
 
   add_foreign_key "accounts", "users", on_update: :cascade, on_delete: :cascade
   add_foreign_key "categories", "users", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "transactions", "users", on_update: :cascade, on_delete: :cascade
 end

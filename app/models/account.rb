@@ -6,5 +6,8 @@ class Account < ApplicationRecord
 
   belongs_to :user
 
+  has_many :incomes, as: :destination, dependent: :delete_all
+  has_many :expenses, as: :source, dependent: :delete_all
+
   validates :name, presence: true
 end
