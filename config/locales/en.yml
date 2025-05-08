@@ -26,6 +26,7 @@ en:
     yesterday: Yesterday
   errors:
     messages:
+      is_an: must be an %{model}
       not_less_than: cannot be less than %{count}
   helpers:
     submit:
