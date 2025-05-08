@@ -20,4 +20,10 @@ RSpec.describe CategoryDecorator do
       it { is_expected.to eql("expense category") }
     end
   end
+
+  describe "#name_text_weight" do
+    subject { decorated_category.name_text_weight }
+
+    it { is_expected.to eql("has-text-weight-semibold") }
+  end
 end

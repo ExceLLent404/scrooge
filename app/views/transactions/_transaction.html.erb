@@ -3,9 +3,9 @@
     <div class="mr-4">
       <div class="is-flex is-justify-content-space-between">
         <span class="icon-text is-align-items-center">
-          <%= tag.span transaction.source.name %>
+          <%= tag.span transaction.source.name, class: transaction.source.name_text_weight %>
           <%= icon "fas fa-arrow-right-long fa-xs", class: "is-small" %>
-          <%= tag.span transaction.destination.name %>
+          <%= tag.span transaction.destination.name, class: transaction.destination.name_text_weight %>
         </span>
 
         <%= tag.span transaction.amount.format, class: "has-text-#{transaction.color}" %>
