@@ -18,6 +18,12 @@ en:
       text: Add %{type}
     update:
       success: Category updated
+  date:
+    formats:
+      verbal_with_year: "%a, %b %d, %Y"
+      verbal_without_year: "%a, %b %d"
+    today: Today
+    yesterday: Yesterday
   errors:
     messages:
       not_less_than: cannot be less than %{count}

@@ -46,7 +46,7 @@ RSpec.describe "Transactions" do
       # check grouping
       user_transactions.each do |date, transactions|
         transactions.each do |transaction|
-          expect(find(".block", text: date))
+          expect(find(".block", text: date.to_relative_in_words))
             .to have_content(transaction.source.name)
             .and have_content(transaction.destination.name)
             .and have_content(transaction.amount)
@@ -85,7 +85,7 @@ RSpec.describe "Transactions" do
       act
 
       expect(success_notification).to have_content(t("transactions.create.success"))
-      expect(find(".block", text: committed_date))
+      expect(find(".block", text: committed_date.to_relative_in_words))
         .to have_content(income_category.name)
         .and have_content(account.name)
         .and have_content(amount)
@@ -121,7 +121,7 @@ RSpec.describe "Transactions" do
       act
 
       expect(success_notification).to have_content(t("transactions.create.success"))
-      expect(find(".block", text: committed_date))
+      expect(find(".block", text: committed_date.to_relative_in_words))
         .to have_content(account.name)
         .and have_content(expense_category.name)
         .and have_content(amount)
@@ -159,7 +159,7 @@ RSpec.describe "Transactions" do
       act
 
       expect(success_notification).to have_content(t("transactions.update.success"))
-      expect(find(".block", text: committed_date))
+      expect(find(".block", text: committed_date.to_relative_in_words))
         .to have_content(income_category.name)
         .and have_content(account.name)
         .and have_content(amount)
@@ -197,7 +197,7 @@ RSpec.describe "Transactions" do
       act
 
       expect(success_notification).to have_content(t("transactions.update.success"))
-      expect(find(".block", text: committed_date))
+      expect(find(".block", text: committed_date.to_relative_in_words))
         .to have_content(account.name)
         .and have_content(expense_category.name)
         .and have_content(amount)
@@ -234,7 +234,7 @@ RSpec.describe "Transactions" do
       find_menu(transaction).hover
       dismiss_confirm { click_on t("shared.links.delete") }
 
-      expect(find(".block", text: transaction.committed_date))
+      expect(find(".block", text: transaction.committed_date.to_relative_in_words))
         .to have_content(transaction.source.name)
         .and have_content(transaction.destination.name)
         .and have_content(transaction.amount)
