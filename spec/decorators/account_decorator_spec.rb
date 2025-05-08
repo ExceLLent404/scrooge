@@ -10,4 +10,12 @@ RSpec.describe AccountDecorator do
 
     it { is_expected.to eql("has-text-weight-normal") }
   end
+
+  describe "#to_label" do
+    subject(:label) { decorated_account.to_label }
+
+    it "returns account info including name and balance" do
+      expect(label).to include(account.name).and include(account.balance.to_s)
+    end
+  end
 end

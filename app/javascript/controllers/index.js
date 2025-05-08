@@ -7,5 +7,8 @@ import { application } from "./application"
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
+import InputController from "./input_controller"
+application.register("input", InputController)
+
 import NavbarController from "./navbar_controller"
 application.register("navbar", NavbarController)
