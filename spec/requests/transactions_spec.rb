@@ -30,6 +30,7 @@ RSpec.describe "Transactions requests" do
 
     include_examples "of response status", :ok
     include_examples "of user authentication"
+    include_examples "of checking resource existence", :transaction
   end
 
   describe "POST /transactions" do
@@ -56,6 +57,20 @@ RSpec.describe "Transactions requests" do
       expect { request }.to change { Transaction.find_by(search_attributes) }.from(nil).to(Transaction)
     end
 
+    context "when Transaction is Income" do
+      let(:transaction) { build(:income, user:) }
+
+      include_examples "of checking associated resource existence", :income_category, :source_id
+      include_examples "of checking associated resource existence", :account, :destination_id
+    end
+
+    context "when Transaction is Expense" do
+      let(:transaction) { build(:expense, user:) }
+
+      include_examples "of checking associated resource existence", :account, :source_id
+      include_examples "of checking associated resource existence", :expense_category, :destination_id
+    end
+
     context "with invalid parameters" do
       let(:transaction) { build(:transaction, :invalid, user:) }
 
@@ -70,7 +85,8 @@ RSpec.describe "Transactions requests" do
   describe "PATCH /transactions/:id" do
     let(:request) { patch transaction_url(id), params: {transaction: attributes} }
     let(:id) { transaction.id }
-    let(:transaction) { create(:transaction, user:) }
+    let(:transaction) { create(type, user:) }
+    let(:type) { :transaction }
     let(:attributes) do
       {
         amount: transaction.amount + Money.from_amount(1),
@@ -81,6 +97,7 @@ RSpec.describe "Transactions requests" do
 
     include_examples "of redirection to list of", :transactions
     include_examples "of user authentication"
+    include_examples "of checking resource existence", :transaction
 
     it "updates transaction data to the specified ones" do
       expect { request }.to change { transaction.reload.attributes }
@@ -88,6 +105,74 @@ RSpec.describe "Transactions requests" do
       changed_attributes = transaction.attributes.symbolize_keys
       changed_attributes[:amount] = Money.from_cents(changed_attributes[:amount_cents])
       expect(changed_attributes).to include(attributes)
+    end
+
+    context "when Transaction is Income" do
+      let(:type) { :income }
+
+      context "when source_id is specified" do
+        let(:attributes) { {source_id:} }
+
+        context "when the specified source_id belongs to another IncomeCategory of the User" do
+          let(:source_id) { another_category.id }
+          let(:another_category) { create(:income_category, user:) }
+
+          it "changes the IncomeCategory to the specified one" do
+            expect { request }.to change { transaction.reload.source }.to(another_category)
+          end
+        end
+
+        include_examples "of checking associated resource existence", :income_category, :source_id
+      end
+
+      context "when destination_id is specified" do
+        let(:attributes) { {destination_id:} }
+
+        context "when the specified destination_id belongs to another Account of the User" do
+          let(:destination_id) { new_account.id }
+          let(:new_account) { create(:account, user:) }
+
+          it "changes the Account to the specified one" do
+            expect { request }.to change { transaction.reload.account }.to(new_account)
+          end
+        end
+
+        include_examples "of checking associated resource existence", :account, :destination_id
+      end
+    end
+
+    context "when Transaction is Expense" do
+      let(:type) { :expense }
+
+      context "when destination_id is specified" do
+        let(:attributes) { {destination_id:} }
+
+        context "when the specified destination_id belongs to another ExpenseCategory of the User" do
+          let(:destination_id) { another_category.id }
+          let(:another_category) { create(:expense_category, user:) }
+
+          it "changes the ExpenseCategory to the specified one" do
+            expect { request }.to change { transaction.reload.destination }.to(another_category)
+          end
+        end
+
+        include_examples "of checking associated resource existence", :expense_category, :destination_id
+      end
+
+      context "when source_id is specified" do
+        let(:attributes) { {source_id:} }
+
+        context "when the specified source_id belongs to another Account of the User" do
+          let(:source_id) { new_account.id }
+          let(:new_account) { create(:account, user:) }
+
+          it "changes the Account to the specified one" do
+            expect { request }.to change { transaction.reload.account }.to(new_account)
+          end
+        end
+
+        include_examples "of checking associated resource existence", :account, :source_id
+      end
     end
 
     context "with invalid parameters" do
@@ -108,6 +193,7 @@ RSpec.describe "Transactions requests" do
 
     include_examples "of redirection to list of", :transactions
     include_examples "of user authentication"
+    include_examples "of checking resource existence", :transaction
 
     it "deletes the requested Transaction" do
       expect { request }.to change { Transaction.find_by(id: transaction.id) }.from(transaction).to(nil)

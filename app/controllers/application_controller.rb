@@ -4,11 +4,18 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
   def current_user
     @decorated_user ||= super.decorate if super
   end
 
   private
+
+  def record_not_found(error)
+    path = send(:"#{error.model.downcase.pluralize}_path")
+    redirect_back_or_to path, alert: "#{error.model} not found"
+  end
 
   # Method used by sessions controller to sign out a user.
   # @see Devise::Controllers::Helpers#after_sign_out_path_for
