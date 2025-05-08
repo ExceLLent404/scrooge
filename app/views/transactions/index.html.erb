@@ -9,7 +9,7 @@
         <%= date %>
 
         <div class="box p-1">
-          <%= render transactions_by_date %>
+          <%= render partial: transactions_by_date, spacer_template: "spacer" %>
         </div>
       </div>
     <% end %>
