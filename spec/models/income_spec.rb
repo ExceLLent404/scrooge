@@ -34,5 +34,17 @@ RSpec.describe Income do
         expect(build(:income, destination: expense_category)).not_to be_valid
       end
     end
+
+    describe "#category" do
+      subject { income.category }
+
+      it { is_expected.to be_an_instance_of(IncomeCategory) }
+    end
+
+    describe "#account" do
+      subject { income.account }
+
+      it { is_expected.to be_an_instance_of(Account) }
+    end
   end
 end
