@@ -6,10 +6,10 @@
   <div class="column has-background-light" style="max-width: 500px">
     <% transactions.group_by(&:committed_date).each do |date, transactions_by_date| %>
       <div class="block">
-        <%= date %>
+        <%= date.to_relative_in_words %>
 
         <div class="box p-1">
-          <%= render transactions_by_date %>
+          <%= render partial: transactions_by_date, spacer_template: "spacer" %>
         </div>
       </div>
     <% end %>
