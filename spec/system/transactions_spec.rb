@@ -177,8 +177,8 @@ RSpec.describe "Transactions" do
     end
 
     let!(:income) { create(:income, user:) }
-    let!(:income_category) { create(:income_category, user:, name: "Not #{income.source.name}") }
-    let!(:account) { create(:account, user:, name: "Not #{income.destination.name}") }
+    let!(:income_category) { create(:income_category, user:, name: "Not #{income.category.name}") }
+    let!(:account) { create(:account, user:, name: "Not #{income.account.name}") }
     let(:amount) { income.amount + Money.from_amount(1) }
     let(:committed_date) { income.committed_date.prev_day }
     let(:comment) { "Updated #{income.comment}" }
@@ -215,8 +215,8 @@ RSpec.describe "Transactions" do
     end
 
     let!(:expense) { create(:expense, user:) }
-    let!(:account) { create(:account, user:, name: "Not #{expense.source.name}") }
-    let!(:expense_category) { create(:expense_category, user:, name: "Not #{expense.destination.name}") }
+    let!(:account) { create(:account, user:, name: "Not #{expense.account.name}") }
+    let!(:expense_category) { create(:expense_category, user:, name: "Not #{expense.category.name}") }
     let(:amount) { expense.amount - Money.from_amount(1) }
     let(:committed_date) { expense.committed_date.prev_day }
     let(:comment) { "Updated #{expense.comment}" }
