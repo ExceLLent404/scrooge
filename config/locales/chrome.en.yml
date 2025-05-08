@@ -2,6 +2,8 @@
 en:
   chrome:
     validations:
+      custom:
+        greater_than: Value must be greater than %{count}.
       email:
         incomplete: Please enter a part following '@'. '%{email}' is incomplete.
         invalid: Please include an '@' in the email address. '%{email}' is missing an '@'.
