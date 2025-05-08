@@ -16,7 +16,8 @@
                           required: true,
                           wrapper: :select_control,
                           select_html: {class: "is-fullwidth"},
-                          collection: sources %>
+                          collection: sources,
+                          prompt: sources.selection_prompt %>
         <%= f.error :source %>
       </div>
 
@@ -30,7 +31,8 @@
                           required: true,
                           wrapper: :select_control,
                           select_html: {class: "is-fullwidth"},
-                          collection: destinations %>
+                          collection: destinations,
+                          prompt: destinations.selection_prompt %>
         <%= f.error :destination %>
       </div>
     </div>

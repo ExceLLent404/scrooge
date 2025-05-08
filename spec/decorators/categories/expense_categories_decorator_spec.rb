@@ -10,4 +10,10 @@ RSpec.describe ExpenseCategoriesDecorator do
 
     it { is_expected.to eql("Expense categories") }
   end
+
+  describe "#selection_prompt" do
+    subject { decorated_categories.selection_prompt }
+
+    it { is_expected.to eql("Select expense category") }
+  end
 end
