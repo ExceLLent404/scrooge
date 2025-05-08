@@ -45,7 +45,7 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_create_params
-    params.require(:transaction).permit(%i[type source_id source_type destination_id destination_type amount committed_date comment])
+    params.require(:transaction).permit(%i[type source_id destination_id amount committed_date comment])
   end
 
   def transaction_update_params

@@ -37,7 +37,7 @@ RSpec.describe "Transactions requests" do
     let(:creation_attributes) do
       attrs = transaction.attributes
       attrs["amount"] = transaction.amount.to_s
-      attrs.except(*%w[id amount_cents user_id created_at updated_at])
+      attrs.except(*%w[id source_type destination_type amount_cents user_id created_at updated_at])
     end
     let(:transaction) { build(:transaction, user:) }
     let(:source_id) { transaction.source.tap(&:save!).id }

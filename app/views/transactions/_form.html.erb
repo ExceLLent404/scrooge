@@ -3,11 +3,7 @@
   <%= simple_form_for(transaction, as: :transaction, url:) do |f| %>
     <%= f.error_notification %>
 
-    <% if transaction.new_record? %>
-      <%= f.input :type, as: :hidden %>
-      <%= f.input :source_type, as: :hidden, input_html: {value: transaction.is_a?(Income) ? "Category" : "Account"} %>
-      <%= f.input :destination_type, as: :hidden, input_html: {value: transaction.is_a?(Income) ? "Account" : "Category"} %>
-    <% end %>
+    <%= f.input :type, as: :hidden if transaction.new_record? %>
 
     <div class="is-flex">
       <div class="field is-flex-grow-1 is-flex-shrink-1">
