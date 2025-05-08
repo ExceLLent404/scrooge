@@ -69,7 +69,7 @@ RSpec.describe "Transactions" do
       select income_category.name
       select account.name
       fill_in "Amount", with: amount
-      fill_in "Committed date", with: committed_date
+      fill_in "Committed date", with: committed_date unless default_committed_date
       fill_in "Comment", with: comment
 
       click_on t("helpers.submit.create")
@@ -80,6 +80,7 @@ RSpec.describe "Transactions" do
     let(:amount) { 100 }
     let(:committed_date) { Date.current }
     let(:comment) { "Test income" }
+    let(:default_committed_date) { false }
 
     it "creates an income" do
       act
@@ -94,6 +95,19 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
     it_behaves_like "validation of transaction committed date presence"
+
+    context "with suggested default committed date" do
+      let(:default_committed_date) { true }
+
+      it "creates an income with the current date" do
+        act
+
+        expect(find(".block", text: Date.current.to_relative_in_words))
+          .to have_content(income_category.name)
+          .and have_content(account.name)
+          .and have_content(amount)
+      end
+    end
   end
 
   describe "Creating an expense" do
@@ -105,7 +119,7 @@ RSpec.describe "Transactions" do
       select account.name
       select expense_category.name
       fill_in "Amount", with: amount
-      fill_in "Committed date", with: committed_date
+      fill_in "Committed date", with: committed_date unless default_committed_date
       fill_in "Comment", with: comment
 
       click_on t("helpers.submit.create")
@@ -116,6 +130,7 @@ RSpec.describe "Transactions" do
     let(:amount) { 100 }
     let(:committed_date) { Date.current }
     let(:comment) { "Test expense" }
+    let(:default_committed_date) { false }
 
     it "creates an expense" do
       act
@@ -130,6 +145,19 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
     it_behaves_like "validation of transaction committed date presence"
+
+    context "with suggested default committed date" do
+      let(:default_committed_date) { true }
+
+      it "creates an expense with the current date" do
+        act
+
+        expect(find(".block", text: Date.current.to_relative_in_words))
+          .to have_content(account.name)
+          .and have_content(expense_category.name)
+          .and have_content(amount)
+      end
+    end
   end
 
   describe "Editing an income" do

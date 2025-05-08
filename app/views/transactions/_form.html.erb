@@ -38,7 +38,9 @@
     </div>
 
     <%= f.input :amount, as: :money, input_html: {min: 0} %>
-    <%= f.input :committed_date, html5: true, input_html: {class: "is-fullwidth"} %>
+    <%= f.input :committed_date,
+                html5: true,
+                input_html: {class: "is-fullwidth", value: transaction.committed_date || Date.current} %>
     <%= f.input :comment %>
 
     <div class="field pt-4">
