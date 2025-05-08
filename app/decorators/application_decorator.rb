@@ -14,4 +14,10 @@ class ApplicationDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
+
+  # Returns the path to the partial based on the base class
+  # @see ActiveModel::Conversion#to_partial_path
+  def to_partial_path
+    self.class.base_class._to_partial_path
+  end
 end
