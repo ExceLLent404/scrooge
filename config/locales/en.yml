@@ -27,6 +27,7 @@ en:
   errors:
     messages:
       is_an: must be an %{model}
+      not_greater_than: cannot be greater than %{count}
       not_less_than: cannot be less than %{count}
       ownership: must belong to the %{model}
   helpers:

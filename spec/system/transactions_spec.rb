@@ -95,6 +95,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
     it_behaves_like "validation of transaction committed date presence"
+    it_behaves_like "validation of transaction committed date occurrence"
 
     context "with suggested default committed date" do
       let(:default_committed_date) { true }
@@ -145,6 +146,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
     it_behaves_like "validation of transaction committed date presence"
+    it_behaves_like "validation of transaction committed date occurrence"
 
     context "with suggested default committed date" do
       let(:default_committed_date) { true }
@@ -196,6 +198,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
     it_behaves_like "validation of transaction committed date presence"
+    it_behaves_like "validation of transaction committed date occurrence"
   end
 
   describe "Editing an expense" do
@@ -234,6 +237,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
     it_behaves_like "validation of transaction committed date presence"
+    it_behaves_like "validation of transaction committed date occurrence"
   end
 
   describe "Deleting a transaction" do
