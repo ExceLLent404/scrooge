@@ -1,4 +1,4 @@
-<%= tag.div id: dom_id(category) do %>
+<%= turbo_frame_tag category do %>
   <div class="card has-background-<%= category.color %>-light" style="width: 240px">
     <div class="card-content">
       <span class="subtitle"><%= category.name %></span>

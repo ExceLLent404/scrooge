@@ -1,48 +1,54 @@
-<div class="p-3">
-  <% url = transaction.new_record? ? transactions_path : transaction_path(transaction) %>
-  <%= simple_form_for(transaction, as: :transaction, url:) do |f| %>
-    <%= f.error_notification %>
+<%= turbo_frame_tag transaction do %>
+  <div class="p-3">
+    <% url = transaction.new_record? ? transactions_path : transaction_path(transaction) %>
+    <%= simple_form_for(transaction, as: :transaction, url:) do |f| %>
+      <%= f.error_notification %>
 
-    <%= f.input :type, as: :hidden if transaction.new_record? %>
+      <%= f.input :type, as: :hidden if transaction.new_record? %>
 
-    <div class="is-flex">
-      <div class="field is-flex-grow-1 is-flex-shrink-1">
-        <% sources = transaction.possible_sources %>
-        <%= f.association :source,
-                          required: true,
-                          wrapper: :select_control,
-                          select_html: {class: "is-fullwidth"},
-                          collection: sources,
-                          prompt: sources.selection_prompt %>
-        <%= f.error :source %>
+      <div class="is-flex">
+        <div class="field is-flex-grow-1 is-flex-shrink-1">
+          <% sources = transaction.possible_sources %>
+          <%= f.association :source,
+                            required: true,
+                            wrapper: :select_control,
+                            select_html: {class: "is-fullwidth"},
+                            collection: sources,
+                            prompt: sources.selection_prompt %>
+          <%= f.error :source %>
+        </div>
+
+        <div class="field is-align-self-center mx-1">
+          <%= icon "fas fa-arrow-right", class: "has-text-dark" %>
+        </div>
+
+        <div class="field is-flex-grow-1 is-flex-shrink-1">
+          <% destinations = transaction.possible_destinations %>
+          <%= f.association :destination,
+                            required: true,
+                            wrapper: :select_control,
+                            select_html: {class: "is-fullwidth"},
+                            collection: destinations,
+                            prompt: destinations.selection_prompt %>
+          <%= f.error :destination %>
+        </div>
       </div>
 
-      <div class="field is-align-self-center mx-1">
-        <%= icon "fas fa-arrow-right", class: "has-text-dark" %>
+      <%= f.input :amount,
+                  as: :money,
+                  input_html: {data: {controller: "input", action: "input#validate", input_predicate_param: "gt", input_value_param: 0}} %>
+      <%= f.input :committed_date,
+                  html5: true,
+                  input_html: {class: "is-fullwidth", value: transaction.committed_date || Date.current} %>
+      <%= f.input :comment %>
+
+      <div class="field pt-4">
+        <% if transaction.new_record? %>
+          <%= f.button :submit, class: "is-primary is-fullwidth", data: {turbo_frame: "_top"} %>
+        <% else %>
+          <%= f.button :submit, class: "is-primary is-fullwidth" %>
+        <% end %>
       </div>
-
-      <div class="field is-flex-grow-1 is-flex-shrink-1">
-        <% destinations = transaction.possible_destinations %>
-        <%= f.association :destination,
-                          required: true,
-                          wrapper: :select_control,
-                          select_html: {class: "is-fullwidth"},
-                          collection: destinations,
-                          prompt: destinations.selection_prompt %>
-        <%= f.error :destination %>
-      </div>
-    </div>
-
-    <%= f.input :amount,
-                as: :money,
-                input_html: {data: {controller: "input", action: "input#validate", input_predicate_param: "gt", input_value_param: 0}} %>
-    <%= f.input :committed_date,
-                html5: true,
-                input_html: {class: "is-fullwidth", value: transaction.committed_date || Date.current} %>
-    <%= f.input :comment %>
-
-    <div class="field pt-4">
-      <%= f.button :submit, class: "is-primary is-fullwidth" %>
-    </div>
-  <% end %>
-</div>
+    <% end %>
+  </div>
+<% end %>

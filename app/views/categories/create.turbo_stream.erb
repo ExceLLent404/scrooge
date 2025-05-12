@@ -1,0 +1,9 @@
+<%= turbo_stream.remove Category.new(type: category.type) %>
+
+<%= turbo_stream.append category.type.underscore.pluralize, category %>
+
+<%= turbo_stream.append category.type.underscore.pluralize do %>
+  <%= render "offer_new_category", type: category.type %>
+<% end %>
+
+<%= prepend_flash %>

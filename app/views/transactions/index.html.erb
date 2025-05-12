@@ -5,13 +5,13 @@
 <div class="mt-3 columns is-centered">
   <div class="column has-background-light" style="max-width: 500px">
     <% transactions.group_by(&:committed_date).each do |date, transactions_by_date| %>
-      <div class="block">
+      <%= tag.div id: date, class: "block" do %>
         <%= date.to_relative_in_words %>
 
-        <div class="box p-1">
+        <%= tag.div id: "#{date}_transactions", class: "box p-1" do %>
           <%= render partial: transactions_by_date, spacer_template: "spacer" %>
-        </div>
-      </div>
+        <% end %>
+      <% end %>
     <% end %>
   </div>
 </div>

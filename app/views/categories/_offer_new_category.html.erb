@@ -1,10 +1,12 @@
 <% new_category = Category.new(type:).decorate %>
 
-<%= link_to new_category_path(type:) do %>
-  <div class="card has-background-light" style="width: 240px">
-    <div class="card-content has-text-centered p-3">
-      <p class="is-size-5 mb-2"><%= t(".text", type: new_category.human_type) %></p>
-      <%= icon "fas fa-square-plus fa-2xl", class: "has-text-#{new_category.color}" %>
+<%= turbo_frame_tag new_category do %>
+  <%= link_to new_category_path(type:) do %>
+    <div class="card has-background-light" style="width: 240px">
+      <div class="card-content has-text-centered p-3">
+        <p class="is-size-5 mb-2"><%= t(".text", type: new_category.human_type) %></p>
+        <%= icon "fas fa-square-plus fa-2xl", class: "has-text-#{new_category.color}" %>
+      </div>
     </div>
-  </div>
+  <% end %>
 <% end %>

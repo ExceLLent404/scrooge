@@ -54,6 +54,10 @@ label {
   border-radius: calc(var(--bulma-radius) + var(--bulma-column-gap));
 }
 
+.turbo-progress-bar {
+  background: var(--bulma-primary);
+}
+
 .flash {
   position: fixed;
   z-index: 31; // calc(var(--bulma-navbar-z) + 1);

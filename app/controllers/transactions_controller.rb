@@ -27,7 +27,10 @@ class TransactionsController < ApplicationController
 
   def update
     if @transaction.update(transaction_update_params)
-      redirect_to transactions_path, notice: t(".success")
+      respond_to do |format|
+        format.html { redirect_to transactions_path, notice: t(".success") }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+      end
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,7 +38,10 @@ class TransactionsController < ApplicationController
 
   def destroy
     @transaction.destroy!
-    redirect_to transactions_path, notice: t(".success")
+    respond_to do |format|
+      format.html { redirect_to transactions_path, notice: t(".success") }
+      format.turbo_stream { flash.now[:notice] = t(".success") }
+    end
   end
 
   private

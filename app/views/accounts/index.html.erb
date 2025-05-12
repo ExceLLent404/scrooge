@@ -1,7 +1,7 @@
 <h1 class="title">Accounts</h1>
 
-<div class="grid is-col-min-8" style="justify-items: center">
+<%= turbo_frame_tag :accounts, class: "grid is-col-min-8", style: "justify-items: center" do %>
   <%= render accounts %>
 
   <%= render "offer_new_account" %>
-</div>
+<% end %>

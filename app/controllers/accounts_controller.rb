@@ -18,7 +18,10 @@ class AccountsController < ApplicationController
     @account = current_user.accounts.new(account_params)
 
     if @account.save
-      redirect_to accounts_path, notice: t(".success")
+      respond_to do |format|
+        format.html { redirect_to accounts_path, notice: t(".success") }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+      end
     else
       render :new, status: :unprocessable_content
     end
@@ -26,7 +29,10 @@ class AccountsController < ApplicationController
 
   def update
     if @account.update(account_params)
-      redirect_to accounts_path, notice: t(".success")
+      respond_to do |format|
+        format.html { redirect_to accounts_path, notice: t(".success") }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+      end
     else
       render :edit, status: :unprocessable_content
     end
@@ -34,7 +40,11 @@ class AccountsController < ApplicationController
 
   def destroy
     @account.destroy!
-    redirect_to accounts_path, notice: t(".success")
+
+    respond_to do |format|
+      format.html { redirect_to accounts_path, notice: t(".success") }
+      format.turbo_stream { flash.now[:notice] = t(".success") }
+    end
   end
 
   private
