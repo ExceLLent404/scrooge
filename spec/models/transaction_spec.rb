@@ -96,4 +96,38 @@ RSpec.describe Transaction do
       expect(build(:transaction, committed_date: nil)).not_to be_valid
     end
   end
+
+  describe "Associations" do
+    describe "#source" do
+      subject(:source) { transaction.source }
+
+      it "belongs to the same user as the transaction itself" do
+        expect(transaction).to be_valid
+        expect(source.user).to eql(transaction.user)
+
+        source.user = build(:user)
+        expect(transaction).not_to be_valid
+
+        source.user = transaction.user
+        source.user_id = 1
+        expect(transaction).not_to be_valid
+      end
+    end
+
+    describe "#destination" do
+      subject(:destination) { transaction.destination }
+
+      it "belongs to the same user as the transaction itself" do
+        expect(transaction).to be_valid
+        expect(destination.user).to eql(transaction.user)
+
+        destination.user = build(:user)
+        expect(transaction).not_to be_valid
+
+        destination.user = transaction.user
+        destination.user_id = 1
+        expect(transaction).not_to be_valid
+      end
+    end
+  end
 end

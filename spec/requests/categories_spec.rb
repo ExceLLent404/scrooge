@@ -30,6 +30,7 @@ RSpec.describe "Categories requests" do
     include_examples "of response status", :ok
     include_examples "of user authentication"
     include_examples "of checking resource existence", :category
+    include_examples "of checking resource ownership", :category
   end
 
   describe "POST /categories" do
@@ -63,6 +64,7 @@ RSpec.describe "Categories requests" do
     include_examples "of redirection to list of", :categories
     include_examples "of user authentication"
     include_examples "of checking resource existence", :category
+    include_examples "of checking resource ownership", :category
 
     it "updates the requested Category" do
       expect { request }.to change { category.reload.attributes }
@@ -87,6 +89,7 @@ RSpec.describe "Categories requests" do
     include_examples "of redirection to list of", :categories
     include_examples "of user authentication"
     include_examples "of checking resource existence", :category
+    include_examples "of checking resource ownership", :category
 
     it "deletes the requested Category" do
       expect { request }.to change { Category.find_by(id: category.id) }.from(category).to(nil)

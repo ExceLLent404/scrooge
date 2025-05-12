@@ -31,6 +31,7 @@ RSpec.describe "Transactions requests" do
     include_examples "of response status", :ok
     include_examples "of user authentication"
     include_examples "of checking resource existence", :transaction
+    include_examples "of checking resource ownership", :transaction
   end
 
   describe "POST /transactions" do
@@ -61,14 +62,34 @@ RSpec.describe "Transactions requests" do
       let(:transaction) { build(:income, user:) }
 
       include_examples "of checking associated resource existence", :income_category, :source_id
+      include_examples "of checking associated resource ownership", :income_category, :source_id
       include_examples "of checking associated resource existence", :account, :destination_id
+      include_examples "of checking associated resource ownership", :account, :destination_id
+
+      context "when both IncomeCategory and Account with the specified source_id and destination_id respectively belongs to another User" do
+        let(:source_id) { create(:income_category, user: another_user).id }
+        let(:destination_id) { create(:account, user: another_user).id }
+        let(:another_user) { create(:user) }
+
+        include_examples "of response status", :unprocessable_content
+      end
     end
 
     context "when Transaction is Expense" do
       let(:transaction) { build(:expense, user:) }
 
       include_examples "of checking associated resource existence", :account, :source_id
+      include_examples "of checking associated resource ownership", :account, :source_id
       include_examples "of checking associated resource existence", :expense_category, :destination_id
+      include_examples "of checking associated resource ownership", :expense_category, :destination_id
+
+      context "when both Account and ExpenseCategory with the specified source_id and destination_id respectively belongs to another User" do
+        let(:source_id) { create(:account, user: another_user).id }
+        let(:destination_id) { create(:expense_category, user: another_user).id }
+        let(:another_user) { create(:user) }
+
+        include_examples "of response status", :unprocessable_content
+      end
     end
 
     context "with invalid parameters" do
@@ -98,6 +119,7 @@ RSpec.describe "Transactions requests" do
     include_examples "of redirection to list of", :transactions
     include_examples "of user authentication"
     include_examples "of checking resource existence", :transaction
+    include_examples "of checking resource ownership", :transaction
 
     it "updates transaction data to the specified ones" do
       expect { request }.to change { transaction.reload.attributes }
@@ -123,6 +145,7 @@ RSpec.describe "Transactions requests" do
         end
 
         include_examples "of checking associated resource existence", :income_category, :source_id
+        include_examples "of checking associated resource ownership", :income_category, :source_id
       end
 
       context "when destination_id is specified" do
@@ -138,6 +161,16 @@ RSpec.describe "Transactions requests" do
         end
 
         include_examples "of checking associated resource existence", :account, :destination_id
+        include_examples "of checking associated resource ownership", :account, :destination_id
+      end
+
+      context "when both IncomeCategory and Account with the specified source_id and destination_id respectively belongs to another User" do
+        let(:attributes) { {source_id:, destination_id:} }
+        let(:source_id) { create(:income_category, user: another_user).id }
+        let(:destination_id) { create(:account, user: another_user).id }
+        let(:another_user) { create(:user) }
+
+        include_examples "of response status", :unprocessable_content
       end
     end
 
@@ -157,6 +190,7 @@ RSpec.describe "Transactions requests" do
         end
 
         include_examples "of checking associated resource existence", :expense_category, :destination_id
+        include_examples "of checking associated resource ownership", :expense_category, :destination_id
       end
 
       context "when source_id is specified" do
@@ -172,6 +206,16 @@ RSpec.describe "Transactions requests" do
         end
 
         include_examples "of checking associated resource existence", :account, :source_id
+        include_examples "of checking associated resource ownership", :account, :source_id
+      end
+
+      context "when both Account and ExpenseCategory with the specified source_id and destination_id respectively belongs to another User" do
+        let(:attributes) { {source_id:, destination_id:} }
+        let(:source_id) { create(:account, user: another_user).id }
+        let(:destination_id) { create(:expense_category, user: another_user).id }
+        let(:another_user) { create(:user) }
+
+        include_examples "of response status", :unprocessable_content
       end
     end
 
@@ -194,6 +238,7 @@ RSpec.describe "Transactions requests" do
     include_examples "of redirection to list of", :transactions
     include_examples "of user authentication"
     include_examples "of checking resource existence", :transaction
+    include_examples "of checking resource ownership", :transaction
 
     it "deletes the requested Transaction" do
       expect { request }.to change { Transaction.find_by(id: transaction.id) }.from(transaction).to(nil)
