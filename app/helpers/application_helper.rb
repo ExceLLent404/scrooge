@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def prepend_flash
+    turbo_stream.prepend "flash", partial: "flash"
+  end
+
   SECTION_ICON = {
     capital: "fas fa-landmark",
     accounts: "fas fa-credit-card",

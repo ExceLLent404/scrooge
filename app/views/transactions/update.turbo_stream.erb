@@ -1,0 +1,24 @@
+<% if transaction.errors.present? %>
+  <%= turbo_stream.replace transaction, render(partial: "form", transaction:) %>
+<% else %>
+  <% if transaction.committed_date_previously_changed? %>
+    <% previous_date, new_date = transaction.committed_date_previous_change %>
+
+    <% if current_user.transactions.where(committed_date: previous_date).any? %>
+      <%= turbo_stream.remove transaction %>
+    <% else %>
+      <%= turbo_stream.remove previous_date %>
+    <% end %>
+
+    <%= turbo_stream.append "#{new_date}_transactions" do %>
+      <%= render "spacer" %>
+      <%= render transaction %>
+    <% end %>
+
+    <%# TODO: How to render a new transactions block for new_date? %>
+  <% else %>
+    <%= turbo_stream.replace transaction %>
+  <% end %>
+<% end %>
+
+<%= prepend_flash %>

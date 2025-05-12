@@ -19,7 +19,10 @@ class CategoriesController < ApplicationController
     @category = current_user.categories.new(category_create_params)
 
     if @category.save
-      redirect_to categories_path, notice: t(".success")
+      respond_to do |format|
+        format.html { redirect_to categories_path, notice: t(".success") }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+      end
     else
       render :new, status: :unprocessable_content
     end
@@ -27,7 +30,10 @@ class CategoriesController < ApplicationController
 
   def update
     if @category.update(category_update_params)
-      redirect_to categories_path, notice: t(".success")
+      respond_to do |format|
+        format.html { redirect_to categories_path, notice: t(".success") }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+      end
     else
       render :edit, status: :unprocessable_content
     end
@@ -35,7 +41,11 @@ class CategoriesController < ApplicationController
 
   def destroy
     @category.destroy!
-    redirect_to categories_path, notice: t(".success")
+
+    respond_to do |format|
+      format.html { redirect_to categories_path, notice: t(".success") }
+      format.turbo_stream { flash.now[:notice] = t(".success") }
+    end
   end
 
   private

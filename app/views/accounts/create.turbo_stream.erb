@@ -1,0 +1,4 @@
+<%= turbo_stream.remove Account.new %>
+<%= turbo_stream.append "accounts", account %>
+<%= turbo_stream.append "accounts", partial: "accounts/offer_new_account" %>
+<%= prepend_flash %>

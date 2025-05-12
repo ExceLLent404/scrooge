@@ -172,7 +172,6 @@ RSpec.describe "Transactions" do
       select income_category.name
       select account.name
       fill_in "Amount", with: amount
-      fill_in "Committed date", with: committed_date
       fill_in "Comment", with: comment
 
       click_on t("helpers.submit.update")
@@ -182,14 +181,13 @@ RSpec.describe "Transactions" do
     let!(:income_category) { create(:income_category, user:, name: "Not #{income.category.name}") }
     let!(:account) { create(:account, user:, name: "Not #{income.account.name}") }
     let(:amount) { income.amount + Money.from_amount(1) }
-    let(:committed_date) { income.committed_date.prev_day }
     let(:comment) { "Updated #{income.comment}" }
 
     it "updates the income" do
       act
 
       expect(success_notification).to have_content(t("transactions.update.success"))
-      expect(find(".block", text: committed_date.to_relative_in_words))
+      expect(find(".block", text: income.committed_date.to_relative_in_words))
         .to have_content(income_category.name)
         .and have_content(account.name)
         .and have_content(amount)
@@ -197,8 +195,6 @@ RSpec.describe "Transactions" do
 
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
-    it_behaves_like "validation of transaction committed date presence"
-    it_behaves_like "validation of transaction committed date occurrence"
   end
 
   describe "Editing an expense" do
@@ -211,7 +207,6 @@ RSpec.describe "Transactions" do
       select account.name
       select expense_category.name
       fill_in "Amount", with: amount
-      fill_in "Committed date", with: committed_date
       fill_in "Comment", with: comment
 
       click_on t("helpers.submit.update")
@@ -221,14 +216,13 @@ RSpec.describe "Transactions" do
     let!(:account) { create(:account, user:, name: "Not #{expense.account.name}") }
     let!(:expense_category) { create(:expense_category, user:, name: "Not #{expense.category.name}") }
     let(:amount) { expense.amount - Money.from_amount(1) }
-    let(:committed_date) { expense.committed_date.prev_day }
     let(:comment) { "Updated #{expense.comment}" }
 
     it "updates the expense" do
       act
 
       expect(success_notification).to have_content(t("transactions.update.success"))
-      expect(find(".block", text: committed_date.to_relative_in_words))
+      expect(find(".block", text: expense.committed_date.to_relative_in_words))
         .to have_content(account.name)
         .and have_content(expense_category.name)
         .and have_content(amount)
@@ -236,24 +230,94 @@ RSpec.describe "Transactions" do
 
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
+  end
+
+  describe "Changing transaction committed date" do
+    before { create(:transaction, user:, committed_date: prev_day) }
+
+    def act
+      visit transactions_path
+
+      find_menu(transaction).hover
+      click_on t("shared.links.edit")
+
+      fill_in "Committed date", with: committed_date
+
+      click_on t("helpers.submit.update")
+    end
+
+    let!(:transaction) { create(:transaction, user:) }
+    let(:prev_day) { transaction.committed_date.prev_day }
+    let(:committed_date) { prev_day }
+
+    it "updates the transaction committed date and transaction display location" do
+      act
+
+      expect(success_notification).to have_content(t("transactions.update.success"))
+      expect(find(".block", text: committed_date.to_relative_in_words))
+        .to have_content(transaction.account.name)
+        .and have_content(transaction.category.name)
+        .and have_content(transaction.amount)
+    end
+
+    context "when there are other transactions with the same committed date" do
+      before { create(:transaction, user:, committed_date: transaction.committed_date) }
+
+      it "leaves a block of transactions corresponding to the previous transaction committed date" do
+        act
+
+        expect(page).to have_content(transaction.committed_date.to_relative_in_words)
+      end
+    end
+
+    context "when there are no other transactions with the same committed date" do
+      it "removes a block of transactions corresponding to the previous transaction committed date" do
+        act
+
+        expect(page).to have_no_content(transaction.committed_date.to_relative_in_words)
+      end
+    end
+
     it_behaves_like "validation of transaction committed date presence"
     it_behaves_like "validation of transaction committed date occurrence"
   end
 
   describe "Deleting a transaction" do
-    it "deletes the transaction" do
-      transaction = create(:transaction, user:)
-
+    def act
       visit transactions_path
 
       find_menu(transaction).hover
       accept_confirm { click_on t("shared.links.delete") }
+    end
+
+    let!(:transaction) { create(:transaction, user:) }
+
+    it "deletes the transaction" do
+      act
 
       expect(success_notification).to have_content(t("transactions.destroy.success"))
       expect(page)
         .to have_no_content(transaction.source.name)
         .and have_no_content(transaction.destination.name)
         .and have_no_content(transaction.amount)
+    end
+
+    context "when there are other transactions with the same committed date" do
+      before { create(:transaction, user:, committed_date: transaction.committed_date) }
+
+      it "leaves a block of transactions corresponding to the previous transaction committed date" do
+        act
+
+        expect(page).to have_content(transaction.committed_date.to_relative_in_words)
+      end
+    end
+
+    context "when there are no other transactions with the same committed date" do
+      it "removes a block of transactions corresponding to the previous transaction committed date" do
+        act
+
+        expect(page).to have_no_content(transaction.committed_date.to_relative_in_words)
+      end
     end
   end
 
