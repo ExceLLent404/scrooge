@@ -26,6 +26,7 @@ RSpec.describe "Accounts requests" do
     include_examples "of response status", :ok
     include_examples "of user authentication"
     include_examples "of checking resource existence", :account
+    include_examples "of checking resource ownership", :account
   end
 
   describe "POST /accounts" do
@@ -61,6 +62,7 @@ RSpec.describe "Accounts requests" do
     include_examples "of redirection to list of", :accounts
     include_examples "of user authentication"
     include_examples "of checking resource existence", :account
+    include_examples "of checking resource ownership", :account
 
     it "updates the requested Account" do
       expect { request }.to change { account.reload.attributes }
@@ -85,6 +87,7 @@ RSpec.describe "Accounts requests" do
     include_examples "of redirection to list of", :accounts
     include_examples "of user authentication"
     include_examples "of checking resource existence", :account
+    include_examples "of checking resource ownership", :account
 
     it "deletes the requested Account" do
       expect { request }.to change { Account.find_by(id: account.id) }.from(account).to(nil)

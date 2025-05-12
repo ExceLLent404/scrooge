@@ -11,7 +11,10 @@ class Transaction < ApplicationRecord
 
   validates :committed_date, presence: true
   validate do
-    %i[source destination].each { |attribute| type_matching(attribute) }
+    %i[source destination].each do |attribute|
+      type_matching(attribute)
+      ownership_of(attribute)
+    end
   end
 
   after_initialize :set_appropriate_source_type, unless: :source_type?
@@ -34,6 +37,15 @@ class Transaction < ApplicationRecord
     klass = self.class.const_get("#{attribute.upcase}_TYPE").constantize
     model = klass.model_name.human
     errors.add(attribute, I18n.t("errors.messages.is_an", model:)) unless association.is_a?(klass)
+  end
+
+  def ownership_of(attribute)
+    association = public_send(attribute)
+    return if user.nil? || association.nil?
+    return if (user.persisted? || association.persisted?) && user_id == association.user_id
+    return if user == association.user
+
+    errors.add(attribute, I18n.t("errors.messages.ownership", model: User.model_name.human))
   end
 
   def set_appropriate_source_type
