@@ -10,6 +10,10 @@ class Transaction < ApplicationRecord
   belongs_to :destination, polymorphic: true
 
   validates :committed_date, presence: true
+  validates :committed_date, comparison: {
+    less_than_or_equal_to: ->(_) { Date.current },
+    message: I18n.t("errors.messages.not_greater_than", count: "the current date")
+  }
   validate do
     %i[source destination].each do |attribute|
       type_matching(attribute)

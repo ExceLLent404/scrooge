@@ -33,3 +33,16 @@ RSpec.shared_examples "validation of transaction committed date presence" do
     end
   end
 end
+
+RSpec.shared_examples "validation of transaction committed date occurrence" do
+  context "when committed date is greater than the current one" do
+    let(:committed_date) { Date.tomorrow }
+
+    it "pops up an error message" do
+      act
+
+      expect(field_validation_message("Committed date"))
+        .to eql(t("chrome.validations.date.less_than", date: l(Date.current, format: :chrome)))
+    end
+  end
+end

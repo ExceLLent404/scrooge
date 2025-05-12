@@ -20,7 +20,7 @@ FactoryBot.define do
 
     trait :invalid do
       amount { 0 }
-      committed_date { nil }
+      committed_date { Date.tomorrow }
     end
 
     transient { abstract { true } }

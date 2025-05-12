@@ -95,6 +95,10 @@ RSpec.describe Transaction do
     it "cannot be absent" do
       expect(build(:transaction, committed_date: nil)).not_to be_valid
     end
+
+    it "cannot be greater than the current date" do
+      expect(build(:transaction, committed_date: Date.tomorrow)).not_to be_valid
+    end
   end
 
   describe "Associations" do
