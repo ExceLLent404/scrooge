@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :incomes
   has_many :expenses
 
+  validates :time_zone, inclusion: {in: ActiveSupport::TimeZone.all.map(&:name), message: I18n.t("errors.messages.invalid")}
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

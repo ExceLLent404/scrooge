@@ -11,6 +11,8 @@
         <%= f.input :password, input_html: {autocomplete: "new-password"} %>
         <%= f.input :password_confirmation, input_html: {autocomplete: "new-password"} %>
 
+        <%= f.input :time_zone, select_html: {class: "is-fullwidth"}, selected: "UTC" %>
+
         <div class="field pt-4">
           <%= f.button :submit, t(".sign_up"), class: "is-primary is-fullwidth" %>
         </div>

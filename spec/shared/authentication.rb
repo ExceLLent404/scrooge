@@ -3,6 +3,8 @@ RSpec.shared_context "with authenticated user" do
   let(:user) { create(:user) }
 
   before { sign_in(user) }
+
+  around { |example| Time.use_zone(user.time_zone, &example) }
 end
 
 RSpec.shared_examples "of user authentication" do

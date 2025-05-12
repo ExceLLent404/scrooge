@@ -259,6 +259,7 @@ SimpleForm.setup do |config|
     check_boxes: :check_boxes,
     file: :file,
     hidden: :hidden,
+    time_zone: :select,
     text: :text
   }
 
