@@ -55,4 +55,21 @@ RSpec.describe User do
       expect(user).not_to be_valid
     end
   end
+
+  describe "#time_zone" do
+    subject(:time_zone) { user.time_zone }
+
+    it { is_expected.to be_an_instance_of(String) }
+
+    it "cannot be absent" do
+      expect(build(:user, time_zone: nil)).not_to be_valid
+    end
+
+    it "is a valid time zone name" do
+      expect(ActiveSupport::TimeZone.all.map(&:name)).to include(time_zone)
+
+      expect(build(:user, time_zone: "UTC")).to be_valid
+      expect(build(:user, time_zone: "invalid")).not_to be_valid
+    end
+  end
 end

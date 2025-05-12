@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
+  around_action :set_time_zone, if: :current_user
+
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def current_user
@@ -11,6 +13,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_time_zone(&)
+    Time.use_zone(current_user.time_zone, &)
+  end
 
   def record_not_found(error)
     path = send(:"#{error.model.downcase.pluralize}_path")

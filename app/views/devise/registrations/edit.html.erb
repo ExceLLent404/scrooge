@@ -9,6 +9,8 @@
         <%= f.input :name %>
         <%= f.input :email %>
 
+        <%= f.input :time_zone, select_html: {class: "is-fullwidth"}, selected: resource.time_zone %>
+
         <hr>
 
         <%= f.input :password,

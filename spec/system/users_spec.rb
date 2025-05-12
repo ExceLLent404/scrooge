@@ -11,6 +11,7 @@ RSpec.describe "Users" do
       fill_in "Email", with: email
       fill_in "Password", with: password, match: :first
       fill_in "Password confirmation", with: password_confirmation
+      select time_zone
 
       form.click_on t("devise.registrations.new.sign_up")
     end
@@ -19,6 +20,7 @@ RSpec.describe "Users" do
     let(:email) { user.email }
     let(:password) { user.password }
     let(:password_confirmation) { password }
+    let(:time_zone) { ActiveSupport::TimeZone.new(attributes_for(:user)[:time_zone]).to_s }
 
     it "requires confirmation of the registered user's email via a link in the sent email" do
       act
@@ -240,6 +242,7 @@ RSpec.describe "Users" do
       expect(page)
         .to have_field("Name", with: user.name)
         .and have_field("Email", with: user.email)
+        .and have_select("Time zone", selected: ActiveSupport::TimeZone.new(user.time_zone).to_s)
     end
   end
 
@@ -252,6 +255,7 @@ RSpec.describe "Users" do
       click_on user.name
 
       fill_in "Name", with: name
+      select time_zone
       fill_in "Current password", with: current_password
 
       click_on t("devise.registrations.edit.update")
@@ -259,6 +263,7 @@ RSpec.describe "Users" do
 
     let(:user) { create(:user, :with_name) }
     let(:name) { "Updated #{user.name}" }
+    let(:time_zone) { ActiveSupport::TimeZone.new(attributes_for(:user)[:time_zone]).to_s }
     let(:current_password) { user.password }
 
     it "updates user data" do
@@ -266,7 +271,9 @@ RSpec.describe "Users" do
 
       expect(success_notification).to have_content(t("devise.registrations.updated"))
       expect(navbar).to have_content(name)
-      expect(page).to have_field("Name", with: name)
+      expect(page)
+        .to have_field("Name", with: name)
+        .and have_select("Time zone", selected: time_zone)
     end
 
     it_behaves_like "validation of current password presence"
