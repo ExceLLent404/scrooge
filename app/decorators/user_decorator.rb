@@ -7,7 +7,7 @@ class UserDecorator < ApplicationDecorator
     explicit_name.presence || implicit_name
   end
 
-  def avatar_path
-    (avatar.attached? && avatar.persisted?) ? avatar : "default_avatar.png"
+  def avatar_path(size)
+    (avatar.attached? && avatar.persisted?) ? avatar.variant(size) : "default_avatar.png"
   end
 end

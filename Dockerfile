@@ -32,7 +32,7 @@ ARG NODE_VERSION=18.20.4
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         git \
-        make gcc libjemalloc2 \
+        make gcc libjemalloc2 libvips \
         libpq-dev postgresql-client-16 \
         nodejs=$NODE_VERSION-1nodesource1 && \
     rm -rf /var/lib/apt/lists/*
