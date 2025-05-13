@@ -1,6 +1,8 @@
 RSpec.shared_context "with authenticated user" do
+  fixtures :users
+
   # user, i.e. current user, i.e. authenticated user
-  let(:user) { create(:user) }
+  let(:user) { users(:ordinary) }
 
   before { sign_in(user) }
 

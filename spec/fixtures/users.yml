@@ -1,0 +1,6 @@
+ordinary:
+  name: <%= [Faker::Name.first_name, nil].sample %>
+  email: <%= Faker::Internet.email %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, Faker::Internet.password) %>
+  confirmed_at: <%= Time.current %>
+  time_zone: <%= ActiveSupport::TimeZone.all.sample.name %>
