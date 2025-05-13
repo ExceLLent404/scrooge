@@ -6,12 +6,13 @@
       <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
         <%= f.error_notification %>
 
-        <div class="is-flex is-flex-direction-column is-align-items-center">
+        <div class="is-flex is-flex-direction-column is-align-items-center" data-controller="preview">
           <% size = 128 %>
           <%= tag.figure(class: "image is-#{size}x#{size} mb-2") do %>
             <%= image_tag resource.avatar_path,
                           class: "is-rounded",
-                          style: "width: #{size}px; height: #{size}px" %>
+                          style: "width: #{size}px; height: #{size}px",
+                          data: {preview_target: :preview} %>
           <% end %>
 
           <%= f.input :avatar, file_html: {class: "is-small"} %>

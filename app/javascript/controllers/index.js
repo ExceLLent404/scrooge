@@ -15,3 +15,6 @@ application.register("input", InputController)
 
 import NavbarController from "./navbar_controller"
 application.register("navbar", NavbarController)
+
+import PreviewController from "./preview_controller"
+application.register("preview", PreviewController)

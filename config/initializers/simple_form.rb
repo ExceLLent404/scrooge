@@ -117,7 +117,9 @@ SimpleForm.setup do |config|
   config.wrappers :file, tag: "div", class: "field" do |b|
     b.wrapper :file, tag: "div", class: "file has-name", html: {data: {controller: :file}} do |file|
       file.wrapper tag: "label", class: "file-label" do |component|
-        component.use :input, class: "file-input", data: {file_target: :input, action: "change->file#changeName"}
+        component.use :input,
+          class: "file-input",
+          data: {file_target: :input, preview_target: :input, action: "change->file#changeName change->preview#show"}
         component.use :file_button
       end
     end
