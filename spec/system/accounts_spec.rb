@@ -56,6 +56,25 @@ RSpec.describe "Accounts" do
     end
   end
 
+  describe "Canceling account creation" do
+    let(:name) { "Canceling" }
+    let(:balance) { 100500 }
+
+    it "does not create an account and offers to do it" do
+      visit accounts_path
+
+      click_on t("accounts.offer_new_account.text")
+
+      fill_in "Name", with: name
+      fill_in "Balance", with: balance
+
+      click_on t("shared.links.cancel")
+
+      expect(page).to have_no_content(name).and have_no_content(balance)
+      expect(page).to have_content(t("accounts.offer_new_account.text"))
+    end
+  end
+
   describe "Editing an account" do
     def act
       visit accounts_path
@@ -83,6 +102,27 @@ RSpec.describe "Accounts" do
     it_behaves_like "validation of account name presence"
     it_behaves_like "validation of account balance presence"
     it_behaves_like "validation of account balance non-negativity"
+  end
+
+  describe "Canceling account edition" do
+    let!(:account) { create(:account, user:) }
+    let(:name) { "Canceling" }
+    let(:balance) { 100500 }
+
+    it "does not update the account and shows the original one" do
+      visit accounts_path
+
+      find_menu(account).hover
+      click_on t("shared.links.edit")
+
+      fill_in "Name", with: name
+      fill_in "Balance", with: balance
+
+      click_on t("shared.links.cancel")
+
+      expect(page).to have_no_content(name).and have_no_content(balance)
+      expect(page).to have_content(account.name).and have_content(account.balance)
+    end
   end
 
   describe "Deleting an account" do

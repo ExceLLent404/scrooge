@@ -1,11 +1,14 @@
 class TransactionsController < ApplicationController
-  before_action :set_transaction, only: %i[edit update destroy]
+  before_action :set_transaction, only: %i[show edit update destroy]
 
   decorates_assigned :transaction, :transactions
 
   def index
     @transactions =
       current_user.transactions.order(committed_date: :desc, created_at: :desc).includes(:source, :destination)
+  end
+
+  def show
   end
 
   def new

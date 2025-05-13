@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[edit update destroy]
+  before_action :set_category, only: %i[show edit update destroy]
 
   decorates_assigned :category, :income_categories, :expense_categories
 
@@ -8,8 +8,14 @@ class CategoriesController < ApplicationController
     @expense_categories = current_user.expense_categories.order(created_at: :asc)
   end
 
+  def show
+  end
+
   def new
     @category = Category.new(type: params[:type])
+  end
+
+  def offer
   end
 
   def edit

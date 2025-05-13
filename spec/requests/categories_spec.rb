@@ -15,8 +15,26 @@ RSpec.describe "Categories requests" do
     include_examples "of user authentication"
   end
 
+  describe "GET /categories/:id" do
+    let(:request) { get category_url(id) }
+    let(:id) { create(:category, user:).id }
+
+    include_examples "of response status", :ok
+    include_examples "of user authentication"
+    include_examples "of checking resource existence", :category
+    include_examples "of checking resource ownership", :category
+  end
+
   describe "GET /categories/new" do
     let(:request) { get new_category_url(type:) }
+    let(:type) { %w[IncomeCategory ExpenseCategory].sample }
+
+    include_examples "of response status", :ok
+    include_examples "of user authentication"
+  end
+
+  describe "GET /categories/new/offer" do
+    let(:request) { get offer_new_category_url(type:) }
     let(:type) { %w[IncomeCategory ExpenseCategory].sample }
 
     include_examples "of response status", :ok
