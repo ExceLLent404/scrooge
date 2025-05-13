@@ -8,6 +8,6 @@ class UserDecorator < ApplicationDecorator
   end
 
   def avatar_path
-    "default_avatar.png"
+    (avatar.attached? && avatar.persisted?) ? avatar : "default_avatar.png"
   end
 end

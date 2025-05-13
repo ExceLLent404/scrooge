@@ -13,6 +13,8 @@
                           class: "is-rounded",
                           style: "width: #{size}px; height: #{size}px" %>
           <% end %>
+
+          <%= f.input :avatar, file_html: {class: "is-small"} %>
         </div>
 
         <%= f.input :name %>
