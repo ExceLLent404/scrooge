@@ -1,4 +1,4 @@
-<% if transaction.errors.present? %>
+<% if transaction.errors.present? || flash.key?(:alert) %>
   <%= turbo_stream.replace transaction, render(partial: "form", transaction:) %>
 <% else %>
   <% if transaction.committed_date_previously_changed? %>

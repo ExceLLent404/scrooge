@@ -1,7 +1,9 @@
-<% if current_user.transactions.where(committed_date: transaction.committed_date).any? %>
-  <%= turbo_stream.remove transaction %>
-<% else %>
-  <%= turbo_stream.remove transaction.committed_date %>
+<% unless flash.key?(:alert) %>
+  <% if current_user.transactions.where(committed_date: transaction.committed_date).any? %>
+    <%= turbo_stream.remove transaction %>
+  <% else %>
+    <%= turbo_stream.remove transaction.committed_date %>
+  <% end %>
 <% end %>
 
 <%= prepend_flash %>

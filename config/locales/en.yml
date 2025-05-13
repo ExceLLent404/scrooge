@@ -26,6 +26,9 @@ en:
     yesterday: Yesterday
   errors:
     messages:
+      account:
+        negative_amount: It is not possible to operate with a negative amount (%{amount})
+        not_enough_balance: The balance of account %{name} (%{balance}) cannot be reduced by %{amount}
       is_an: must be an %{model}
       not_greater_than: cannot be greater than %{count}
       not_less_than: cannot be less than %{count}

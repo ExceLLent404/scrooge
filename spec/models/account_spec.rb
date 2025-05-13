@@ -35,4 +35,61 @@ RSpec.describe Account do
       expect(build(:account, balance: -1)).not_to be_valid
     end
   end
+
+  describe "#deposit" do
+    subject(:command) { account.deposit(amount) }
+
+    let(:amount) { Money.from_amount(100) }
+
+    it "increases the balance by the specified amount" do
+      expect { command }.to change(account, :balance).by(amount)
+    end
+
+    context "when the specified amount is negative" do
+      let(:amount) { Money.from_amount(-1) }
+
+      it "raises Account::NegativeAmount error" do
+        expect { command }.to raise_error(Account::NegativeAmount)
+      end
+
+      it "does not increase the balance" do
+        expect { suppress(Account::NegativeAmount) { command } }.not_to change(account, :balance)
+      end
+    end
+  end
+
+  describe "#withdraw" do
+    subject(:command) { account.withdraw(amount) }
+
+    let(:amount) { account.balance }
+    let(:account) { build(:account, balance: 100) }
+
+    it "decreases the balance by the specified amount" do
+      expect { command }.to change(account, :balance).by(-amount)
+    end
+
+    context "when the specified amount is negative" do
+      let(:amount) { Money.from_amount(-1) }
+
+      it "raises Account::NegativeAmount error" do
+        expect { command }.to raise_error(Account::NegativeAmount)
+      end
+
+      it "does not decrease the balance" do
+        expect { suppress(Account::NegativeAmount) { command } }.not_to change(account, :balance)
+      end
+    end
+
+    context "when the specified amount is greater than the balance" do
+      let(:amount) { account.balance + Money.from_amount(1) }
+
+      it "raises Account::NotEnoughBalance error" do
+        expect { command }.to raise_error(Account::NotEnoughBalance)
+      end
+
+      it "does not decrease the balance" do
+        expect { suppress(Account::NotEnoughBalance) { command } }.not_to change(account, :balance)
+      end
+    end
+  end
 end

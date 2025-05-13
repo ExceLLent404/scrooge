@@ -14,6 +14,10 @@ RSpec.describe Transaction do
     expect(described_class.new(type: "Expense")).to be_an_instance_of(Expense)
   end
 
+  it { is_expected.to respond_to(:perform).with(0).arguments }
+  it { is_expected.to respond_to(:correct).with(1).argument }
+  it { is_expected.to respond_to(:cancel).with(0).arguments }
+
   it { is_expected.to monetize(:amount) }
 
   it_behaves_like "it has timestamps"
