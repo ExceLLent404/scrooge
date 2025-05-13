@@ -83,3 +83,5 @@ RSpec.configure do |config|
     end
   end
 end
+
+Bullet.add_safelist type: :n_plus_one_query, class_name: "User", association: :avatar_attachment

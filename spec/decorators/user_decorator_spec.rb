@@ -22,4 +22,15 @@ RSpec.describe UserDecorator do
       end
     end
   end
+
+  describe "#avatar_path" do
+    subject(:avatar_path) { decorated_user.avatar_path(size) }
+
+    context "when user does not have the avatar" do
+      let(:user) { build(:user) }
+      let(:size) { :does_not_matter }
+
+      it { is_expected.to include("default") }
+    end
+  end
 end

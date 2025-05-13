@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import FileController from "./file_controller"
+application.register("file", FileController)
+
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
@@ -12,3 +15,6 @@ application.register("input", InputController)
 
 import NavbarController from "./navbar_controller"
 application.register("navbar", NavbarController)
+
+import PreviewController from "./preview_controller"
+application.register("preview", PreviewController)

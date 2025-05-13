@@ -2,6 +2,11 @@ class User < ApplicationRecord
   normalizes :name, with: ->(name) { name.present? ? name.squish : nil }
   normalizes :email, with: ->(email) { email.strip.downcase }
 
+  has_one_attached :avatar do |attachable|
+    attachable.variant :thumbnail, resize_to_fill: [32, 32], saver: {quality: 100}
+    attachable.variant :profile, resize_to_fill: [128, 128], saver: {quality: 100}
+  end
+
   has_many :accounts, dependent: :delete_all
   has_many :categories, dependent: :delete_all
   has_many :income_categories
