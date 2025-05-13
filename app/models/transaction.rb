@@ -34,6 +34,22 @@ class Transaction < ApplicationRecord
     super(class_name.constantize.base_class.to_s)
   end
 
+  # :nocov:
+
+  def perform
+    raise "Not implemented"
+  end
+
+  def correct(_new_amount)
+    raise "Not implemented"
+  end
+
+  def cancel
+    raise "Not implemented"
+  end
+
+  # :nocov:
+
   private
 
   def type_matching(attribute)

@@ -17,4 +17,19 @@ class Expense < Transaction
   def category=(expense_category)
     self.destination = expense_category
   end
+
+  def perform
+    account.withdraw(amount)
+  end
+
+  def correct(new_amount)
+    diff = new_amount - amount
+    return if diff.zero?
+
+    (diff < 0) ? account.deposit(diff.abs) : account.withdraw(diff)
+  end
+
+  def cancel
+    account.deposit(amount)
+  end
 end

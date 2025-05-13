@@ -13,7 +13,7 @@ FactoryBot.define do
     end
 
     type { %w[Income Expense].sample }
-    amount { rand(0.01..100.0).round(2) }
+    amount { rand(1.01..100.0).round(2) } # 1.01 is the minimum value that can be decreased by 1 without becoming an invalid transaction amount
     comment { ["Comment", nil].sample }
     committed_date { Faker::Date.between(from: Date.current.beginning_of_year.prev_year, to: Date.current) }
     user

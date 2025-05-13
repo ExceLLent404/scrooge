@@ -1,4 +1,6 @@
 class TransactionsController < ApplicationController
+  include Dry::Monads[:result]
+
   before_action :set_transaction, only: %i[show edit update destroy]
 
   decorates_assigned :transaction, :transactions
@@ -20,30 +22,49 @@ class TransactionsController < ApplicationController
 
   def create
     @transaction = current_user.transactions.new(transaction_create_params)
+    result = CreateTransaction.call(transaction: @transaction)
 
-    if @transaction.save
+    case result
+    in Success(_)
       redirect_to transactions_path, notice: t(".success")
-    else
+    in Failure(Symbol, message)
+      flash.now[:alert] = message if message.present?
       render :new, status: :unprocessable_content
     end
   end
 
   def update
-    if @transaction.update(transaction_update_params)
+    result = UpdateTransaction.call(transaction: @transaction, data: transaction_update_params)
+
+    case result
+    in Success()
       respond_to do |format|
         format.html { redirect_to transactions_path, notice: t(".success") }
         format.turbo_stream { flash.now[:notice] = t(".success") }
       end
-    else
-      render :edit, status: :unprocessable_content
+    in Failure(Symbol, message)
+      flash.now[:alert] = message if message.present?
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_content }
+        format.turbo_stream
+      end
     end
   end
 
   def destroy
-    @transaction.destroy!
-    respond_to do |format|
-      format.html { redirect_to transactions_path, notice: t(".success") }
-      format.turbo_stream { flash.now[:notice] = t(".success") }
+    result = DeleteTransaction.call(transaction: @transaction)
+
+    case result
+    in Success()
+      respond_to do |format|
+        format.html { redirect_to transactions_path, notice: t(".success") }
+        format.turbo_stream { flash.now[:notice] = t(".success") }
+      end
+    in Failure(Symbol, message)
+      respond_to do |format|
+        format.html { redirect_to transactions_path, alert: message }
+        format.turbo_stream { flash.now[:alert] = message }
+      end
     end
   end
 

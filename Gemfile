@@ -20,6 +20,9 @@ gem "draper", "~> 4.0"
 gem "money-rails", "~> 1.0"
 gem "simple_form", "~> 5.0"
 
+gem "dry-monads", "~> 1.0"
+gem "dry-initializer", "~> 3.0"
+
 gem "image_processing", "~> 1.0"
 
 group :development do

@@ -14,6 +14,84 @@ RSpec.describe Income do
     end
   end
 
+  describe "#perform" do
+    subject(:command) { income.perform }
+
+    it "increases the Account balance by the Income amount" do
+      expect { command }.to change { income.account.balance }.by(income.amount)
+    end
+  end
+
+  describe "#correct" do
+    subject(:command) { income.correct(new_amount) }
+
+    let(:income) { build(:income, user:, destination: account, amount: account.balance) }
+    let(:account) { build(:account, user:, balance: 100) }
+    let(:user) { build(:user) }
+    let(:new_amount) { income.amount + diff }
+
+    context "when the new amount is greater than the current one" do
+      let(:diff) { Money.from_amount(1) }
+
+      it "increases the Account balance by the difference between the new and current amounts" do
+        expect { command }.to change(account, :balance).by(diff)
+      end
+    end
+
+    context "when the new amount is equal to the current one" do
+      let(:diff) { Money.zero }
+
+      it "does not change the Account balance" do
+        expect { command }.not_to change(account, :balance)
+      end
+    end
+
+    context "when the new amount is less than the current one" do
+      let(:diff) { Money.from_amount(-1) }
+
+      it "decreases the Account balance by the difference between the new and current amounts" do
+        expect { command }.to change(account, :balance).by(diff)
+      end
+
+      context "when the difference between the new and current amounts is greater than Account balance" do
+        let(:diff) { -(account.balance + Money.from_amount(1)) }
+
+        it "raises Account::NotEnoughBalance error" do
+          expect { command }.to raise_error(Account::NotEnoughBalance)
+        end
+
+        it "does not decrease the Account balance" do
+          expect { suppress(Account::NotEnoughBalance) { command } }.not_to change(account, :balance)
+        end
+      end
+    end
+  end
+
+  describe "#cancel" do
+    subject(:command) { income.cancel }
+
+    let(:income) { build(:income, user:, destination: account, amount:) }
+    let(:account) { build(:account, user:, balance: 100) }
+    let(:user) { build(:user) }
+    let(:amount) { account.balance }
+
+    it "decreases the Account balance by the Income amount" do
+      expect { command }.to change(account, :balance).by(-income.amount)
+    end
+
+    context "when Income amount is greater than Account balance" do
+      let(:amount) { account.balance + Money.from_amount(1) }
+
+      it "raises Account::NotEnoughBalance error" do
+        expect { command }.to raise_error(Account::NotEnoughBalance)
+      end
+
+      it "does not decrease the Account balance" do
+        expect { suppress(Account::NotEnoughBalance) { command } }.not_to change(account, :balance)
+      end
+    end
+  end
+
   describe "Associations" do
     let(:income_category) { build(:income_category) }
     let(:account) { build(:account) }

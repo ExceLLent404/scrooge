@@ -11,6 +11,7 @@ if ENV["COVERAGE"] || ENV["CI"]
 
     add_group "Decorators", "app/decorators"
     add_group "Inputs", "app/inputs"
+    add_group "Operations", "app/operations"
     add_group "Views", "app/views"
 
     formatter SimpleCov::Formatter::CoberturaFormatter if ENV["CI"]

@@ -126,9 +126,10 @@ RSpec.describe "Transactions" do
       click_on t("helpers.submit.create")
     end
 
-    let!(:account) { create(:account, user:) }
+    let!(:account) { create(:account, user:, balance:) }
+    let(:balance) { 100 }
     let!(:expense_category) { create(:expense_category, user:) }
-    let(:amount) { 100 }
+    let(:amount) { balance }
     let(:committed_date) { Date.current }
     let(:comment) { "Test expense" }
     let(:default_committed_date) { false }
@@ -145,6 +146,22 @@ RSpec.describe "Transactions" do
 
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
+
+    context "when amount is greater than account balance" do
+      let(:amount) { balance + 1 }
+
+      it "shows an error notification" do
+        act
+
+        expect(error_notification).to have_content(t(
+          "errors.messages.account.not_enough_balance",
+          name: account.name,
+          balance: Money.from_amount(balance).format,
+          amount: Money.from_amount(amount).format
+        ))
+      end
+    end
+
     it_behaves_like "validation of transaction committed date presence"
     it_behaves_like "validation of transaction committed date occurrence"
 
@@ -198,18 +215,20 @@ RSpec.describe "Transactions" do
       click_on t("shared.links.edit")
 
       select income_category.name
-      select account.name
+      select account.name if account_change
       fill_in "Amount", with: amount
       fill_in "Comment", with: comment
 
       click_on t("helpers.submit.update")
     end
 
-    let!(:income) { create(:income, user:) }
+    let!(:income) { create(:income, user:, destination: current_account) }
+    let(:current_account) { create(:account, user:, balance: current_account_balance) }
+    let(:current_account_balance) { 100 }
     let!(:income_category) { create(:income_category, user:, name: "Not #{income.category.name}") }
-    let!(:account) { create(:account, user:, name: "Not #{income.account.name}") }
     let(:amount) { income.amount + Money.from_amount(1) }
     let(:comment) { "Updated #{income.comment}" }
+    let(:account_change) { false }
 
     it "updates the income" do
       act
@@ -217,12 +236,57 @@ RSpec.describe "Transactions" do
       expect(success_notification).to have_content(t("transactions.update.success"))
       expect(find(".block", text: income.committed_date.to_relative_in_words))
         .to have_content(income_category.name)
-        .and have_content(account.name)
         .and have_content(amount)
     end
 
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
+
+    context "when amount decreases" do
+      let(:amount) { income.amount - Money.from_amount(1) }
+
+      context "when the difference between the new and current amounts is greater than account balance" do
+        let(:current_account_balance) { 0 }
+
+        it "shows an error notification" do
+          act
+
+          expect(error_notification).to have_content(t(
+            "errors.messages.account.not_enough_balance",
+            name: current_account.name,
+            balance: current_account.balance.format,
+            amount: Money.from_amount(1).format
+          ))
+        end
+      end
+    end
+
+    context "when account changed" do
+      let(:account_change) { true }
+      let!(:account) { create(:account, user:, name: "Not #{income.account.name}") }
+
+      it "updates the income account" do
+        act
+
+        expect(find(".block", text: income.committed_date.to_relative_in_words))
+          .to have_content(account.name)
+      end
+
+      context "when amount is greater than balance of the original account" do
+        let(:current_account_balance) { 0 }
+
+        it "shows an error notification" do
+          act
+
+          expect(error_notification).to have_content(t(
+            "errors.messages.account.not_enough_balance",
+            name: current_account.name,
+            balance: current_account.balance.format,
+            amount: income.amount.format
+          ))
+        end
+      end
+    end
   end
 
   describe "Editing an expense" do
@@ -232,7 +296,7 @@ RSpec.describe "Transactions" do
       find_menu(expense).hover
       click_on t("shared.links.edit")
 
-      select account.name
+      select account.name if account_change
       select expense_category.name
       fill_in "Amount", with: amount
       fill_in "Comment", with: comment
@@ -240,24 +304,72 @@ RSpec.describe "Transactions" do
       click_on t("helpers.submit.update")
     end
 
-    let!(:expense) { create(:expense, user:) }
-    let!(:account) { create(:account, user:, name: "Not #{expense.account.name}") }
+    let!(:expense) { create(:expense, user:, source: current_account) }
+    let(:current_account) { create(:account, user:, balance: current_account_balance) }
+    let(:current_account_balance) { 100 }
     let!(:expense_category) { create(:expense_category, user:, name: "Not #{expense.category.name}") }
     let(:amount) { expense.amount - Money.from_amount(1) }
     let(:comment) { "Updated #{expense.comment}" }
+    let(:account_change) { false }
 
     it "updates the expense" do
       act
 
       expect(success_notification).to have_content(t("transactions.update.success"))
       expect(find(".block", text: expense.committed_date.to_relative_in_words))
-        .to have_content(account.name)
-        .and have_content(expense_category.name)
+        .to have_content(expense_category.name)
         .and have_content(amount)
     end
 
     it_behaves_like "validation of transaction amount presence"
     it_behaves_like "validation of transaction amount positivity"
+
+    context "when amount increases" do
+      let(:amount) { expense.amount + Money.from_amount(1) }
+
+      context "when the difference between the new and current amounts is greater than account balance" do
+        let(:current_account_balance) { 0 }
+
+        it "shows an error notification" do
+          act
+
+          expect(error_notification).to have_content(t(
+            "errors.messages.account.not_enough_balance",
+            name: current_account.name,
+            balance: current_account.balance.format,
+            amount: Money.from_amount(1).format
+          ))
+        end
+      end
+    end
+
+    context "when account changed" do
+      let(:account_change) { true }
+      let!(:account) { create(:account, user:, name: "Not #{expense.account.name}", balance:) }
+      let(:balance) { expense.amount }
+
+      it "updates the expense account" do
+        act
+
+        expect(find(".block", text: expense.committed_date.to_relative_in_words))
+          .to have_content(account.name)
+      end
+
+      context "when amount is greater than balance of the specified account" do
+        let(:balance) { 0 }
+
+        it "shows an error notification" do
+          act
+
+          expect(error_notification).to have_content(t(
+            "errors.messages.account.not_enough_balance",
+            name: account.name,
+            balance: Money.from_amount(balance).format,
+            amount: amount.format
+          ))
+        end
+      end
+    end
   end
 
   describe "Changing transaction committed date" do
@@ -335,6 +447,8 @@ RSpec.describe "Transactions" do
   end
 
   describe "Deleting a transaction" do
+    before { transaction.account.update!(balance: transaction.amount) if transaction.is_a?(Income) }
+
     def act
       visit transactions_path
 
@@ -369,6 +483,26 @@ RSpec.describe "Transactions" do
         act
 
         expect(page).to have_no_content(transaction.committed_date.to_relative_in_words)
+      end
+    end
+
+    context "when transaction is income" do
+      let!(:transaction) { create(:income, user:) }
+      let(:account) { transaction.account }
+
+      context "when income amount is greater than account balance" do
+        before { transaction.update!(amount: account.balance + Money.from_amount(1)) }
+
+        it "shows an error notification" do
+          act
+
+          expect(error_notification).to have_content(t(
+            "errors.messages.account.not_enough_balance",
+            name: account.name,
+            balance: account.balance.format,
+            amount: transaction.amount.format
+          ))
+        end
       end
     end
   end
