@@ -6,4 +6,8 @@ class UserDecorator < ApplicationDecorator
     implicit_name = email.split("@").first
     explicit_name.presence || implicit_name
   end
+
+  def avatar_path
+    "default_avatar.png"
+  end
 end
