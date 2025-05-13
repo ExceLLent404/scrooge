@@ -18,7 +18,13 @@ Rails.application.routes.draw do
 
   get "capital", to: "capital#show"
 
-  resources :accounts, except: :show
-  resources :categories, except: :show
-  resources :transactions, except: :show
+  resources :accounts do
+    get "offer", on: :new
+  end
+
+  resources :categories do
+    get "offer", on: :new
+  end
+
+  resources :transactions
 end

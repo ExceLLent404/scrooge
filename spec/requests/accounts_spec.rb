@@ -12,8 +12,25 @@ RSpec.describe "Accounts requests" do
     include_examples "of user authentication"
   end
 
+  describe "GET /accounts/:id" do
+    let(:request) { get account_url(id) }
+    let(:id) { create(:account, user:).id }
+
+    include_examples "of response status", :ok
+    include_examples "of user authentication"
+    include_examples "of checking resource existence", :account
+    include_examples "of checking resource ownership", :account
+  end
+
   describe "GET /accounts/new" do
     let(:request) { get new_account_url }
+
+    include_examples "of response status", :ok
+    include_examples "of user authentication"
+  end
+
+  describe "GET /accounts/new/offer" do
+    let(:request) { get offer_new_account_url }
 
     include_examples "of response status", :ok
     include_examples "of user authentication"

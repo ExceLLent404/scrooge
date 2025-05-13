@@ -48,6 +48,25 @@ RSpec.describe "Categories" do
     it_behaves_like "validation of category name presence"
   end
 
+  describe "Canceling category creation" do
+    let(:type) { %i[income expense].sample }
+    let(:name) { "Canceling" }
+
+    it "does not create a category and offers to do it" do
+      visit categories_path
+
+      click_on t("categories.offer_new_category.text", type: "#{type} category")
+
+      fill_in "Name", with: name
+
+      click_on t("shared.links.cancel")
+
+      expect(page).to have_no_content(name)
+      expect(find(".block", text: "#{type.capitalize} categories"))
+        .to have_content(t("categories.offer_new_category.text", type: "#{type} category"))
+    end
+  end
+
   describe "Editing a category" do
     def act
       visit categories_path
@@ -72,6 +91,30 @@ RSpec.describe "Categories" do
     end
 
     it_behaves_like "validation of category name presence"
+  end
+
+  describe "Canceling category edition" do
+    def act
+      visit categories_path
+
+      find_menu(category).hover
+      click_on t("shared.links.edit")
+
+      fill_in "Name", with: name
+
+      click_on t("shared.links.cancel")
+    end
+
+    let(:type) { %i[income expense].sample }
+    let!(:category) { create(:"#{type}_category", user:) }
+    let(:name) { "Canceling" }
+
+    it "does not update the category and shows the original one" do
+      act
+
+      expect(page).to have_no_content(name)
+      expect(find(".block", text: "#{type.capitalize} categories")).to have_content(category.name)
+    end
   end
 
   describe "Deleting a category" do

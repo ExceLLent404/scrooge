@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: %i[edit update destroy]
+  before_action :set_account, only: %i[show edit update destroy]
 
   decorates_assigned :account, :accounts
 
@@ -7,8 +7,14 @@ class AccountsController < ApplicationController
     @accounts = current_user.accounts.order(created_at: :asc)
   end
 
+  def show
+  end
+
   def new
     @account = Account.new
+  end
+
+  def offer
   end
 
   def edit

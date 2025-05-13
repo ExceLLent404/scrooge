@@ -19,8 +19,10 @@
           <%= f.error :balance %>
         </div>
 
-        <div class="field">
+        <div class="field is-grouped">
           <%= f.button :submit, class: "is-primary is-fullwidth" %>
+          <% path = account.new_record? ? offer_new_account_path : account_path(account) %>
+          <%= link_to t("shared.links.cancel"), path, class: "button" %>
         </div>
       <% end %>
     </div>

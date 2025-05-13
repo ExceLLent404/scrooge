@@ -6,8 +6,10 @@
         <%= f.input :type, as: :hidden if category.new_record? %>
         <%= f.input :name, label_html: {class: "is-sr-only"}, placeholder: "Category name", autofocus: true %>
 
-        <div class="field">
+        <div class="field is-grouped">
           <%= f.button :submit, class: "is-primary is-fullwidth" %>
+          <% path = category.new_record? ? offer_new_category_path(type: category.type) : category_path(category) %>
+          <%= link_to t("shared.links.cancel"), path, class: "button" %>
         </div>
       <% end %>
     </div>

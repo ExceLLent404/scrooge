@@ -162,6 +162,34 @@ RSpec.describe "Transactions" do
     end
   end
 
+  describe "Canceling transaction creation" do
+    let(:type) { %i[income expense].sample }
+    let!(:category) { create(:"#{type}_category", user:, name: "Cancellation category") }
+    let!(:account) { create(:account, user:, name: "Cancellation account") }
+    let(:amount) { 100500 }
+    let(:comment) { "Cancellation comment" }
+
+    it "does not create a transaction and offers to do it" do
+      visit transactions_path
+
+      click_on t("transactions.offer_new_transaction.text", type:)
+
+      select category.name
+      select account.name
+      fill_in "Amount", with: amount
+      fill_in "Comment", with: comment
+
+      click_on t("shared.links.cancel")
+
+      expect(page)
+        .to have_no_content(category.name)
+        .and have_no_content(account.name)
+        .and have_no_content(amount)
+        .and have_no_content(comment)
+      expect(page).to have_content(t("transactions.offer_new_transaction.text", type:))
+    end
+  end
+
   describe "Editing an income" do
     def act
       visit transactions_path
@@ -280,6 +308,30 @@ RSpec.describe "Transactions" do
 
     it_behaves_like "validation of transaction committed date presence"
     it_behaves_like "validation of transaction committed date occurrence"
+  end
+
+  describe "Canceling transaction edition" do
+    let!(:transaction) { create(:transaction, user:) }
+    let(:amount) { 100500 }
+    let(:comment) { "Cancellation comment" }
+
+    it "does not update the transaction and shows the original one" do
+      visit transactions_path
+
+      find_menu(transaction).hover
+      click_on t("shared.links.edit")
+
+      fill_in "Amount", with: amount
+      fill_in "Comment", with: comment
+
+      click_on t("shared.links.cancel")
+
+      expect(page).to have_no_content(amount).and have_no_content(comment)
+      expect(page)
+        .to have_content(transaction.category.name)
+        .and have_content(transaction.account.name)
+        .and have_content(transaction.amount)
+    end
   end
 
   describe "Deleting a transaction" do

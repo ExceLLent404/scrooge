@@ -16,6 +16,16 @@ RSpec.describe "Transactions requests" do
     include_examples "of user authentication"
   end
 
+  describe "GET /transactions/:id" do
+    let(:request) { get transaction_url(id) }
+    let(:id) { create(:transaction, user:).id }
+
+    include_examples "of response status", :ok
+    include_examples "of user authentication"
+    include_examples "of checking resource existence", :transaction
+    include_examples "of checking resource ownership", :transaction
+  end
+
   describe "GET /transactions/new" do
     let(:request) { get new_transaction_url(type:) }
     let(:type) { %w[Income Expense].sample }

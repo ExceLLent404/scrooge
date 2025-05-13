@@ -42,11 +42,13 @@
                   input_html: {class: "is-fullwidth", value: transaction.committed_date || Date.current} %>
       <%= f.input :comment %>
 
-      <div class="field pt-4">
+      <div class="field is-grouped pt-4">
         <% if transaction.new_record? %>
           <%= f.button :submit, class: "is-primary is-fullwidth", data: {turbo_frame: "_top"} %>
+          <%= link_to t("shared.links.cancel"), transactions_path, class: "button", data: {turbo_frame: "_top"} %>
         <% else %>
           <%= f.button :submit, class: "is-primary is-fullwidth" %>
+          <%= link_to t("shared.links.cancel"), transaction_path(transaction), class: "button" %>
         <% end %>
       </div>
     <% end %>
