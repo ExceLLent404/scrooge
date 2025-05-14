@@ -39,19 +39,7 @@ RSpec.describe Account do
   describe "#currency" do
     subject { account.currency }
 
-    it { is_expected.to be_an_instance_of(Money::Currency) }
-
-    it "cannot be absent" do
-      expect(build(:account, currency: nil)).not_to be_valid
-    end
-
-    it "can be only `USD`, `EUR` or `RUB`" do
-      expect(build(:account, currency: Money::Currency.new("USD"))).to be_valid
-      expect(build(:account, currency: "EUR")).to be_valid
-      expect(build(:account, currency: :rub)).to be_valid
-      expect(build(:account, currency: "GBP")).not_to be_valid
-      expect(build(:account, currency: "ABC")).not_to be_valid
-    end
+    include_examples "of currency available to use", :currency
   end
 
   describe "#deposit" do

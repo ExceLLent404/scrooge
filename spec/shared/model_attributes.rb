@@ -31,6 +31,24 @@ RSpec.shared_examples "it has name" do
   end
 end
 
+RSpec.shared_examples "of currency available to use" do |attribute|
+  let(:essence) { described_class.to_s.underscore.to_sym }
+
+  it { is_expected.to be_an_instance_of(Money::Currency) }
+
+  it "cannot be absent" do
+    expect(build(essence, attribute => nil)).not_to be_valid
+  end
+
+  it "can be only `USD`, `EUR` or `RUB`" do
+    expect(build(essence, attribute => Money::Currency.new("USD"))).to be_valid
+    expect(build(essence, attribute => "EUR")).to be_valid
+    expect(build(essence, attribute => :rub)).to be_valid
+    expect(build(essence, attribute => "GBP")).not_to be_valid
+    expect(build(essence, attribute => "ABC")).not_to be_valid
+  end
+end
+
 RSpec.shared_examples "it has timestamps" do
   let(:essence) { described_class.to_s.underscore.to_sym }
 
