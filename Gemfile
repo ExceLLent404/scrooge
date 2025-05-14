@@ -18,6 +18,7 @@ gem "devise", "~> 4.0"
 gem "devise-i18n", "~> 1.0"
 gem "draper", "~> 4.0"
 gem "money-rails", "~> 1.0"
+gem "pagy", "~> 9.0"
 gem "simple_form", "~> 5.0"
 
 gem "dry-monads", "~> 1.0"
