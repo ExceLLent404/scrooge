@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   normalizes :name, with: ->(name) { name.present? ? name.squish : nil }
   normalizes :email, with: ->(email) { email.strip.downcase }
+  normalizes :preferred_currency, with: ->(currency) { currency.upcase }
 
   has_one_attached :avatar do |attachable|
     attachable.variant :thumbnail, resize_to_fill: [32, 32], saver: {quality: 100}
@@ -16,9 +17,24 @@ class User < ApplicationRecord
   has_many :expenses
 
   validates :time_zone, inclusion: {in: ActiveSupport::TimeZone.all.map(&:name), message: I18n.t("errors.messages.invalid")}
+  validates :preferred_currency, presence: {
+    message: I18n.t(
+      "errors.messages.one_of",
+      list: Money::Currency.all.to_sentence(last_word_connector: I18n.t("support.array.enum_connector"))
+    )
+  }
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable, :confirmable
+
+  def preferred_currency=(value)
+    currency = suppress(Money::Currency::UnknownCurrency) { value&.to_currency }
+    super(currency)
+  end
+
+  def preferred_currency
+    super&.to_currency
+  end
 end

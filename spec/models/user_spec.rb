@@ -56,6 +56,24 @@ RSpec.describe User do
     end
   end
 
+  describe "#preferred_currency" do
+    subject { user.preferred_currency }
+
+    it { is_expected.to be_an_instance_of(Money::Currency) }
+
+    it "cannot be absent" do
+      expect(build(:user, preferred_currency: nil)).not_to be_valid
+    end
+
+    it "can be only `USD`, `EUR` or `RUB`" do
+      expect(build(:user, preferred_currency: Money::Currency.new("USD"))).to be_valid
+      expect(build(:user, preferred_currency: "EUR")).to be_valid
+      expect(build(:user, preferred_currency: :rub)).to be_valid
+      expect(build(:user, preferred_currency: "GBP")).not_to be_valid
+      expect(build(:user, preferred_currency: "ABC")).not_to be_valid
+    end
+  end
+
   describe "#time_zone" do
     subject(:time_zone) { user.time_zone }
 

@@ -23,6 +23,14 @@
         <%= f.input :password, input_html: {autocomplete: "new-password"} %>
         <%= f.input :password_confirmation, input_html: {autocomplete: "new-password"} %>
 
+        <%= f.input :preferred_currency,
+                    field_label_html: {style: "white-space: nowrap;"},
+                    wrapper: :select_horizontal,
+                    collection: Money::Currency.all,
+                    selected: Money::Currency.all.first,
+                    label_method: :symbol,
+                    value_method: :to_s %>
+
         <%= f.input :time_zone, select_html: {class: "is-fullwidth"}, selected: "UTC" %>
 
         <div class="field pt-4">

@@ -21,6 +21,14 @@
         <%= f.input :name %>
         <%= f.input :email %>
 
+        <%= f.input :preferred_currency,
+                    field_label_html: {style: "white-space: nowrap;"},
+                    wrapper: :select_horizontal,
+                    collection: Money::Currency.all,
+                    selected: resource.preferred_currency,
+                    label_method: :symbol,
+                    value_method: :to_s %>
+
         <%= f.input :time_zone, select_html: {class: "is-fullwidth"}, selected: resource.time_zone %>
 
         <hr>
