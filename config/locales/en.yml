@@ -32,6 +32,7 @@ en:
       is_an: must be an %{model}
       not_greater_than: cannot be greater than %{count}
       not_less_than: cannot be less than %{count}
+      one_of: "must be one of: %{list}"
       ownership: must belong to the %{model}
   helpers:
     submit:
@@ -47,6 +48,9 @@ en:
       cancel: Cancel
       delete: Delete
       edit: Edit
+  support:
+    array:
+      enum_connector: ", or "
   transactions:
     create:
       success: Transaction added

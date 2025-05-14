@@ -7,9 +7,18 @@
         <div class="field">
           <%= f.label :balance, class: "is-sr-only", required: true %>
           <div class="field has-addons mb-0">
-            <div class="control">
-              <%= f.button :button, Money.default_currency.symbol, class: "is-static has-text-dark" %>
-            </div>
+            <% if account.new_record? %>
+              <%= f.input :currency,
+                          wrapper: :select_control,
+                          collection: Money::Currency.all,
+                          selected: "USD",
+                          label_method: :symbol,
+                          value_method: :to_s %>
+            <% else %>
+              <div class="control">
+                <%= f.button :button, account.currency.symbol, class: "is-static has-text-dark" %>
+              </div>
+            <% end %>
 
             <%= f.input :balance,
                         as: :money,
@@ -17,6 +26,7 @@
                         wrapper_html: {class: "is-expanded"} %>
           </div>
           <%= f.error :balance %>
+          <%= f.full_error :currency %>
         </div>
 
         <div class="field is-grouped">

@@ -5,7 +5,7 @@ RSpec.describe Account do
 
   it { is_expected.to be_an(ApplicationRecord) }
 
-  it { is_expected.to monetize(:balance) }
+  it { is_expected.to monetize(:balance).with_model_currency(:currency) }
 
   it_behaves_like "it has name"
   it_behaves_like "it has timestamps"
@@ -36,17 +36,35 @@ RSpec.describe Account do
     end
   end
 
+  describe "#currency" do
+    subject { account.currency }
+
+    it { is_expected.to be_an_instance_of(Money::Currency) }
+
+    it "cannot be absent" do
+      expect(build(:account, currency: nil)).not_to be_valid
+    end
+
+    it "can be only `USD`, `EUR` or `RUB`" do
+      expect(build(:account, currency: Money::Currency.new("USD"))).to be_valid
+      expect(build(:account, currency: "EUR")).to be_valid
+      expect(build(:account, currency: :rub)).to be_valid
+      expect(build(:account, currency: "GBP")).not_to be_valid
+      expect(build(:account, currency: "ABC")).not_to be_valid
+    end
+  end
+
   describe "#deposit" do
     subject(:command) { account.deposit(amount) }
 
-    let(:amount) { Money.from_amount(100) }
+    let(:amount) { Money.from_amount(100, account.currency) }
 
     it "increases the balance by the specified amount" do
       expect { command }.to change(account, :balance).by(amount)
     end
 
     context "when the specified amount is negative" do
-      let(:amount) { Money.from_amount(-1) }
+      let(:amount) { Money.from_amount(-1, account.currency) }
 
       it "raises Account::NegativeAmount error" do
         expect { command }.to raise_error(Account::NegativeAmount)
@@ -69,7 +87,7 @@ RSpec.describe Account do
     end
 
     context "when the specified amount is negative" do
-      let(:amount) { Money.from_amount(-1) }
+      let(:amount) { Money.from_amount(-1, account.currency) }
 
       it "raises Account::NegativeAmount error" do
         expect { command }.to raise_error(Account::NegativeAmount)
@@ -81,7 +99,7 @@ RSpec.describe Account do
     end
 
     context "when the specified amount is greater than the balance" do
-      let(:amount) { account.balance + Money.from_amount(1) }
+      let(:amount) { account.balance + Money.from_amount(1, account.currency) }
 
       it "raises Account::NotEnoughBalance error" do
         expect { command }.to raise_error(Account::NotEnoughBalance)

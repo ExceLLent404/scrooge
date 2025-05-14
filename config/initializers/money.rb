@@ -1,3 +1,11 @@
+# Limit the set of supported (allowed) currencies
+white_list = %i[usd eur rub]
+Money::Currency.table.keys.each do |currency|
+  next if white_list.include?(currency)
+
+  Money::Currency.unregister(currency)
+end
+
 MoneyRails.configure do |config|
   # To set the default currency
   config.default_currency = :usd

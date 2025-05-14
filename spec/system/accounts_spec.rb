@@ -11,7 +11,7 @@ RSpec.describe "Accounts" do
       visit accounts_path
 
       user_accounts.each do |account|
-        expect(page).to have_content(account.name).and have_content(account.balance)
+        expect(page).to have_content(account.name).and have_content(account.balance).and have_content(account.currency.symbol)
       end
       another_accounts.each { |account| expect(page).to have_no_content(account.name).and have_no_content(account.balance) }
     end
@@ -25,19 +25,22 @@ RSpec.describe "Accounts" do
 
       fill_in "Name", with: name
       fill_in "Balance", with: balance unless default_balance
+      select currency unless default_currency
 
       click_on t("helpers.submit.create")
     end
 
     let(:name) { attributes_for(:account)[:name] }
     let(:balance) { 100 }
+    let(:currency) { attributes_for(:account)[:currency].symbol }
     let(:default_balance) { false }
+    let(:default_currency) { false }
 
     it "creates a new user account" do
       act
 
       expect(success_notification).to have_content(t("accounts.create.success"))
-      expect(page).to have_content(name).and have_content(balance)
+      expect(page).to have_content(name).and have_content(balance).and have_content(currency)
     end
 
     it_behaves_like "validation of account name presence"
@@ -51,7 +54,18 @@ RSpec.describe "Accounts" do
       it "creates an account with a zero balance" do
         act
 
-        expect(page).to have_content(name).and have_content(balance)
+        expect(page).to have_content(name).and have_content(balance).and have_content(currency)
+      end
+    end
+
+    context "with suggested default currency" do
+      let(:default_currency) { true }
+      let(:currency) { "USD".to_currency.symbol }
+
+      it "creates an account with `USD` currency" do
+        act
+
+        expect(page).to have_content(name).and have_content(balance).and have_content(currency)
       end
     end
   end
@@ -90,7 +104,7 @@ RSpec.describe "Accounts" do
 
     let!(:account) { create(:account, user:) }
     let(:name) { "Updated #{account.name}" }
-    let(:balance) { account.balance + Money.from_amount(1) }
+    let(:balance) { account.balance + Money.from_amount(1, account.currency) }
 
     it "updates the account" do
       act

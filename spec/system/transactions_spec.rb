@@ -50,6 +50,7 @@ RSpec.describe "Transactions" do
             .to have_content(transaction.source.name)
             .and have_content(transaction.destination.name)
             .and have_content(transaction.amount)
+            .and have_content(transaction.account.currency.symbol)
         end
       end
 
@@ -94,6 +95,7 @@ RSpec.describe "Transactions" do
           .to have_content(transaction.source.name)
           .and have_content(transaction.destination.name)
           .and have_content(transaction.amount)
+          .and have_content(transaction.account.currency.symbol)
           .and have_content(transaction.comment)
       end
 
@@ -138,6 +140,7 @@ RSpec.describe "Transactions" do
           .to have_no_content(transaction.source.name)
           .and have_no_content(transaction.destination.name)
           .and have_no_content(transaction.amount)
+          .and have_no_content(transaction.account.currency.symbol)
       end
 
       click_on t("transactions.search_form.reset")
@@ -147,6 +150,7 @@ RSpec.describe "Transactions" do
           .to have_content(transaction.source.name)
           .and have_content(transaction.destination.name)
           .and have_content(transaction.amount)
+          .and have_content(transaction.account.currency.symbol)
       end
     end
   end
@@ -181,6 +185,7 @@ RSpec.describe "Transactions" do
         .to have_content(income_category.name)
         .and have_content(account.name)
         .and have_content(amount)
+        .and have_content(account.currency.symbol)
     end
 
     it_behaves_like "validation of transaction amount presence"
@@ -198,6 +203,7 @@ RSpec.describe "Transactions" do
           .to have_content(income_category.name)
           .and have_content(account.name)
           .and have_content(amount)
+          .and have_content(account.currency.symbol)
       end
     end
   end
@@ -233,6 +239,7 @@ RSpec.describe "Transactions" do
         .to have_content(account.name)
         .and have_content(expense_category.name)
         .and have_content(amount)
+        .and have_content(account.currency.symbol)
     end
 
     it_behaves_like "validation of transaction amount presence"
@@ -247,8 +254,8 @@ RSpec.describe "Transactions" do
         expect(error_notification).to have_content(t(
           "errors.messages.account.not_enough_balance",
           name: account.name,
-          balance: Money.from_amount(balance).format,
-          amount: Money.from_amount(amount).format
+          balance: Money.from_amount(balance, account.currency).format,
+          amount: Money.from_amount(amount, account.currency).format
         ))
       end
     end
@@ -266,6 +273,7 @@ RSpec.describe "Transactions" do
           .to have_content(account.name)
           .and have_content(expense_category.name)
           .and have_content(amount)
+          .and have_content(account.currency.symbol)
       end
     end
   end
@@ -317,7 +325,7 @@ RSpec.describe "Transactions" do
     let(:current_account) { create(:account, user:, balance: current_account_balance) }
     let(:current_account_balance) { 100 }
     let!(:income_category) { create(:income_category, user:, name: "Not #{income.category.name}") }
-    let(:amount) { income.amount + Money.from_amount(1) }
+    let(:amount) { income.amount + Money.from_amount(1, income.currency_for_amount) }
     let(:comment) { "Updated #{income.comment}" }
     let(:account_change) { false }
 
@@ -334,7 +342,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount positivity"
 
     context "when amount decreases" do
-      let(:amount) { income.amount - Money.from_amount(1) }
+      let(:amount) { income.amount - Money.from_amount(1, income.currency_for_amount) }
 
       context "when the difference between the new and current amounts is greater than account balance" do
         let(:current_account_balance) { 0 }
@@ -346,7 +354,7 @@ RSpec.describe "Transactions" do
             "errors.messages.account.not_enough_balance",
             name: current_account.name,
             balance: current_account.balance.format,
-            amount: Money.from_amount(1).format
+            amount: Money.from_amount(1, current_account.currency).format
           ))
         end
       end
@@ -361,6 +369,7 @@ RSpec.describe "Transactions" do
 
         expect(find(".block", text: income.committed_date.to_relative_in_words))
           .to have_content(account.name)
+          .and have_content(account.currency.symbol)
       end
 
       context "when amount is greater than balance of the original account" do
@@ -399,7 +408,7 @@ RSpec.describe "Transactions" do
     let(:current_account) { create(:account, user:, balance: current_account_balance) }
     let(:current_account_balance) { 100 }
     let!(:expense_category) { create(:expense_category, user:, name: "Not #{expense.category.name}") }
-    let(:amount) { expense.amount - Money.from_amount(1) }
+    let(:amount) { expense.amount - Money.from_amount(1, expense.currency_for_amount) }
     let(:comment) { "Updated #{expense.comment}" }
     let(:account_change) { false }
 
@@ -416,7 +425,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount positivity"
 
     context "when amount increases" do
-      let(:amount) { expense.amount + Money.from_amount(1) }
+      let(:amount) { expense.amount + Money.from_amount(1, expense.currency_for_amount) }
 
       context "when the difference between the new and current amounts is greater than account balance" do
         let(:current_account_balance) { 0 }
@@ -427,8 +436,8 @@ RSpec.describe "Transactions" do
           expect(error_notification).to have_content(t(
             "errors.messages.account.not_enough_balance",
             name: current_account.name,
-            balance: current_account.balance.format,
-            amount: Money.from_amount(1).format
+            balance: Money.from_amount(current_account_balance, current_account.currency).format,
+            amount: Money.from_amount(1, current_account.currency).format
           ))
         end
       end
@@ -444,6 +453,7 @@ RSpec.describe "Transactions" do
 
         expect(find(".block", text: expense.committed_date.to_relative_in_words))
           .to have_content(account.name)
+          .and have_content(account.currency.symbol)
       end
 
       context "when amount is greater than balance of the specified account" do
@@ -455,8 +465,8 @@ RSpec.describe "Transactions" do
           expect(error_notification).to have_content(t(
             "errors.messages.account.not_enough_balance",
             name: account.name,
-            balance: Money.from_amount(balance).format,
-            amount: amount.format
+            balance: Money.from_amount(balance, account.currency).format,
+            amount: amount.with_currency(account.currency).format
           ))
         end
       end
@@ -534,6 +544,7 @@ RSpec.describe "Transactions" do
         .to have_content(transaction.category.name)
         .and have_content(transaction.account.name)
         .and have_content(transaction.amount)
+        .and have_content(transaction.account.currency.symbol)
     end
   end
 
@@ -557,6 +568,7 @@ RSpec.describe "Transactions" do
         .to have_no_content(transaction.source.name)
         .and have_no_content(transaction.destination.name)
         .and have_no_content(transaction.amount)
+        .and have_no_content(transaction.account.currency.symbol)
     end
 
     context "when there are other transactions with the same committed date" do
@@ -582,7 +594,7 @@ RSpec.describe "Transactions" do
       let(:account) { transaction.account }
 
       context "when income amount is greater than account balance" do
-        before { transaction.update!(amount: account.balance + Money.from_amount(1)) }
+        before { transaction.update!(amount: account.balance + Money.from_amount(1, account.currency)) }
 
         it "shows an error notification" do
           act
@@ -590,8 +602,8 @@ RSpec.describe "Transactions" do
           expect(error_notification).to have_content(t(
             "errors.messages.account.not_enough_balance",
             name: account.name,
-            balance: account.balance.format,
-            amount: transaction.amount.format
+            balance: Money.from_amount(account.balance.to_f, account.currency).format,
+            amount: Money.from_amount(transaction.amount.to_f, account.currency).format
           ))
         end
       end
@@ -611,6 +623,7 @@ RSpec.describe "Transactions" do
         .to have_content(transaction.source.name)
         .and have_content(transaction.destination.name)
         .and have_content(transaction.amount)
+        .and have_content(transaction.account.currency.symbol)
     end
   end
 end

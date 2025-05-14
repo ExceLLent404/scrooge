@@ -17,7 +17,9 @@ class Transaction < ApplicationRecord
 
   normalizes :comment, with: ->(comment) { comment.present? ? comment.strip : nil }
 
-  monetize :amount_cents, numericality: {greater_than: 0}
+  monetize :amount_cents,
+    with_currency: ->(transaction) { transaction.account.is_a?(Account) ? transaction.account.currency : Money.default_currency },
+    numericality: {greater_than: 0}
 
   belongs_to :user
   belongs_to :source, polymorphic: true

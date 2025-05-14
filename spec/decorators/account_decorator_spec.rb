@@ -14,8 +14,8 @@ RSpec.describe AccountDecorator do
   describe "#to_label" do
     subject(:label) { decorated_account.to_label }
 
-    it "returns account info including name and balance" do
-      expect(label).to include(account.name).and include(account.balance.to_s)
+    it "returns account info including name, balance and currency" do
+      expect(label).to include(account.name).and include(account.balance.to_s).and include(account.currency.symbol)
     end
   end
 end
