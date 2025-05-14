@@ -37,7 +37,8 @@ RemoveUnusedMethodsInControllersCheck:
 RemoveUnusedMethodsInHelpersCheck:
   except_methods: []
 RemoveUnusedMethodsInModelsCheck:
-  except_methods: []
+  except_methods:
+    - Transaction#ransackable_associations
 ReplaceComplexCreationWithFactoryMethodCheck:
   attribute_assignment_count: 2
 ReplaceInstanceVariableWithLocalVariableCheck: {}

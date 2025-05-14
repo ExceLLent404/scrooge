@@ -6,8 +6,9 @@ class TransactionsController < ApplicationController
   decorates_assigned :transaction, :transactions
 
   def index
-    transactions = current_user.transactions.order(committed_date: :desc, created_at: :desc)
-    @pagy, @transactions = pagy_countless(transactions.includes(:source, :destination))
+    @search = current_user.transactions.ransack(search_params)
+    @search.sorts = ["committed_date desc", "created_at desc"]
+    @pagy, @transactions = pagy_countless(@search.result.includes(:source, :destination))
 
     render_index_view
   end
@@ -75,6 +76,13 @@ class TransactionsController < ApplicationController
   def set_transaction
     @transaction = current_user.transactions.find(params[:id])
   end
+
+  def search_params
+    params[:search]&.permit(
+      :comment_i_cont, :committed_date_lteq, type_in: [], account_in: [], income_category_in: [], expense_category_in: []
+    )
+  end
+  helper_method :search_params
 
   def transaction_create_params
     params.require(:transaction).permit(%i[type source_id destination_id amount committed_date comment])
