@@ -60,6 +60,97 @@ RSpec.describe "Transactions" do
     end
   end
 
+  describe "Searching transactions" do
+    let(:type) { %i[income expense].sample }
+    let(:comment) { "com" }
+    let(:date) { today - 2.days }
+    let(:today) { Date.current }
+    let!(:suitable) do
+      [
+        create(type, user:, committed_date: today - 2.days, comment: "Income or Expense"),
+        create(type, user:, committed_date: today - 7.days, comment: "Comment")
+      ]
+    end
+    let!(:not_suitable) do
+      [
+        create(:income, user:, amount: 9999, committed_date: today - 2.days, comment: nil),
+        create(:expense, user:, amount: 100500, committed_date: today - 7.days, comment: "Blah-blah-blah"),
+        create(:income, user:, amount: 8888, committed_date: today, comment: "Not beCOMing")
+      ]
+    end
+    let(:transactions_section) { find_by_id("transactions") }
+
+    it "shows a list of transactions that match the search criteria" do
+      visit transactions_path
+
+      check(type.to_s.capitalize)
+      fill_in "Search by comment", with: comment
+      fill_in "Up to", with: date
+
+      click_on t("transactions.search_form.search")
+
+      suitable.each do |transaction|
+        expect(transactions_section)
+          .to have_content(transaction.source.name)
+          .and have_content(transaction.destination.name)
+          .and have_content(transaction.amount)
+          .and have_content(transaction.comment)
+      end
+
+      not_suitable.each do |transaction|
+        expect(transactions_section).to have_no_content(transaction.amount)
+        expect(transactions_section).to have_no_content(transaction.comment) if transaction.comment
+      end
+    end
+  end
+
+  describe "Resetting transaction search parameters" do
+    def act
+      visit transactions_path
+
+      check(checked_type)
+      fill_in "Search by comment", with: "non-existent comment"
+      fill_in "Up to", with: Date.yesterday
+
+      click_on t("transactions.search_form.search")
+    end
+
+    let(:type) { %i[income expense].sample }
+    let(:another_type) { %i[income expense].excluding(type).sample }
+    let(:checked_type) { another_type.to_s.capitalize }
+    let!(:transactions) { create_pair(type, user:, committed_date: Date.current) }
+    let(:transactions_section) { find_by_id("transactions") }
+
+    it "clears the search form" do
+      act
+      click_on t("transactions.search_form.reset")
+
+      expect(page).to have_no_checked_field(checked_type)
+      expect(page).to have_field("Search by comment", with: nil)
+      expect(page).to have_field("Up to", with: nil)
+    end
+
+    it "shows a list of all user transactions" do
+      act
+
+      transactions.each do |transaction|
+        expect(transactions_section)
+          .to have_no_content(transaction.source.name)
+          .and have_no_content(transaction.destination.name)
+          .and have_no_content(transaction.amount)
+      end
+
+      click_on t("transactions.search_form.reset")
+
+      transactions.each do |transaction|
+        expect(transactions_section)
+          .to have_content(transaction.source.name)
+          .and have_content(transaction.destination.name)
+          .and have_content(transaction.amount)
+      end
+    end
+  end
+
   describe "Creating an income" do
     def act
       visit transactions_path
@@ -198,7 +289,7 @@ RSpec.describe "Transactions" do
 
       click_on t("shared.links.cancel")
 
-      expect(page)
+      expect(find_by_id("transactions"))
         .to have_no_content(category.name)
         .and have_no_content(account.name)
         .and have_no_content(amount)
@@ -439,7 +530,7 @@ RSpec.describe "Transactions" do
       click_on t("shared.links.cancel")
 
       expect(page).to have_no_content(amount).and have_no_content(comment)
-      expect(page)
+      expect(find_by_id("transactions"))
         .to have_content(transaction.category.name)
         .and have_content(transaction.account.name)
         .and have_content(transaction.amount)
@@ -462,7 +553,7 @@ RSpec.describe "Transactions" do
       act
 
       expect(success_notification).to have_content(t("transactions.destroy.success"))
-      expect(page)
+      expect(find_by_id("transactions"))
         .to have_no_content(transaction.source.name)
         .and have_no_content(transaction.destination.name)
         .and have_no_content(transaction.amount)

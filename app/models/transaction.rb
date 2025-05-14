@@ -1,6 +1,20 @@
 class Transaction < ApplicationRecord
   include FaithfulSTI
 
+  TYPES = %w[Income Expense].freeze
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[type committed_date comment] + _ransack_aliases.keys
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[source destination]
+  end
+
+  def self.ransortable_attributes(_auth_object = nil)
+    %w[committed_date created_at]
+  end
+
   normalizes :comment, with: ->(comment) { comment.present? ? comment.strip : nil }
 
   monetize :amount_cents, numericality: {greater_than: 0}
@@ -23,6 +37,10 @@ class Transaction < ApplicationRecord
 
   after_initialize :set_appropriate_source_type, unless: :source_type?
   after_initialize :set_appropriate_destination_type, unless: :destination_type?
+
+  ransack_alias :account, :source_of_Account_type_id_or_destination_of_Account_type_id
+  ransack_alias :income_category, :source_of_Category_type_id
+  ransack_alias :expense_category, :destination_of_Category_type_id
 
   # Sets the correct type for the polymorphic association with a source model that may use STI
   def source_type=(class_name)

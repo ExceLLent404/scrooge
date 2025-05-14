@@ -3,11 +3,19 @@
 <% end %>
 
 <div class="mt-3 columns is-centered">
-  <div class="column has-background-light" style="max-width: 500px">
-    <div id="transactions">
-      <%= render "transactions", transactions: %>
-    </div>
-
-    <%= render "pagination" %>
+  <div class="column is-one-quarter mb-3">
+    <%= render "search_form", search: @search %>
   </div>
+
+  <div class="column has-background-light" style="max-width: 500px">
+    <%= turbo_frame_tag :results do %>
+      <div id="transactions">
+        <%= render "transactions", transactions: %>
+      </div>
+
+      <%= render "pagination" %>
+    <% end %>
+  </div>
+
+  <div class="column is-one-quarter"></div>
 </div>

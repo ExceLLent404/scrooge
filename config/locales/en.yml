@@ -54,5 +54,8 @@ en:
       success: Transaction deleted
     offer_new_transaction:
       text: Add %{type}
+    search_form:
+      reset: Reset
+      search: Search
     update:
       success: Transaction updated

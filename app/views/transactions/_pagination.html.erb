@@ -3,6 +3,7 @@
                       src: transactions_path(
                         format: :turbo_stream,
                         page: pagy.next,
+                        search: search_params,
                         last_rendered_date: transactions.last.committed_date
                       ),
                       loading: :lazy %>
