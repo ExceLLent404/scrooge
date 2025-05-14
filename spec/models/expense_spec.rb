@@ -27,7 +27,7 @@ RSpec.describe Expense do
     end
 
     context "when Expense amount is greater than Account balance" do
-      let(:amount) { account.balance + Money.from_amount(1) }
+      let(:amount) { account.balance + Money.from_amount(1, account.currency) }
 
       it "raises Account::NotEnoughBalance error" do
         expect { command }.to raise_error(Account::NotEnoughBalance)
@@ -48,14 +48,14 @@ RSpec.describe Expense do
     let(:new_amount) { expense.amount + diff }
 
     context "when the new amount is greater than the current one" do
-      let(:diff) { Money.from_amount(1) }
+      let(:diff) { Money.from_amount(1, account.currency) }
 
       it "decreases the Account balance by the difference between the new and current amounts" do
         expect { command }.to change(account, :balance).by(-diff)
       end
 
       context "when the difference between the new and current amounts is greater than Account balance" do
-        let(:diff) { account.balance + Money.from_amount(1) }
+        let(:diff) { account.balance + Money.from_amount(1, account.currency) }
 
         it "raises Account::NotEnoughBalance error" do
           expect { command }.to raise_error(Account::NotEnoughBalance)
@@ -68,7 +68,7 @@ RSpec.describe Expense do
     end
 
     context "when the new amount is equal to the current one" do
-      let(:diff) { Money.zero }
+      let(:diff) { Money.zero(account.currency) }
 
       it "does not change the Account balance" do
         expect { command }.not_to change(account, :balance)
@@ -76,7 +76,7 @@ RSpec.describe Expense do
     end
 
     context "when the new amount is less than the current one" do
-      let(:diff) { Money.from_amount(-1) }
+      let(:diff) { Money.from_amount(-1, account.currency) }
 
       it "increases the Account balance by the difference between the new and current amounts" do
         expect { command }.to change(account, :balance).by(diff.abs)

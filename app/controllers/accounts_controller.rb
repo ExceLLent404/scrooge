@@ -21,7 +21,7 @@ class AccountsController < ApplicationController
   end
 
   def create
-    @account = current_user.accounts.new(account_params)
+    @account = current_user.accounts.new(account_create_params)
 
     if @account.save
       respond_to do |format|
@@ -34,7 +34,7 @@ class AccountsController < ApplicationController
   end
 
   def update
-    if @account.update(account_params)
+    if @account.update(account_update_params)
       respond_to do |format|
         format.html { redirect_to accounts_path, notice: t(".success") }
         format.turbo_stream { flash.now[:notice] = t(".success") }
@@ -59,7 +59,11 @@ class AccountsController < ApplicationController
     @account = current_user.accounts.find(params[:id])
   end
 
-  def account_params
+  def account_create_params
+    params.require(:account).permit(:name, :balance, :currency)
+  end
+
+  def account_update_params
     params.require(:account).permit(:name, :balance)
   end
 end

@@ -30,7 +30,7 @@ class UpdateTransaction < Operation
   end
 
   def new_amount
-    data[:amount] ? Monetize.parse(data[:amount]) : transaction.amount
+    data[:amount] ? Monetize.parse(data[:amount], transaction.currency_for_amount) : transaction.amount
   end
 
   def update_transaction

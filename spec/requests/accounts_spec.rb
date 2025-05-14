@@ -50,7 +50,7 @@ RSpec.describe "Accounts requests" do
     let(:request) { post accounts_url, params: }
     let(:params) { {account: attributes_for(:account)} }
     let(:search_params) { params[:account].dup.tap { |hash| hash[:balance_cents] = balance_cents }.tap { |hash| hash.delete(:balance) } }
-    let(:balance_cents) { Money.from_amount(params[:account][:balance]).cents }
+    let(:balance_cents) { Money.from_amount(params[:account][:balance], params[:account][:currency]).cents }
 
     include_examples "of redirection to list of", :accounts
     include_examples "of user authentication"
@@ -86,7 +86,7 @@ RSpec.describe "Accounts requests" do
     end
 
     context "with invalid parameters" do
-      let(:params) { {account: attributes_for(:account, :invalid)} }
+      let(:params) { {account: attributes_for(:account, :invalid).except(:currency)} }
 
       include_examples "of response status", :unprocessable_content
 

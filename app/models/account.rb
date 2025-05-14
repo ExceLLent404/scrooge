@@ -20,8 +20,10 @@ class Account < ApplicationRecord
   end
 
   normalizes :name, with: ->(name) { name.squish }
+  normalizes :currency, with: ->(currency) { currency.upcase }
 
   monetize :balance_cents,
+    with_model_currency: :currency,
     numericality: {greater_than_or_equal_to: 0, message: I18n.t("errors.messages.not_less_than", count: 0)}
 
   belongs_to :user
@@ -30,6 +32,21 @@ class Account < ApplicationRecord
   has_many :expenses, as: :source, dependent: :delete_all
 
   validates :name, presence: true
+  validates :currency, presence: {
+    message: I18n.t(
+      "errors.messages.one_of",
+      list: Money::Currency.all.to_sentence(last_word_connector: I18n.t("support.array.enum_connector"))
+    )
+  }
+
+  def currency=(value)
+    currency = suppress(Money::Currency::UnknownCurrency) { value&.to_currency }
+    super(currency)
+  end
+
+  def currency
+    super&.to_currency
+  end
 
   def deposit(amount)
     raise NegativeAmount.new(amount) if amount < 0
