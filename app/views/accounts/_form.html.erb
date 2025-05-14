@@ -11,7 +11,7 @@
               <%= f.input :currency,
                           wrapper: :select_control,
                           collection: Money::Currency.all,
-                          selected: "USD",
+                          selected: current_user.preferred_currency,
                           label_method: :symbol,
                           value_method: :to_s %>
             <% else %>

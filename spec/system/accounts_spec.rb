@@ -60,9 +60,9 @@ RSpec.describe "Accounts" do
 
     context "with suggested default currency" do
       let(:default_currency) { true }
-      let(:currency) { "USD".to_currency.symbol }
+      let(:currency) { user.preferred_currency.symbol }
 
-      it "creates an account with `USD` currency" do
+      it "creates an account with user preferred currency" do
         act
 
         expect(page).to have_content(name).and have_content(balance).and have_content(currency)

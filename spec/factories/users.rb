@@ -3,6 +3,7 @@ FactoryBot.define do
     name { [Faker::Name.first_name, nil].sample }
     email { Faker::Internet.email }
     password { Faker::Internet.password }
+    preferred_currency { Money::Currency.all.sample }
     time_zone { ActiveSupport::TimeZone.all.sample.name }
 
     confirmed
