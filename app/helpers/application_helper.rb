@@ -1,4 +1,6 @@
 module ApplicationHelper
+  attr_reader :pagy
+
   def prepend_flash
     turbo_stream.prepend "flash", partial: "flash"
   end

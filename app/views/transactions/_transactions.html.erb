@@ -1,0 +1,9 @@
+<% transactions.group_by(&:committed_date).each do |date, transactions_by_date| %>
+  <%= tag.div id: date, class: "block" do %>
+    <%= date.to_relative_in_words %>
+
+    <%= tag.div id: "#{date}_transactions", class: "box p-1" do %>
+      <%= render partial: transactions_by_date, spacer_template: "spacer" %>
+    <% end %>
+  <% end %>
+<% end %>

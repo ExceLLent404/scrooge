@@ -1,0 +1,9 @@
+<% if pagy.next.present? %>
+  <%= turbo_frame_tag :pagination,
+                      src: transactions_path(
+                        format: :turbo_stream,
+                        page: pagy.next,
+                        last_rendered_date: transactions.last.committed_date
+                      ),
+                      loading: :lazy %>
+<% end %>

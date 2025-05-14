@@ -1,0 +1,14 @@
+<% last_rendered_date = suppress(Date::Error) { Date.iso8601(params[:last_rendered_date]) } %>
+<% repeated_date_transactions = transactions.select { |t| t.committed_date == last_rendered_date } %>
+<% if repeated_date_transactions.any? %>
+  <%= turbo_stream.append "#{last_rendered_date}_transactions" do %>
+    <%= render "spacer" %>
+    <%= render partial: repeated_date_transactions, spacer_template: "spacer" %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.append "transactions" do %>
+  <%= render "transactions", transactions: transactions.excluding(repeated_date_transactions) %>
+<% end %>
+
+<%= turbo_stream.replace "pagination", render("pagination") %>

@@ -6,8 +6,10 @@ class TransactionsController < ApplicationController
   decorates_assigned :transaction, :transactions
 
   def index
-    @transactions =
-      current_user.transactions.order(committed_date: :desc, created_at: :desc).includes(:source, :destination)
+    transactions = current_user.transactions.order(committed_date: :desc, created_at: :desc)
+    @pagy, @transactions = pagy_countless(transactions.includes(:source, :destination))
+
+    render_index_view
   end
 
   def show
@@ -80,5 +82,10 @@ class TransactionsController < ApplicationController
 
   def transaction_update_params
     params.require(:transaction).permit(%i[source_id destination_id amount committed_date comment])
+  end
+
+  def render_index_view
+    format = params[:format]&.to_sym || :html
+    render "index", formats: [format]
   end
 end
