@@ -40,8 +40,13 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = if Rails.application.credentials.tebi
+    # Store uploaded files on S3-compatible object storage (see config/storage.yml for options).
+    :tebi_s3
+  else
+    # Store uploaded files on the local file system.
+    :local
+  end
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
