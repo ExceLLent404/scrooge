@@ -1,4 +1,7 @@
-require "sidekiq/web" if Rails.env.development?
+if Rails.env.development?
+  require "sidekiq/web"
+  require "sidekiq-scheduler/web"
+end
 
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
