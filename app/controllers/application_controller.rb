@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   before_action :authenticate_user!
+  before_action :set_sentry_user, if: :current_user
 
   around_action :set_time_zone, if: :current_user
 
@@ -15,6 +16,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_sentry_user
+    Sentry.set_user(email: current_user.email)
+  end
 
   def set_time_zone(&)
     Time.use_zone(current_user.time_zone, &)
