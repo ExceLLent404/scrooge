@@ -32,6 +32,11 @@ gem "dry-initializer", "~> 3.0"
 
 gem "image_processing", "~> 1.0"
 
+gem "stackprof", "~> 0.2.0"
+gem "sentry-ruby", "~> 5.0"
+gem "sentry-rails", "~> 5.0"
+gem "sentry-sidekiq", "~> 5.0"
+
 group :development do
   gem "web-console", "~> 4.0"
 
@@ -81,6 +86,5 @@ group :test do
   gem "simplecov", "~> 0.22.0", require: false
   gem "simplecov-cobertura", "~> 2.0", require: false
 
-  gem "stackprof", "~> 0.2.0", require: false
   gem "test-prof", "~> 1.0", require: false
 end
