@@ -1,3 +1,5 @@
+require "money/bank/open_exchange_rates_bank"
+
 # Limit the set of supported (allowed) currencies
 white_list = %i[usd eur rub]
 Money::Currency.table.keys.each do |currency|
@@ -10,10 +12,24 @@ MoneyRails.configure do |config|
   # To set the default currency
   config.default_currency = :usd
 
+  oxr = Money::Bank::OpenExchangeRatesBank.new(Money::RatesStore::Memory.new)
+
+  oxr.app_id = Rails.application.credentials.oxr_app_id
+
+  # (optional)
+  # Minified Response ('prettyprint')
+  # see https://docs.openexchangerates.org/docs/prettyprint
+  oxr.prettyprint = false
+
+  # Filter response to a list of symbols
+  # see https://docs.openexchangerates.org/docs/get-specific-currencies
+  oxr.symbols = Money::Currency.all.map(&:to_s).excluding(oxr.source)
+
   # Set default bank object
   #
   # Example:
   # config.default_bank = EuCentralBank.new
+  config.default_bank = oxr
 
   # Add exchange rates to current money bank object.
   # (The conversion rate refers to one direction only)
@@ -21,7 +37,7 @@ MoneyRails.configure do |config|
   # Example:
   # config.add_rate "USD", "CAD", 1.24515
   # config.add_rate "CAD", "USD", 0.803115
-  if Rails.env.development?
+  if oxr.app_id.blank? && Rails.env.development?
     config.add_rate "USD", "EUR",   0.9000
     config.add_rate "EUR", "USD",   1.1111
     config.add_rate "USD", "RUB",  90.0000
@@ -29,6 +45,8 @@ MoneyRails.configure do |config|
     config.add_rate "EUR", "RUB", 100.0000
     config.add_rate "RUB", "EUR",   0.0100
   end
+
+  oxr.update_rates if oxr.app_id.present? && Rails.env.development?
 
   # To handle the inclusion of validations for monetized fields
   # The default value is true
