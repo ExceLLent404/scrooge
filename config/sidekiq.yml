@@ -1,0 +1,9 @@
+---
+:scheduler:
+  :dynamic: true
+  :schedule:
+    UpdateExchangeRatesJob:
+      cron: "0 0 * * * *"
+
+test:
+  :max_retries: 0
