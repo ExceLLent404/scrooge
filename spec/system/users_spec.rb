@@ -28,7 +28,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.signed_up_but_unconfirmed"))
-      expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
+      expect(wait { open_email(email) }).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
 
     it_behaves_like "validation of email presence"
@@ -60,7 +60,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.confirmations.send_instructions"))
-      expect(emails_sent_to(email).count).to be(2)
+      expect(wait { emails_sent_to(email) }.count).to be(2)
       expect(emails_sent_to(email)).to all(have_content(t("devise.mailer.confirmation_instructions.action")))
     end
 
@@ -84,7 +84,7 @@ RSpec.describe "Users" do
     it "activates user profile" do
       user = create(:user, :unconfirmed)
 
-      open_email(user.email).click_on t("devise.mailer.confirmation_instructions.action")
+      wait { open_email(user.email) }.click_on t("devise.mailer.confirmation_instructions.action")
 
       expect(success_notification).to have_content(t("devise.confirmations.confirmed"))
     end
@@ -177,7 +177,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.passwords.send_instructions"))
-      expect(open_email(email)).to have_content(t("devise.mailer.reset_password_instructions.action"))
+      expect(wait { open_email(email) }).to have_content(t("devise.mailer.reset_password_instructions.action"))
     end
 
     it_behaves_like "validation of email presence"
@@ -189,7 +189,7 @@ RSpec.describe "Users" do
     before { user.send_reset_password_instructions }
 
     def act
-      open_email(user.email).click_on t("devise.mailer.reset_password_instructions.action")
+      wait { open_email(user.email) }.click_on t("devise.mailer.reset_password_instructions.action")
 
       fill_in "New password", with: password
       fill_in "Confirm new password", with: password_confirmation
@@ -205,7 +205,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.passwords.updated_not_active"))
-      expect(open_email(user.email)).to have_content(t("devise.mailer.password_change.message"))
+      expect(wait { open_email(user.email) }).to have_content(t("devise.mailer.password_change.message"))
     end
 
     context "when the available time to change the password has expired" do
@@ -309,7 +309,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.update_needs_confirmation"))
-      expect(open_email(user.email))
+      expect(wait { open_email(user.email) })
         .to have_content(t("devise.mailer.email_changed.message_unconfirmed", email:))
       expect(open_email(email)).to have_content(t("devise.mailer.confirmation_instructions.action"))
     end
@@ -345,7 +345,7 @@ RSpec.describe "Users" do
       act
 
       expect(success_notification).to have_content(t("devise.registrations.updated"))
-      expect(open_email(user.email)).to have_content(t("devise.mailer.password_change.message"))
+      expect(wait { open_email(user.email) }).to have_content(t("devise.mailer.password_change.message"))
     end
 
     context "with empty password" do

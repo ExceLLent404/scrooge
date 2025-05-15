@@ -39,6 +39,8 @@ RemoveUnusedMethodsInHelpersCheck:
 RemoveUnusedMethodsInModelsCheck:
   except_methods:
     - Transaction#ransackable_associations
+    - User#send_devise_notification
+    - User#send_reset_password_instructions_notification
 ReplaceComplexCreationWithFactoryMethodCheck:
   attribute_assignment_count: 2
 ReplaceInstanceVariableWithLocalVariableCheck: {}
