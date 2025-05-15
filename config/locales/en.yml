@@ -9,6 +9,11 @@ en:
       text: Add account
     update:
       success: Account updated
+  capital:
+    show:
+      expenses: Expenses
+      funds: Total funds
+      incomes: Incomes
   categories:
     create:
       success: Category added
