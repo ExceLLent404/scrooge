@@ -21,6 +21,14 @@ MoneyRails.configure do |config|
   # Example:
   # config.add_rate "USD", "CAD", 1.24515
   # config.add_rate "CAD", "USD", 0.803115
+  if Rails.env.development?
+    config.add_rate "USD", "EUR",   0.9000
+    config.add_rate "EUR", "USD",   1.1111
+    config.add_rate "USD", "RUB",  90.0000
+    config.add_rate "RUB", "USD",   0.0111
+    config.add_rate "EUR", "RUB", 100.0000
+    config.add_rate "RUB", "EUR",   0.0100
+  end
 
   # To handle the inclusion of validations for monetized fields
   # The default value is true

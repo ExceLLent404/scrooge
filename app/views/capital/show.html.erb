@@ -1,2 +1,26 @@
-<h1>Capital#show</h1>
-<p>Find me in app/views/capital/show.html.erb</p>
+<div class="columns is-mobile is-centered">
+  <div class="column" style="max-width: 800px">
+    <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+      <div class="card my-2 has-background-grey-lighter" style="width: 220px">
+        <div class="card-content">
+          <p class="title is-5"><%= t(".funds") %></p>
+          <p><%= @total_funds.format %></p>
+        </div>
+      </div>
+
+      <div class="card my-2 has-background-success-light" style="width: 220px">
+        <div class="card-content">
+          <p class="title is-5"><%= t(".incomes") %></p>
+          <p><%= @incomes_amount.format %></p>
+        </div>
+      </div>
+
+      <div class="card my-2 has-background-danger-light" style="width: 220px">
+        <div class="card-content">
+          <p class="title is-5"><%= t(".expenses") %></p>
+          <p><%= @expenses_amount.format %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
