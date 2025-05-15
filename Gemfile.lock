@@ -478,6 +478,12 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     sexp_processor (4.17.3)
+    sidekiq (7.3.9)
+      base64
+      connection_pool (>= 2.3.0)
+      logger
+      rack (>= 2.2.4)
+      redis-client (>= 0.22.2)
     simple_form (5.3.1)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
@@ -611,6 +617,7 @@ DEPENDENCIES
   ruby-lsp-rails (~> 0.4.0)
   rubycritic (~> 4.0)
   selenium-webdriver (~> 4.0)
+  sidekiq (~> 7.0)
   simple_form (~> 5.0)
   simplecov (~> 0.22.0)
   simplecov-cobertura (~> 2.0)

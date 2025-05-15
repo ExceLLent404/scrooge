@@ -1,0 +1,3 @@
+---
+test:
+  :max_retries: 0

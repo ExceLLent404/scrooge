@@ -24,6 +24,8 @@ gem "pagy", "~> 9.0"
 gem "ransack", "~> 4.0"
 gem "simple_form", "~> 5.0"
 
+gem "sidekiq", "~> 7.0"
+
 gem "dry-monads", "~> 1.0"
 gem "dry-initializer", "~> 3.0"
 

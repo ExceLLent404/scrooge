@@ -1,13 +1,24 @@
+x-app: &app
+  build:
+    context: .
+    target: development
+  environment: &env
+    DB_USER: scrooge
+    DB_PASS: 123456
+    DB_HOST: postgres
+    REDIS_URL: redis://redis:6379
+  volumes:
+    - .:/scrooge
+    - bundle:/usr/local/bundle
+  depends_on:
+    - postgres
+    - redis
+
 services:
   web:
-    build:
-      context: .
-      target: development
+    <<: *app
     environment:
-      DB_USER: scrooge
-      DB_PASS: 123456
-      DB_HOST: postgres
-      REDIS_URL: redis://redis:6379
+      <<: *env
       DEMO_USER_EMAIL: scrooge@example.com
       DEMO_USER_PASS: 123456
       CHROME_HOST: 172.17.0.1
@@ -15,12 +26,11 @@ services:
     ports:
       - "3000:3000"
       - "3030:3030"
-    volumes:
-      - .:/scrooge
-      - bundle:/usr/local/bundle
     depends_on:
-      - postgres
-      - redis
+      - sidekiq
+  sidekiq:
+    <<: *app
+    command: bundle exec sidekiq
   postgres:
     image: postgres:16.1-alpine3.19
     environment:
