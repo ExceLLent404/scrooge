@@ -72,6 +72,7 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://scrooge:123456@localhost:5432/scrooge_test
+      REDIS_URL: redis://localhost:6379
     services:
       postgres:
         image: postgres:16.1-alpine3.19
@@ -81,6 +82,11 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7.2.5-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libjemalloc2 libvips

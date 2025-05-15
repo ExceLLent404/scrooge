@@ -1,4 +1,5 @@
 require "money/bank/open_exchange_rates_bank"
+require Rails.root.join("lib/money/rates_store/redis.rb")
 
 # Limit the set of supported (allowed) currencies
 white_list = %i[usd eur rub]
@@ -12,7 +13,9 @@ MoneyRails.configure do |config|
   # To set the default currency
   config.default_currency = :usd
 
-  oxr = Money::Bank::OpenExchangeRatesBank.new(Money::RatesStore::Memory.new)
+  redis_db = Rails.env.test? ? 15 : 1
+  rates_store = Money::RatesStore::Redis.new(url: "#{ENV["REDIS_URL"]}/#{redis_db}")
+  oxr = Money::Bank::OpenExchangeRatesBank.new(rates_store)
 
   oxr.app_id = Rails.application.credentials.oxr_app_id
 
@@ -45,8 +48,6 @@ MoneyRails.configure do |config|
     config.add_rate "EUR", "RUB", 100.0000
     config.add_rate "RUB", "EUR",   0.0100
   end
-
-  oxr.update_rates if oxr.app_id.present? && Rails.env.development?
 
   # To handle the inclusion of validations for monetized fields
   # The default value is true

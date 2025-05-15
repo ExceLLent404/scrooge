@@ -368,6 +368,10 @@ GEM
       logger
     rdoc (6.13.1)
       psych (>= 4.0.0)
+    redis (5.4.0)
+      redis-client (>= 0.22.0)
+    redis-client (0.24.0)
+      connection_pool
     reek (6.4.0)
       dry-schema (~> 1.13.0)
       logger (~> 1.6)
@@ -594,6 +598,7 @@ DEPENDENCIES
   rails (~> 7.2.0)
   rails_best_practices (~> 1.0)
   ransack (~> 4.0)
+  redis (~> 5.0)
   reek (~> 6.0)
   rspec-rails (~> 7.0)
   rubocop (~> 1.0)
