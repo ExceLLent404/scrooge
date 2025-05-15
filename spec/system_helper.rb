@@ -23,6 +23,14 @@ Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, **browser_location, options:)
 end
 
+# Selenium related helpers
+module SeleniumHelpers
+  def wait(&)
+    wait = Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time)
+    wait.until(&)
+  end
+end
+
 # Helpers for finding objects on the page
 module ObjectHelpers
   include ActionView::RecordIdentifier
@@ -95,4 +103,5 @@ RSpec.configure do |config|
 
   config.include BulmaHelpers, type: :system
   config.include BrowserHelpers, type: :system
+  config.include SeleniumHelpers, type: :system
 end

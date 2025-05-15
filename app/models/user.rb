@@ -25,4 +25,22 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable, :confirmable
+
+  protected
+
+  # Devise internal method overridden to send a notification/mail in background
+  def send_devise_notification(notification, *)
+    devise_mailer.send(notification, self, *).deliver_later
+  end
+
+  # The original Devise `send_devise_notification` method
+  def send_devise_notification_now(notification, *)
+    devise_mailer.send(notification, self, *).deliver_now
+  end
+
+  # Devise internal method overridden to not log a password reset token by ActiveJob:
+  # https://github.com/heartcombo/devise#password-reset-tokens-and-rails-logs
+  def send_reset_password_instructions_notification(token)
+    send_devise_notification_now(:reset_password_instructions, token, {})
+  end
 end
