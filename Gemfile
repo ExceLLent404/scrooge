@@ -30,6 +30,7 @@ gem "sidekiq-scheduler", "~> 5.0"
 gem "dry-monads", "~> 1.0"
 gem "dry-initializer", "~> 3.0"
 
+gem "aws-sdk-s3", "~> 1.0", require: false
 gem "image_processing", "~> 1.0"
 
 gem "stackprof", "~> 0.2.0"
