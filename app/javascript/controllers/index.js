@@ -10,6 +10,9 @@ application.register("file", FileController)
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
 
+import FormController from "./form_controller"
+application.register("form", FormController)
+
 import InputController from "./input_controller"
 application.register("input", InputController)
 

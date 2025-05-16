@@ -4,7 +4,7 @@ class User < ApplicationRecord
   normalizes :name, with: ->(name) { name.present? ? name.squish : nil }
   normalizes :email, with: ->(email) { email.strip.downcase }
 
-  has_currency :preferred_currency
+  has_currency :preferred_currency, normalize: true
 
   has_one_attached :avatar do |attachable|
     attachable.variant :thumbnail, resize_to_fill: [32, 32], saver: {quality: 100}

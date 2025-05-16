@@ -1,10 +1,15 @@
 class CapitalController < ApplicationController
   def show
-    zero = Money.zero(current_user.preferred_currency)
-    period = Date.current.beginning_of_month..Date.current
+    @accounting = Accounting.new(user: current_user, **accounting_params)
 
-    @total_funds = current_user.accounts.sum(zero, &:balance)
-    @incomes_amount = current_user.incomes.where(committed_date: period).includes(:destination).sum(zero, &:amount)
-    @expenses_amount = current_user.expenses.where(committed_date: period).includes(:source).sum(zero, &:amount)
+    @total_funds = @accounting.total_funds
+    @incomes_amount = @accounting.incomes_amount
+    @expenses_amount = @accounting.expenses_amount
+  end
+
+  private
+
+  def accounting_params
+    params[:accounting]&.permit(%i[currency from to]) || {}
   end
 end

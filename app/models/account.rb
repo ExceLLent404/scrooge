@@ -27,7 +27,7 @@ class Account < ApplicationRecord
     with_model_currency: :currency,
     numericality: {greater_than_or_equal_to: 0, message: I18n.t("errors.messages.not_less_than", count: 0)}
 
-  has_currency :currency
+  has_currency :currency, normalize: true
 
   belongs_to :user
 

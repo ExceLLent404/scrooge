@@ -1,0 +1,33 @@
+<%= turbo_frame_tag accounting do %>
+  <%= simple_form_for accounting, defaults: {required: false}, url: url_for, method: :get, data: {controller: "form"} do |f| %>
+    <div class="field is-grouped is-grouped-right">
+      <div class="field is-flex is-flex-direction-column is-align-items-end">
+        <%= f.input :currency,
+                    wrapper: :select_control,
+                    wrapper_html: {class: "mr-2"},
+                    collection: Money::Currency.all,
+                    selected: accounting.currency,
+                    label_method: :symbol,
+                    value_method: :to_s,
+                    input_html: {data: {action: "form#submit"}} %>
+        <%= f.error :currency %>
+      </div>
+
+      <% %i[from to].each do |field| %>
+        <div class="field is-flex is-flex-direction-column is-align-items-center">
+          <div class="is-flex is-align-items-flex-end">
+            <%= f.label field, class: "label mr-2" %>
+            <%= f.input field,
+                        as: :date,
+                        html5: true,
+                        wrapper: :control,
+                        input_html: {data: {action: "change->form#submitWithDelay"}} %>
+          </div>
+          <%= f.error field %>
+        </div>
+      <% end %>
+
+      <%= f.button :submit, class: "is-hidden", name: nil, data: {turbo_frame: :results, form_target: :submit} %>
+    </div>
+  <% end %>
+<% end %>
