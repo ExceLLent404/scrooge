@@ -10,6 +10,6 @@ class CapitalController < ApplicationController
   private
 
   def accounting_params
-    params[:accounting]&.permit(%i[from to]) || {}
+    params[:accounting]&.permit(%i[currency from to]) || {}
   end
 end

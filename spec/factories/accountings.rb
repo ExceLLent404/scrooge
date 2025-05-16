@@ -3,6 +3,7 @@ FactoryBot.define do
     skip_create
 
     user
+    currency { Money::Currency.all.sample }
     from { Faker::Date.between(from: Date.current.beginning_of_year.prev_year, to:) }
     to { Faker::Date.between(from: Date.current.beginning_of_year.prev_year, to: Date.current) }
 

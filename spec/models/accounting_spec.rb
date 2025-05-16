@@ -1,11 +1,21 @@
 require "rails_helper"
 
+RSpec.shared_examples "calculations with invalid currency" do
+  context "when accounting is invalid due to currency" do
+    let(:accounting) { build(:accounting, currency: "ABC") }
+
+    it "returns zero amount in the application default currency" do
+      expect(subject).to eql(Money.zero)
+    end
+  end
+end
+
 RSpec.shared_examples "calculations with invalid period" do
   context "when accounting is invalid due to period" do
     let(:accounting) { build(:accounting, :with_invalid_period) }
 
-    it "returns zero amount in the user's preferred currency" do
-      expect(subject).to eql(Money.zero(accounting.user.preferred_currency))
+    it "returns zero amount in the accounting currency" do
+      expect(subject).to eql(Money.zero(accounting.currency))
     end
   end
 end
@@ -27,6 +37,21 @@ RSpec.describe Accounting do
 
     it "cannot be absent" do
       expect(build(:accounting, user: nil)).not_to be_valid
+    end
+  end
+
+  describe "#currency" do
+    subject(:currency) { accounting.currency }
+
+    include_examples "of currency available to use", :currency
+
+    context "by default" do
+      let(:accounting) { described_class.new(user:) }
+      let(:user) { build(:user) }
+
+      it "is the user preferred currency" do
+        expect(currency).to eql(user.preferred_currency)
+      end
     end
   end
 
@@ -80,18 +105,20 @@ RSpec.describe Accounting do
     context "when user has accounts" do
       before { user.accounts = Money::Currency.all.map { |currency| build(:account, user:, currency:) } }
 
-      let(:calculated_amount) { user.accounts.sum { |account| account.balance.exchange_to(user.preferred_currency) } }
+      let(:calculated_amount) { user.accounts.sum { |account| account.balance.exchange_to(accounting.currency) } }
 
-      it "returns the total amount of funds from all user accounts in the user's preferred currency" do
+      it "returns the total amount of funds from all user accounts in the accounting currency" do
         expect(total_funds).to eql(calculated_amount)
       end
     end
 
     context "when user has no accounts" do
-      it "returns zero amount in the user's preferred currency" do
-        expect(total_funds).to eql(Money.zero(user.preferred_currency))
+      it "returns zero amount in the accounting currency" do
+        expect(total_funds).to eql(Money.zero(accounting.currency))
       end
     end
+
+    it_behaves_like "calculations with invalid currency"
   end
 
   describe "#incomes_amount" do
@@ -101,19 +128,20 @@ RSpec.describe Accounting do
 
     context "when user has incomes for the accounting period" do
       let!(:incomes) { [accounting.from, accounting.to].map { |date| create(:income, user: accounting.user, committed_date: date) } }
-      let(:calculated_amount) { incomes.sum { |income| income.amount.exchange_to(accounting.user.preferred_currency) } }
+      let(:calculated_amount) { incomes.sum { |income| income.amount.exchange_to(accounting.currency) } }
 
-      it "returns the total amount of all user incomes for the accounting period in the user's preferred currency" do
+      it "returns the total amount of all user incomes for the accounting period in the accounting currency" do
         expect(incomes_amount).to eql(calculated_amount)
       end
     end
 
     context "when user has no incomes for the accounting period" do
-      it "returns zero amount in the user's preferred currency" do
-        expect(incomes_amount).to eql(Money.zero(accounting.user.preferred_currency))
+      it "returns zero amount in the accounting currency" do
+        expect(incomes_amount).to eql(Money.zero(accounting.currency))
       end
     end
 
+    it_behaves_like "calculations with invalid currency"
     it_behaves_like "calculations with invalid period"
   end
 
@@ -124,19 +152,20 @@ RSpec.describe Accounting do
 
     context "when user has expenses for the accounting period" do
       let!(:expenses) { [accounting.from, accounting.to].map { |date| create(:expense, user: accounting.user, committed_date: date) } }
-      let(:calculated_amount) { expenses.sum { |expense| expense.amount.exchange_to(accounting.user.preferred_currency) } }
+      let(:calculated_amount) { expenses.sum { |expense| expense.amount.exchange_to(accounting.currency) } }
 
-      it "returns the total amount of all user expenses for the accounting period in the user's preferred currency" do
+      it "returns the total amount of all user expenses for the accounting period in the accounting currency" do
         expect(expenses_amount).to eql(calculated_amount)
       end
     end
 
     context "when user has no expenses for the accounting period" do
-      it "returns zero amount in the user's preferred currency" do
-        expect(expenses_amount).to eql(Money.zero(accounting.user.preferred_currency))
+      it "returns zero amount in the accounting currency" do
+        expect(expenses_amount).to eql(Money.zero(accounting.currency))
       end
     end
 
+    it_behaves_like "calculations with invalid currency"
     it_behaves_like "calculations with invalid period"
   end
 end

@@ -2,10 +2,14 @@ class Accounting
   include ActiveModel::Model
   include ActiveModel::Attributes
   extend ActiveModel::Callbacks
+  include HasCurrency
 
   attribute :user
+  attribute :currency
   attribute :from, :date
   attribute :to, :date
+
+  has_currency :currency, normalize: false
 
   define_model_callbacks :initialize, only: :after
 
@@ -33,31 +37,39 @@ class Accounting
   after_initialize :set_default_values
 
   def total_funds
-    TotalBalance.new(user.accounts, user.preferred_currency).value
+    validate
+    errors.key?(:currency) ? zero_amount : TotalBalance.new(user.accounts, currency).value
   end
 
   def incomes_amount
-    return Money.zero(user.preferred_currency) unless valid?
+    return zero_amount unless valid?
 
     incomes = user.incomes.where(committed_date: from..to).includes(:destination)
-    TransactionsAmount.new(incomes, user.preferred_currency).value
+    TransactionsAmount.new(incomes, currency).value
   end
 
   def expenses_amount
-    return Money.zero(user.preferred_currency) unless valid?
+    return zero_amount unless valid?
 
     expenses = user.expenses.where(committed_date: from..to).includes(:source)
-    TransactionsAmount.new(expenses, user.preferred_currency).value
+    TransactionsAmount.new(expenses, currency).value
   end
 
   private
 
   def set_default_values
+    self.currency ||= user&.preferred_currency
     self.to ||= Date.current
     self.from ||= to.beginning_of_month
   end
 
   def user_is_user
     errors.add(:user, I18n.t("errors.messages.is_a", model: User.model_name.human)) unless user.is_a?(User)
+  end
+
+  def zero_amount
+    validate
+    zero_currency = errors.key?(:currency) ? Money.default_currency : currency
+    Money.zero(zero_currency)
   end
 end
