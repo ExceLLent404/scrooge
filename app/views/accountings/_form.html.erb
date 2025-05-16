@@ -1,5 +1,5 @@
-<%= turbo_frame_tag form do %>
-  <%= simple_form_for form, defaults: {required: false}, url: url_for, method: :get, data: {controller: "form"} do |f| %>
+<%= turbo_frame_tag accounting do %>
+  <%= simple_form_for accounting, defaults: {required: false}, url: url_for, method: :get, data: {controller: "form"} do |f| %>
     <div class="field is-grouped is-grouped-right">
       <% %i[from to].each do |field| %>
         <div class="field is-flex is-flex-direction-column is-align-items-center">

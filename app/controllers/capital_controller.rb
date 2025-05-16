@@ -1,24 +1,15 @@
 class CapitalController < ApplicationController
   def show
-    @accounting_form = AccountingForm.new(accounting_params)
-    zero = Money.zero(current_user.preferred_currency)
+    @accounting = Accounting.new(user: current_user, **accounting_params)
 
-    @total_funds = current_user.accounts.sum(zero, &:balance)
-
-    if @accounting_form.valid?
-      period = @accounting_form.from..@accounting_form.to
-
-      @incomes_amount = current_user.incomes.where(committed_date: period).includes(:destination).sum(zero, &:amount)
-      @expenses_amount = current_user.expenses.where(committed_date: period).includes(:source).sum(zero, &:amount)
-    else
-      @incomes_amount = zero
-      @expenses_amount = zero
-    end
+    @total_funds = @accounting.total_funds
+    @incomes_amount = @accounting.incomes_amount
+    @expenses_amount = @accounting.expenses_amount
   end
 
   private
 
   def accounting_params
-    params[:accounting_form]&.permit(%i[from to]) || {}
+    params[:accounting]&.permit(%i[from to]) || {}
   end
 end

@@ -1,11 +1,11 @@
-<%= turbo_frame_tag @accounting_form %>
+<%= turbo_frame_tag @accounting %>
 
 <div class="columns is-mobile is-centered">
   <div class="column" style="max-width: 800px">
     <%= turbo_frame_tag :results do %>
       <%# Hack: re-render the form itself when the "results" frame is updated on the form submission. %>
       <%# Used because turbo doesn't allow multiple frames to be specified in the "data-turbo-frame" attribute (on the form submit button) %>
-      <%= turbo_stream.replace @accounting_form, render("accountings/form", form: @accounting_form) %>
+      <%= turbo_stream.replace @accounting, render("accountings/form", accounting: @accounting) %>
 
       <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
         <div class="card my-2 has-background-grey-lighter" style="width: 220px">
