@@ -6,7 +6,7 @@ module HasCurrency
   extend ActiveSupport::Concern
 
   class_methods do
-    def has_currency(attribute, normalize: true)
+    def has_currency(attribute, normalize: false)
       class_eval do
         normalizes attribute, with: ->(currency) { currency.upcase } if normalize
 

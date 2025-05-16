@@ -9,7 +9,7 @@ class Accounting
   attribute :from, :date
   attribute :to, :date
 
-  has_currency :currency, normalize: false
+  has_currency :currency
 
   define_model_callbacks :initialize, only: :after
 
