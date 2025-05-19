@@ -13,6 +13,10 @@ class TransactionsController < ApplicationController
     render_index_view
   end
 
+  def search_form
+    @search = Transaction.ransack
+  end
+
   def show
   end
 

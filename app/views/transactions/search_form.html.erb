@@ -1,0 +1,51 @@
+<%= turbo_frame_tag @search do %>
+  <nav class="panel">
+    <p class="panel-heading">Filters</p>
+
+    <div class="p-2">
+      <%= search_form_for @search, defaults: {required: false} do |f| %>
+        <%= f.input :type_in,
+                    as: :check_boxes,
+                    collection: Transaction::TYPES,
+                    label: false,
+                    checkboxes_html: {class: "is-justify-content-space-evenly"} %>
+
+        <%= f.input :comment_i_cont,
+                    label: false,
+                    placeholder: "Search by comment",
+                    control_html: {class: "has-icons-left"},
+                    icon: "fas fa-search",
+                    icon_class: "is-left" %>
+
+        <%= f.input :committed_date_lteq,
+                    as: :date,
+                    html5: true,
+                    wrapper: :horizontal,
+                    label: "Up to",
+                    input_html: {class: "is-fullwidth", max: Date.current} %>
+
+        <% check_boxes_options = {as: :check_boxes, checkboxes_html: {class: "is-flex-direction-column"}} %>
+
+        <%= f.input :account_in,
+                    **check_boxes_options,
+                    collection: current_user.accounts.order(created_at: :asc),
+                    label: "Account" %>
+
+        <%= f.input :income_category_in,
+                    **check_boxes_options,
+                    collection: current_user.income_categories.order(created_at: :asc),
+                    label: "Income category" %>
+
+        <%= f.input :expense_category_in,
+                    **check_boxes_options,
+                    collection: current_user.expense_categories.order(created_at: :asc),
+                    label: "Expense category" %>
+
+        <div class="field is-grouped">
+          <%= f.button :submit, t(".search"), class: "is-fullwidth is-link is-outlined", name: nil, data: {turbo_frame: :results} %>
+          <%= link_to t(".reset"), transactions_path, class: "button", data: {turbo_frame: :results}, onclick: "this.closest('form').reset()" %>
+        </div>
+      <% end %>
+    </div>
+  </nav>
+<% end %>
