@@ -1,5 +1,6 @@
 class Transaction < ApplicationRecord
   include FaithfulSTI
+  include HasCurrency
 
   TYPES = %w[Income Expense].freeze
 
@@ -17,14 +18,18 @@ class Transaction < ApplicationRecord
 
   normalizes :comment, with: ->(comment) { comment.present? ? comment.strip : nil }
 
-  monetize :amount_cents,
-    with_currency: ->(transaction) { transaction.account.is_a?(Account) ? transaction.account.currency : Money.default_currency },
-    numericality: {greater_than: 0}
+  monetize :amount_cents, with_model_currency: :currency, numericality: {greater_than: 0}
+
+  has_currency :currency, normalize: true
 
   belongs_to :user
   belongs_to :source, polymorphic: true
   belongs_to :destination, polymorphic: true
 
+  validates :currency, comparison: {
+    equal_to: ->(transaction) { transaction.send(:account_currency) },
+    message: ->(transaction, _data) { I18n.t("errors.messages.be", expected: transaction.send(:account_currency).to_s) }
+  }, if: :account_currency
   validates :committed_date, presence: true
   validates :committed_date, comparison: {
     less_than_or_equal_to: ->(_) { Date.current },
@@ -37,6 +42,7 @@ class Transaction < ApplicationRecord
     end
   end
 
+  after_initialize :set_currency, if: :new_record?
   after_initialize :set_appropriate_source_type, unless: :source_type?
   after_initialize :set_appropriate_destination_type, unless: :destination_type?
 
@@ -86,6 +92,14 @@ class Transaction < ApplicationRecord
     return if user == association.user
 
     errors.add(attribute, I18n.t("errors.messages.ownership", model: User.model_name.human))
+  end
+
+  def account_currency
+    account.is_a?(Account) ? account.currency : nil
+  end
+
+  def sync_currency
+    self.currency = account_currency
   end
 
   def set_appropriate_source_type

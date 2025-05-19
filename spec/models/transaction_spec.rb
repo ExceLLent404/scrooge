@@ -18,7 +18,7 @@ RSpec.describe Transaction do
   it { is_expected.to respond_to(:correct).with(1).argument }
   it { is_expected.to respond_to(:cancel).with(0).arguments }
 
-  it { is_expected.to monetize(:amount) }
+  it { is_expected.to monetize(:amount).with_model_currency(:currency) }
 
   it_behaves_like "it has timestamps"
 
@@ -72,6 +72,19 @@ RSpec.describe Transaction do
     it "is > 0" do
       expect(amount).to be > 0
       expect(build(:transaction, amount: 0)).not_to be_valid
+    end
+  end
+
+  describe "#currency" do
+    subject(:currency) { transaction.currency }
+
+    it { is_expected.to be_an_instance_of(Money::Currency) }
+
+    it "matches related account currency" do
+      expect(currency).to eql(transaction.account.currency)
+
+      transaction.currency = Money::Currency.all.excluding(currency).sample
+      expect(transaction).not_to be_valid
     end
   end
 

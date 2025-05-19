@@ -2,6 +2,16 @@ class Income < Transaction
   SOURCE_TYPE = "IncomeCategory".freeze
   DESTINATION_TYPE = "Account".freeze
 
+  def destination_id=(id)
+    super
+    sync_currency
+  end
+
+  def destination=(new_destination)
+    super
+    sync_currency
+  end
+
   def category
     source
   end
@@ -31,5 +41,12 @@ class Income < Transaction
 
   def cancel
     account.withdraw(amount)
+  end
+
+  private
+
+  def set_currency
+    self.destination = Account.find_by(id: destination_id) if destination.nil? && destination_id.present?
+    sync_currency
   end
 end

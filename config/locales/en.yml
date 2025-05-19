@@ -36,6 +36,7 @@ en:
         not_enough_balance: The balance of account %{name} (%{balance}) cannot be reduced by %{amount}
       is_a: must be a %{model}
       is_an: must be an %{model}
+      be: must be %{expected}
       not_greater_than: cannot be greater than %{count}
       not_less_than: cannot be less than %{count}
       one_of: "must be one of: %{list}"
