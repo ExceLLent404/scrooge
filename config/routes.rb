@@ -34,5 +34,7 @@ Rails.application.routes.draw do
     get "offer", on: :new
   end
 
-  resources :transactions
+  resources :transactions do
+    get "search_form", on: :collection
+  end
 end

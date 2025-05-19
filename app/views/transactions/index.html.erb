@@ -4,7 +4,7 @@
 
 <div class="mt-3 columns is-centered">
   <div class="column is-one-quarter mb-3">
-    <%= render "search_form", search: @search %>
+    <%= turbo_frame_tag @search, src: search_form_transactions_path %>
   </div>
 
   <div class="column has-background-light" style="max-width: 500px">
