@@ -28,17 +28,17 @@
 
         <%= f.input :account_in,
                     **check_boxes_options,
-                    collection: current_user.accounts.order(created_at: :asc).select(%i[id name]),
+                    collection: current_user.accounts.order(created_at: :asc).pluck(%i[name id]),
                     label: "Account" %>
 
         <%= f.input :income_category_in,
                     **check_boxes_options,
-                    collection: current_user.income_categories.order(created_at: :asc).select(%i[id name type]),
+                    collection: current_user.income_categories.order(created_at: :asc).pluck(%i[name id]),
                     label: "Income category" %>
 
         <%= f.input :expense_category_in,
                     **check_boxes_options,
-                    collection: current_user.expense_categories.order(created_at: :asc).select(%i[id name type]),
+                    collection: current_user.expense_categories.order(created_at: :asc).pluck(%i[name id]),
                     label: "Expense category" %>
 
         <div class="field is-grouped">
