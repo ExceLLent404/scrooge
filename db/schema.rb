@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_14_125051) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_19_082647) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,6 +73,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_125051) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "currency", null: false
     t.index ["destination_type", "destination_id"], name: "index_transactions_on_destination"
     t.index ["source_type", "source_id"], name: "index_transactions_on_source"
     t.index ["user_id"], name: "index_transactions_on_user_id"

@@ -325,7 +325,7 @@ RSpec.describe "Transactions" do
     let(:current_account) { create(:account, user:, balance: current_account_balance) }
     let(:current_account_balance) { 100 }
     let!(:income_category) { create(:income_category, user:, name: "Not #{income.category.name}") }
-    let(:amount) { income.amount + Money.from_amount(1, income.currency_for_amount) }
+    let(:amount) { income.amount + Money.from_amount(1, income.currency) }
     let(:comment) { "Updated #{income.comment}" }
     let(:account_change) { false }
 
@@ -342,7 +342,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount positivity"
 
     context "when amount decreases" do
-      let(:amount) { income.amount - Money.from_amount(1, income.currency_for_amount) }
+      let(:amount) { income.amount - Money.from_amount(1, income.currency) }
 
       context "when the difference between the new and current amounts is greater than account balance" do
         let(:current_account_balance) { 0 }
@@ -408,7 +408,7 @@ RSpec.describe "Transactions" do
     let(:current_account) { create(:account, user:, balance: current_account_balance) }
     let(:current_account_balance) { 100 }
     let!(:expense_category) { create(:expense_category, user:, name: "Not #{expense.category.name}") }
-    let(:amount) { expense.amount - Money.from_amount(1, expense.currency_for_amount) }
+    let(:amount) { expense.amount - Money.from_amount(1, expense.currency) }
     let(:comment) { "Updated #{expense.comment}" }
     let(:account_change) { false }
 
@@ -425,7 +425,7 @@ RSpec.describe "Transactions" do
     it_behaves_like "validation of transaction amount positivity"
 
     context "when amount increases" do
-      let(:amount) { expense.amount + Money.from_amount(1, expense.currency_for_amount) }
+      let(:amount) { expense.amount + Money.from_amount(1, expense.currency) }
 
       context "when the difference between the new and current amounts is greater than account balance" do
         let(:current_account_balance) { 0 }

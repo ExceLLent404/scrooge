@@ -2,6 +2,16 @@ class Expense < Transaction
   SOURCE_TYPE = "Account".freeze
   DESTINATION_TYPE = "ExpenseCategory".freeze
 
+  def source_id=(id)
+    super
+    sync_currency
+  end
+
+  def source=(new_source)
+    super
+    sync_currency
+  end
+
   def account
     source
   end
@@ -31,5 +41,12 @@ class Expense < Transaction
 
   def cancel
     account.deposit(amount)
+  end
+
+  private
+
+  def set_currency
+    self.source = Account.find_by(id: source_id) if source.nil? && source_id.present?
+    sync_currency
   end
 end

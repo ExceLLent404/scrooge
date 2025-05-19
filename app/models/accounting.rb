@@ -44,14 +44,14 @@ class Accounting
   def incomes_amount
     return zero_amount unless valid?
 
-    incomes = user.incomes.where(committed_date: from..to).includes(:destination)
+    incomes = user.incomes.where(committed_date: from..to)
     TransactionsAmount.new(incomes, currency).value
   end
 
   def expenses_amount
     return zero_amount unless valid?
 
-    expenses = user.expenses.where(committed_date: from..to).includes(:source)
+    expenses = user.expenses.where(committed_date: from..to)
     TransactionsAmount.new(expenses, currency).value
   end
 

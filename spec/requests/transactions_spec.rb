@@ -165,7 +165,7 @@ RSpec.describe "Transactions requests" do
     let(:type) { :transaction }
     let(:attributes) do
       {
-        amount: transaction.amount + Money.from_amount(1, transaction.currency_for_amount),
+        amount: transaction.amount + Money.from_amount(1, transaction.currency),
         comment: "New #{transaction.comment}".strip,
         committed_date: transaction.committed_date.prev_day
       }
@@ -188,7 +188,7 @@ RSpec.describe "Transactions requests" do
       expect { request }.to change { transaction.reload.attributes }
 
       changed_attributes = transaction.attributes.symbolize_keys
-      changed_attributes[:amount] = Money.from_cents(changed_attributes[:amount_cents], transaction.currency_for_amount)
+      changed_attributes[:amount] = Money.from_cents(changed_attributes[:amount_cents], transaction.currency)
       expect(changed_attributes).to include(attributes)
     end
 
@@ -215,7 +215,7 @@ RSpec.describe "Transactions requests" do
         let(:attributes) { {amount: transaction.amount + diff} }
 
         context "when the new Income amount is greater than the current one" do
-          let(:diff) { Money.from_amount(1, transaction.currency_for_amount) }
+          let(:diff) { Money.from_amount(1, transaction.currency) }
 
           it "increases the Account balance by the difference between the new and current amounts" do
             expect { request }.to change { transaction.account.reload.balance }.by(diff)
@@ -223,7 +223,7 @@ RSpec.describe "Transactions requests" do
         end
 
         context "when the new Income amount is less than the current one" do
-          let(:diff) { Money.from_amount(-1, transaction.currency_for_amount) }
+          let(:diff) { Money.from_amount(-1, transaction.currency) }
 
           it "decreases the Account balance by the difference between the new and current amounts" do
             expect { request }.to change { transaction.account.reload.balance }.by(diff)
@@ -325,7 +325,7 @@ RSpec.describe "Transactions requests" do
         let(:attributes) { {amount: transaction.amount + diff} }
 
         context "when the new Expense amount is greater than the current one" do
-          let(:diff) { Money.from_amount(1, transaction.currency_for_amount) }
+          let(:diff) { Money.from_amount(1, transaction.currency) }
 
           it "decreases the Account balance by the difference between the new and current amounts" do
             expect { request }.to change { transaction.account.reload.balance }.by(-diff)
@@ -343,7 +343,7 @@ RSpec.describe "Transactions requests" do
         end
 
         context "when the new Expense amount is less than the current one" do
-          let(:diff) { Money.from_amount(-1, transaction.currency_for_amount) }
+          let(:diff) { Money.from_amount(-1, transaction.currency) }
 
           it "increases the Account balance by the difference between the new and current amounts" do
             expect { request }.to change { transaction.account.reload.balance }.by(-diff)
