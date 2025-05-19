@@ -1,2 +1,5 @@
-<%= turbo_stream.replace category %>
+<%= turbo_stream.replace category do %>
+  <%= render category, transactions_amount: @transactions_amount, accounting: %>
+<% end %>
+
 <%= prepend_flash %>

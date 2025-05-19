@@ -6,7 +6,7 @@
 
     <div class="dropdown-menu">
       <div class="dropdown-content">
-        <%= link_to edit_object_path(object), class: "dropdown-item" do %>
+        <%= link_to edit_object_path(object, accounting: local_assigns[:accounting]), class: "dropdown-item" do %>
           <span class="icon-text">
             <%= icon "fas fa-pencil" %>
             <span><%= t("shared.links.edit") %></span>

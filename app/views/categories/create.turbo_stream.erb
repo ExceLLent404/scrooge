@@ -1,9 +1,11 @@
 <%= turbo_stream.remove Category.new(type: category.type) %>
 
-<%= turbo_stream.append category.type.underscore.pluralize, category %>
+<%= turbo_stream.append category.type.underscore.pluralize do %>
+  <%= render category, transactions_amount: @transactions_amount, accounting: %>
+<% end %>
 
 <%= turbo_stream.append category.type.underscore.pluralize do %>
-  <%= render "offer_new_category", type: category.type %>
+  <%= render "offer_new_category", type: category.type, accounting: %>
 <% end %>
 
 <%= prepend_flash %>

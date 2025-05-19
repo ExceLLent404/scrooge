@@ -45,6 +45,15 @@ RSpec.describe ApplicationHelper do
         expect(helper.edit_object_path(object)).to eql("/accounts/#{object.id}/edit")
       end
     end
+
+    context "when additional path params is specified" do
+      let(:object) { build_stubbed(:account) }
+      let(:params) { {additional: true, included: "yes"} }
+
+      it "includes the specified params to the path" do
+        expect(helper.edit_object_path(object, params)).to end_with("?#{params.to_query}")
+      end
+    end
   end
 
   describe "#object_path" do

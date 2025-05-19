@@ -54,9 +54,10 @@ module ApplicationHelper
   end
 
   # @param object [ApplicationRecord] model instance
+  # @param params [Hash] additional path params
   # @return [String] relative path for the edit page of the object
-  def edit_object_path(object)
-    send(:"edit_#{resource_name(object)}_path", object)
+  def edit_object_path(object, params = {})
+    send(:"edit_#{resource_name(object)}_path", object, params)
   end
 
   # @param object [ApplicationRecord] model instance

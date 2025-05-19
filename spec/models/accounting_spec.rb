@@ -168,4 +168,135 @@ RSpec.describe Accounting do
     it_behaves_like "calculations with invalid currency"
     it_behaves_like "calculations with invalid period"
   end
+
+  describe "#transactions_amount_by_category" do
+    subject(:transactions_amount) { accounting.transactions_amount_by_category(category) }
+
+    let(:type) { %i[income expense].sample }
+    let(:category) { build(:"#{type}_category", user: accounting.user) }
+    let(:source_or_destination) { (type == :income) ? :source : :destination }
+
+    it { is_expected.to be_an_instance_of(Money) }
+
+    context "when user has transactions for the specified category for the accounting period" do
+      let!(:transactions) do
+        [accounting.from, accounting.to].map do |date|
+          create(type, :user => accounting.user, source_or_destination => category, :committed_date => date)
+        end
+      end
+      let(:calculated_amount) { transactions.sum { |transaction| transaction.amount.exchange_to(accounting.currency) } }
+
+      it "returns the total amount of all transactions for the specified category for the accounting period in the accounting currency" do
+        expect(transactions_amount).to eql(calculated_amount)
+      end
+    end
+
+    context "when user has no transactions for the specified category for the accounting period" do
+      before do
+        category.save! # important for the category not to be just created
+        create(type, :user => accounting.user, source_or_destination => category, :committed_date => accounting.from.prev_day)
+        create(:transaction, user: accounting.user, committed_date: accounting.to)
+      end
+
+      it "returns zero amount in the accounting currency" do
+        expect(transactions_amount).to eql(Money.zero(accounting.currency))
+      end
+    end
+
+    context "when the specified category was just created" do
+      before { category.save! }
+
+      it "returns zero amount in the accounting currency" do
+        expect(transactions_amount).to eql(Money.zero(accounting.currency))
+      end
+    end
+
+    it_behaves_like "calculations with invalid currency"
+    it_behaves_like "calculations with invalid period"
+  end
+
+  describe "#transactions_amounts_by_categories" do
+    subject(:transactions_amounts) { accounting.transactions_amounts_by_categories(categories) }
+
+    let(:categories) { [category_with_two_transactions, category_with_one_transaction, category_without_transactions] }
+    let(:category_with_two_transactions) { build(:category, user: accounting.user) }
+    let(:category_with_one_transaction) { build(:category, user: accounting.user) }
+    let(:category_without_transactions) { build(:category, user: accounting.user) }
+    let(:transactions) { two_transactions + [one_transaction] }
+    let(:two_transactions) do
+      transactions = [accounting.from, accounting.to].map do |date|
+        build(:transaction, type: category_with_two_transactions.type.sub("Category", ""), user: accounting.user, committed_date: date)
+      end
+      transactions.each { |transaction| transaction.category = category_with_two_transactions }
+      transactions
+    end
+    let(:one_transaction) do
+      transaction = build(:transaction, type: category_with_one_transaction.type.sub("Category", ""), user: accounting.user, committed_date: accounting.from)
+      transaction.category = category_with_one_transaction
+      transaction
+    end
+    let(:calculated_result) do
+      {
+        category_with_two_transactions => two_transactions.sum { |transaction| transaction.amount.exchange_to(accounting.currency) },
+        category_with_one_transaction => one_transaction.amount.exchange_to(accounting.currency),
+        category_without_transactions => Money.zero(accounting.currency)
+      }
+    end
+
+    it "returns a Hash of pairs {category => Money}" do
+      categories.each(&:save!)
+      transactions.each(&:save!)
+
+      hash = transactions_amounts
+      expect(hash).to be_an_instance_of(Hash)
+      expect(hash).not_to be_empty
+      expect(hash.keys).to all(be_a(Category))
+      expect(hash.values).to all(be_an_instance_of(Money))
+    end
+
+    it "returns the total amounts of user transactions in the accounting currency, grouped by the specified categories" do
+      categories.each(&:save!)
+      transactions.each(&:save!)
+
+      expect(transactions_amounts).to eql(calculated_result)
+    end
+
+    context "when the specified categories is empty collection" do
+      let(:categories) { [] }
+
+      it "returns an empty Hash" do
+        expect(transactions_amounts).to eql({})
+      end
+    end
+
+    context "when user has no transactions for the specified categories for the accounting period" do
+      let(:calculated_result) { categories.index_with(Money.zero(accounting.currency)) }
+
+      before do
+        categories.each(&:save!)
+        create(:transaction, type: categories[0].type.sub("Category", ""), user: accounting.user, committed_date: accounting.from.prev_day)
+        create(:transaction, user: accounting.user, committed_date: accounting.from)
+      end
+
+      it "returns a Hash with zero amounts in the accounting currency, grouped by the specified categories" do
+        expect(transactions_amounts).to eql(calculated_result)
+      end
+    end
+
+    context "when accounting is invalid due to currency" do
+      let(:accounting) { build(:accounting, currency: "ABC") }
+
+      it "returns a Hash with zero amounts in the application default currency" do
+        expect(transactions_amounts.values).to all(eql(Money.zero))
+      end
+    end
+
+    context "when accounting is invalid due to period" do
+      let(:accounting) { build(:accounting, :with_invalid_period) }
+
+      it "returns a Hash with zero amounts in the accounting currency" do
+        expect(transactions_amounts.values).to all(eql(Money.zero(accounting.currency)))
+      end
+    end
+  end
 end
