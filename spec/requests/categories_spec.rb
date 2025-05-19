@@ -7,8 +7,9 @@ RSpec.describe "Categories requests" do
     let(:request) { get categories_url }
 
     before do
-      create(:income_category, user:)
+      category = create(:income_category, user:)
       create(:expense_category, user:)
+      create(:income, user:, source: category, committed_date: Date.current)
     end
 
     include_examples "of response status", :ok

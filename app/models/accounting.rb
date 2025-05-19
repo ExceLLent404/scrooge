@@ -2,6 +2,7 @@ class Accounting
   include ActiveModel::Model
   include ActiveModel::Attributes
   extend ActiveModel::Callbacks
+  include Draper::Decoratable
   include HasCurrency
 
   attribute :user
@@ -53,6 +54,19 @@ class Accounting
 
     expenses = user.expenses.where(committed_date: from..to)
     TransactionsAmount.new(expenses, currency).value
+  end
+
+  def transactions_amount_by_category(category)
+    return zero_amount unless valid?
+
+    just_created = category.persisted? && category.id_previously_changed?
+    category_transactions = just_created ? [] : category.transactions.where(user:, committed_date: from..to)
+    TransactionsAmount.new(category_transactions, currency).value
+  end
+
+  def transactions_amounts_by_categories(categories)
+    transactions = user.transactions.where(committed_date: from..to)
+    valid? ? TransactionsAmountsByCategories.new(transactions, categories, currency).result : Hash.new { zero_amount }
   end
 
   private

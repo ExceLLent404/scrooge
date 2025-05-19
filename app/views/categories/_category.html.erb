@@ -2,8 +2,9 @@
   <div class="card has-background-<%= category.color %>-light" style="width: 240px">
     <div class="card-content">
       <span class="subtitle"><%= category.name %></span>
+      <p><%= transactions_amount.format %></p>
     </div>
 
-    <%= render "shared/actions_menu", object: category %>
+    <%= render "shared/actions_menu", object: category, accounting: %>
   </div>
 <% end %>

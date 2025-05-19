@@ -1,14 +1,14 @@
 <%= turbo_frame_tag category do %>
   <div class="card has-background-<%= category.color %>-light" style="width: 240px">
     <div class="card-content p-3">
-      <% url = category.new_record? ? categories_path : category_path(category) %>
+      <% url = category.new_record? ? categories_path(accounting:) : category_path(category, accounting:) %>
       <%= simple_form_for(category, as: :category, url:) do |f| %>
         <%= f.input :type, as: :hidden if category.new_record? %>
         <%= f.input :name, label_html: {class: "is-sr-only"}, placeholder: "Category name", autofocus: true %>
 
         <div class="field is-grouped">
           <%= f.button :submit, class: "is-primary is-fullwidth" %>
-          <% path = category.new_record? ? offer_new_category_path(type: category.type) : category_path(category) %>
+          <% path = category.new_record? ? offer_new_category_path(type: category.type, accounting:) : category_path(category, accounting:) %>
           <%= link_to t("shared.links.cancel"), path, class: "button" %>
         </div>
       <% end %>

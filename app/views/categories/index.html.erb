@@ -1,11 +1,21 @@
-<% [[income_categories, "IncomeCategory"], [expense_categories, "ExpenseCategory"]].each do |categories, type| %>
-  <div class="block pb-5">
-    <h1 class="title is-4 has-text-centered"><%= categories.human_type %></h1>
+<%= render "accountings/form", accounting: %>
 
-    <%= turbo_frame_tag type.underscore.pluralize, class: "grid is-col-min-9", style: "justify-items: center" do %>
-      <%= render categories %>
+<%= turbo_frame_tag :results do %>
+  <%# Hack: re-render the form itself when the "results" frame is updated on the form submission. %>
+  <%# Used because turbo doesn't allow multiple frames to be specified in the "data-turbo-frame" attribute (on the form submit button) %>
+  <%= turbo_stream.replace accounting, render("accountings/form", accounting:) if accounting.errors.any? %>
 
-      <%= render "offer_new_category", type: %>
-    <% end %>
-  </div>
+  <% [[income_categories, "IncomeCategory"], [expense_categories, "ExpenseCategory"]].each do |categories, type| %>
+    <div class="block pb-5">
+      <h1 class="title is-4 has-text-centered"><%= categories.human_type %></h1>
+
+      <%= turbo_frame_tag type.underscore.pluralize, class: "grid is-col-min-9", style: "justify-items: center" do %>
+        <% categories.each do |category| %>
+          <%= render category, transactions_amount: @transactions_amounts_by_categories[category.object], accounting: %>
+        <% end %>
+
+        <%= render "offer_new_category", type:, accounting: %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>
