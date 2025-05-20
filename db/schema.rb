@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_19_082647) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_20_072436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -76,7 +76,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_19_082647) do
     t.string "currency", null: false
     t.index ["destination_type", "destination_id"], name: "index_transactions_on_destination"
     t.index ["source_type", "source_id"], name: "index_transactions_on_source"
-    t.index ["user_id"], name: "index_transactions_on_user_id"
+    t.index ["user_id", "committed_date", "created_at"], name: "index_transactions_on_user_id_committed_date_created_at", order: { committed_date: :desc, created_at: :desc }
   end
 
   create_table "users", force: :cascade do |t|
