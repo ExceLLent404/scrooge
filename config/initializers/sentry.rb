@@ -15,5 +15,5 @@ Sentry.init do |config|
   # Not to send module (dependency) information to Sentry.
   config.send_modules = false
 
-  config.enabled_environments = %w[development]
+  config.enabled_environments = %w[development production]
 end

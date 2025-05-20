@@ -5,7 +5,7 @@ default: &default
   host: <%= ENV["DB_HOST"] %>
   username: <%= ENV["DB_USER"] %>
   password: <%= ENV["DB_PASS"] %>
-  database: <%= "#{ENV["DB_USER"]}_#{ENV.fetch("RAILS_ENV", "development")}" %>
+  database: <%= ENV["DB_NAME"].presence || "#{ENV["DB_USER"]}_#{ENV.fetch("RAILS_ENV", "development")}" %>
 
 development:
   <<: *default
