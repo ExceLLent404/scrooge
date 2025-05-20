@@ -17,7 +17,7 @@ MoneyRails.configure do |config|
   rates_store = Money::RatesStore::Redis.new(url: "#{ENV["REDIS_URL"]}/#{redis_db}")
   oxr = Money::Bank::OpenExchangeRatesBank.new(rates_store)
 
-  oxr.app_id = Rails.application.credentials.oxr_app_id
+  oxr.app_id = ENV["OXR_APP_ID"].presence || Rails.application.credentials.oxr_app_id
 
   # (optional)
   # Minified Response ('prettyprint')
