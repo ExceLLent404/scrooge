@@ -2,14 +2,14 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: %i[show edit update destroy]
   before_action :set_accounting, except: :destroy
 
-  decorates_assigned :category, :income_categories, :expense_categories, :accounting
+  decorates_assigned :category, :accounting
 
   def index
-    @income_categories = current_user.income_categories.order(created_at: :asc)
-    @expense_categories = current_user.expense_categories.order(created_at: :asc)
+    categories = current_user.categories.order(created_at: :asc)
+    @income_categories = categories.select { |c| c.is_a?(IncomeCategory) }
+    @expense_categories = categories.select { |c| c.is_a?(ExpenseCategory) }
 
-    @transactions_amounts_by_categories =
-      @accounting.transactions_amounts_by_categories(@income_categories + @expense_categories)
+    @transactions_amounts_by_categories = @accounting.transactions_amounts_by_categories(categories)
   end
 
   def show
@@ -88,4 +88,14 @@ class CategoriesController < ApplicationController
   def category_update_params
     params.require(:category).permit(:name)
   end
+
+  def income_categories
+    @decorated_income_categories ||= IncomeCategoriesDecorator.decorate(@income_categories)
+  end
+  helper_method :income_categories
+
+  def expense_categories
+    @decorated_expense_categories ||= ExpenseCategoriesDecorator.decorate(@expense_categories)
+  end
+  helper_method :expense_categories
 end
