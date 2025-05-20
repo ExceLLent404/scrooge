@@ -10,3 +10,5 @@ Scrooge is an app that helps you manage your personal finances.
 - Find the transactions you need easily using different filters.
 - View your total capital amount with up-to-date currency exchange rates.
 - Find out the total amount of your income and expenses for any period, as well as by category.
+
+![App screenshot](images/screenshot.png)
