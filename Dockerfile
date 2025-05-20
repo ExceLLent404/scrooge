@@ -58,7 +58,7 @@ WORKDIR /scrooge
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
-        curl libjemalloc2 libvips postgresql-client-16 && \
+        curl libjemalloc2 libvips postgresql-client && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
