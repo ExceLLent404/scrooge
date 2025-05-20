@@ -7,6 +7,7 @@ x-app: &app
     DB_PASS: 123456
     DB_HOST: postgres
     REDIS_URL: redis://redis:6379
+    OXR_APP_ID: ${OXR_APP_ID}
   volumes:
     - .:/scrooge
     - bundle:/usr/local/bundle
